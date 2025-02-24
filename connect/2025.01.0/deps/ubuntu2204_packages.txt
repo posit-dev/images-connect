@@ -1,0 +1,4 @@
+bzip2
+libnss-sss
+libpam-sss
+libglib2.0-0
