@@ -38,15 +38,8 @@ RUN pti syspkg update \
     && pti syspkg install -f /tmp/packages.txt \
     && pti syspkg clean
 
-### Install TensorFlow Serving ###
-RUN echo "deb [arch=amd64] http://storage.googleapis.com/tensorflow-serving-apt stable tensorflow-model-server tensorflow-model-server-universal" > /etc/apt/sources.list.d/tensorflow-serving.list \
-    && curl -fsSL https://storage.googleapis.com/tensorflow-serving-apt/tensorflow-serving.release.pub.gpg | apt-key add - \
-    && pti syspkg install tensorflow-model-server-universal \
-    && pti syspkg clean
-
 ### Install tini ###
 RUN pti tini install
-
 {%- if not image_type == "min" %}
 ### Install Quarto and TinyTex ###
 RUN pti quarto install -V ${QUARTO_VERSION} --add-to-path --default \
@@ -62,10 +55,15 @@ RUN pti python install -V ${PYTHON_VERSION} --add-to-path --default \
 
 ### Install Pro Drivers ###
 RUN pti pro-drivers install --copy-odbcinst
-{%- endif %}
+{% endif %}
+
+### Install TensorFlow Serving ###
+COPY --chmod=0775 {{ rel_path }}/scripts/install_tensorflow.sh /tmp/install_tensorflow.sh
+RUN /tmp/install_tensorflow.sh \
+    && rm -f /tmp/install_tensorflow.sh
 
 ### Install Connect {{ image_version }} ###
-COPY {{ rel_path }}/scripts/install_connect.sh /tmp/install_connect.sh
+COPY --chmod=0775 {{ rel_path }}/scripts/install_connect.sh /tmp/install_connect.sh
 RUN OS_URL=ubuntu22 /tmp/install_connect.sh \
     && rm -f /tmp/install_connect.sh
 
@@ -77,11 +75,10 @@ VOLUME ["/data"]
 COPY --chmod=0775 "{{ rel_path }}/scripts/startup.sh" /usr/local/bin/startup.sh
 
 ### Finalize image ###
-{% if not image_type == "min" %}
+{%- if not image_type == "min" %}
 LABEL co.posit.image.tools.python="{{ python_version }}" \
       co.posit.image.tools.r="{{ r_version }}" \
       co.posit.image.tools.quarto="{{ quarto_version }}"
 {% endif %}
-
-ENTRYPOINT ["/usr/bin/tini", "--"]
+ENTRYPOINT ["/usr/local/bin/tini", "--"]
 CMD ["/usr/local/bin/startup.sh"]

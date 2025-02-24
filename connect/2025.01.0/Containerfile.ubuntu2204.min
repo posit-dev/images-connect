@@ -33,17 +33,16 @@ RUN pti syspkg update \
     && pti syspkg install -f /tmp/packages.txt \
     && pti syspkg clean
 
-### Install TensorFlow Serving ###
-RUN echo "deb [arch=amd64] http://storage.googleapis.com/tensorflow-serving-apt stable tensorflow-model-server tensorflow-model-server-universal" > /etc/apt/sources.list.d/tensorflow-serving.list \
-    && curl -fsSL https://storage.googleapis.com/tensorflow-serving-apt/tensorflow-serving.release.pub.gpg | apt-key add - \
-    && pti syspkg install tensorflow-model-server-universal \
-    && pti syspkg clean
-
 ### Install tini ###
 RUN pti tini install
 
+### Install TensorFlow Serving ###
+COPY --chmod=0775 connect/2025.01.0/scripts/install_tensorflow.sh /tmp/install_tensorflow.sh
+RUN /tmp/install_tensorflow.sh \
+    && rm -f /tmp/install_tensorflow.sh
+
 ### Install Connect 2025.01.0 ###
-COPY connect/2025.01.0/scripts/install_connect.sh /tmp/install_connect.sh
+COPY --chmod=0775 connect/2025.01.0/scripts/install_connect.sh /tmp/install_connect.sh
 RUN OS_URL=ubuntu22 /tmp/install_connect.sh \
     && rm -f /tmp/install_connect.sh
 
@@ -55,7 +54,5 @@ VOLUME ["/data"]
 COPY --chmod=0775 "connect/2025.01.0/scripts/startup.sh" /usr/local/bin/startup.sh
 
 ### Finalize image ###
-
-
-ENTRYPOINT ["/usr/bin/tini", "--"]
+ENTRYPOINT ["/usr/local/bin/tini", "--"]
 CMD ["/usr/local/bin/startup.sh"]
