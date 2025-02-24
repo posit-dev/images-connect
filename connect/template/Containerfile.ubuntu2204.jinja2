@@ -32,7 +32,7 @@ COPY --chmod=0755 ./tools/pti /usr/local/bin/pti
 RUN pti init
 
 ### Install Apt packages ###
-COPY {{ rel_path }}/deps/ubuntu2204_packages.txt /tmp/packages.txt
+COPY ./{{ rel_path }}/deps/ubuntu2204_packages.txt /tmp/packages.txt
 RUN pti syspkg update \
     && pti syspkg upgrade --dist \
     && pti syspkg install -f /tmp/packages.txt \
@@ -40,10 +40,11 @@ RUN pti syspkg update \
 
 ### Install tini ###
 RUN pti tini install
-{%- if not image_type == "min" %}
+
+{% if not image_type == "min" -%}
 ### Install Quarto and TinyTex ###
-RUN pti quarto install -V ${QUARTO_VERSION} --add-to-path --default \
-    && pti quarto tinytex install --add-to-pat
+RUN pti quarto install -V ${QUARTO_VERSION} \
+    && pti quarto tinytex install --add-to-path
 
 ### Install R ###
 RUN pti r install -V ${R_VERSION} --add-to-path --default
@@ -55,20 +56,19 @@ RUN pti python install -V ${PYTHON_VERSION} --add-to-path --default \
 
 ### Install Pro Drivers ###
 RUN pti pro-drivers install --copy-odbcinst
-{% endif %}
 
 ### Install TensorFlow Serving ###
-COPY --chmod=0775 {{ rel_path }}/scripts/install_tensorflow.sh /tmp/install_tensorflow.sh
+COPY --chmod=0775 ./{{ rel_path }}/scripts/install_tensorflow.sh /tmp/install_tensorflow.sh
 RUN /tmp/install_tensorflow.sh \
     && rm -f /tmp/install_tensorflow.sh
-
+{% endif %}
 ### Install Connect {{ image_version }} ###
-COPY --chmod=0775 {{ rel_path }}/scripts/install_connect.sh /tmp/install_connect.sh
+COPY --chmod=0775 ./{{ rel_path }}/scripts/install_connect.sh /tmp/install_connect.sh
 RUN OS_URL=ubuntu22 /tmp/install_connect.sh \
     && rm -f /tmp/install_connect.sh
 
 ### Configure application/image ###
-COPY {{ rel_path }}/conf/rstudio-connect.gcfg /etc/rstudio-connect/rstudio-connect.gcfg
+COPY ./{{ rel_path }}/conf/rstudio-connect.gcfg /etc/rstudio-connect/rstudio-connect.gcfg
 VOLUME ["/data"]
 
 ### Copy scripts ###

@@ -84,7 +84,7 @@ file:
     filetype: symlink
 
   # Check for Quarto installation
-  /opt/quarto/1.4.557/bin/quarto:
+  /opt/quarto/bin/quarto:
     exists: {{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}
   /usr/local/bin/quarto:
     exists: {{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}
