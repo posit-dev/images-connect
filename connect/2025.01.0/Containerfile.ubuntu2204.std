@@ -40,16 +40,14 @@ RUN pti syspkg update \
 RUN pti tini install
 
 ### Install Quarto and TinyTex ###
-RUN pti quarto install -V ${QUARTO_VERSION} \
+RUN pti quarto install -V ${QUARTO_VERSION} --add-to-path \
     && pti quarto tinytex install --add-to-path
 
 ### Install R ###
 RUN pti r install -V ${R_VERSION} --add-to-path --default
 
 ### Install Python and Jupyter ###
-RUN pti python install -V ${PYTHON_VERSION} --add-to-path --default \
-    && pti python jupyter -V ${PYTHON_VERSION} install \
-    && pti python jupyter -V ${PYTHON_VERSION} add-kernel
+RUN pti python install -V ${PYTHON_VERSION} --add-to-path --default
 
 ### Install Pro Drivers ###
 RUN pti pro-drivers install --copy-odbcinst
@@ -69,12 +67,13 @@ COPY ./connect/2025.01.0/conf/rstudio-connect.gcfg /etc/rstudio-connect/rstudio-
 VOLUME ["/data"]
 
 ### Copy scripts ###
-COPY --chmod=0775 "connect/2025.01.0/scripts/startup.sh" /usr/local/bin/startup.sh
+COPY --chmod=0775 ./connect/2025.01.0/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Finalize image ###
 LABEL co.posit.image.tools.python="3.12.1" \
       co.posit.image.tools.r="4.4.0" \
       co.posit.image.tools.quarto="1.4.557"
 
+EXPOSE 3939
 ENTRYPOINT ["/usr/local/bin/tini", "--"]
 CMD ["/usr/local/bin/startup.sh"]

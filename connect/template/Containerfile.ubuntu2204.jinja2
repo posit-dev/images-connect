@@ -43,16 +43,14 @@ RUN pti tini install
 
 {% if not image_type == "min" -%}
 ### Install Quarto and TinyTex ###
-RUN pti quarto install -V ${QUARTO_VERSION} \
+RUN pti quarto install -V ${QUARTO_VERSION} --add-to-path \
     && pti quarto tinytex install --add-to-path
 
 ### Install R ###
 RUN pti r install -V ${R_VERSION} --add-to-path --default
 
 ### Install Python and Jupyter ###
-RUN pti python install -V ${PYTHON_VERSION} --add-to-path --default \
-    && pti python jupyter -V ${PYTHON_VERSION} install \
-    && pti python jupyter -V ${PYTHON_VERSION} add-kernel
+RUN pti python install -V ${PYTHON_VERSION} --add-to-path --default
 
 ### Install Pro Drivers ###
 RUN pti pro-drivers install --copy-odbcinst
@@ -72,7 +70,7 @@ COPY ./{{ rel_path }}/conf/rstudio-connect.gcfg /etc/rstudio-connect/rstudio-con
 VOLUME ["/data"]
 
 ### Copy scripts ###
-COPY --chmod=0775 "{{ rel_path }}/scripts/startup.sh" /usr/local/bin/startup.sh
+COPY --chmod=0775 ./{{ rel_path }}/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Finalize image ###
 {%- if not image_type == "min" %}
@@ -80,5 +78,6 @@ LABEL co.posit.image.tools.python="{{ python_version }}" \
       co.posit.image.tools.r="{{ r_version }}" \
       co.posit.image.tools.quarto="{{ quarto_version }}"
 {% endif %}
+EXPOSE 3939
 ENTRYPOINT ["/usr/local/bin/tini", "--"]
 CMD ["/usr/local/bin/startup.sh"]

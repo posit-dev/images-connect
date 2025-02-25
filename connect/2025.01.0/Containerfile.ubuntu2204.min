@@ -47,8 +47,9 @@ COPY ./connect/2025.01.0/conf/rstudio-connect.gcfg /etc/rstudio-connect/rstudio-
 VOLUME ["/data"]
 
 ### Copy scripts ###
-COPY --chmod=0775 "connect/2025.01.0/scripts/startup.sh" /usr/local/bin/startup.sh
+COPY --chmod=0775 ./connect/2025.01.0/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Finalize image ###
+EXPOSE 3939
 ENTRYPOINT ["/usr/local/bin/tini", "--"]
 CMD ["/usr/local/bin/startup.sh"]

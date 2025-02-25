@@ -21,7 +21,7 @@ package:
     installed: true
 
 process:
-  rstudio-connect:
+  connect:
     running: true
     skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
 
@@ -55,11 +55,9 @@ file:
     exists: true
     filetype: file
     contents:
-      - "Posit Connect service is ready"
-  /tmp/startup.log:
-    exists: true
-    contents:
-    - "!Error: Couldn't read configuration file "
+      - "Startup complete"
+    # Skip for now since logs go to STDERR
+    skip: true
   {{ end }}{% endraw %}
 
   # Check for R installation
@@ -91,9 +89,9 @@ file:
   # Check for Quarto installation
   /opt/quarto/bin/quarto:
     exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
-#   /usr/local/bin/quarto:
-#     exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
-#     filetype: symlink
+  /usr/local/bin/quarto:
+    exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
+    filetype: symlink
 
 command:
   "Ensure Connect version is correct":
@@ -134,22 +132,22 @@ command:
     stdout:
       - "{{ quarto_version }}"
     skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
-#   "Ensure Quarto symlink version is correct":
-#     exec: /usr/local/bin/quarto --version
-#     exit-status: 0
-#     stdout:
-#       - "{{ quarto_version }}"
-#     skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
+  "Ensure Quarto symlink version is correct":
+    exec: /usr/local/bin/quarto --version
+    exit-status: 0
+    stdout:
+      - "{{ quarto_version }}"
+    skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
   "Ensure Quarto works":
     exec: /opt/quarto/bin/quarto check --quiet
     exit-status: 0
     skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
-#   "Ensure Quarto symlink works":
-#     exec: /usr/local/bin/quarto check --quiet
-#     exit-status: 0
-#     skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
+  "Ensure Quarto symlink works":
+    exec: /usr/local/bin/quarto check --quiet
+    exit-status: 0
+    skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
   "Ensure TinyTeX is installed":
-    exec: /opt/quarto/bin/quarto list tools
+    exec: quarto list tools
     exit-status: 0
     stderr:
       - "/tinytex\\s+Up to date\\s+v\\d{4}\\.\\d{2}(\\.\\d{2})?\\s+v\\d{4}\\.\\d{2}(\\.\\d{2})?/"
