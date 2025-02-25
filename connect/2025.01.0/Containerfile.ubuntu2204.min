@@ -9,10 +9,10 @@ ARG PTI_LOG_FORMAT="json"
 ARG CONNECT_VERSION="2025.01.0"
 
 ### ENV declarations ###
-ENV PCT_LICENSE ""
-ENV PCT_LICENSE_SERVER ""
-ENV PCT_LICENSE_FILE_PATH ""
-ENV STARTUP_DEBUG_MODE 0
+ENV PCT_LICENSE=""
+ENV PCT_LICENSE_SERVER=""
+ENV PCT_LICENSE_FILE_PATH=""
+ENV STARTUP_DEBUG_MODE=0
 
 ### Install Posit Tool Installer ###
 # TODO: Uncomment when PTI is available as a public repository
@@ -50,6 +50,6 @@ VOLUME ["/data"]
 COPY --chmod=0775 ./connect/2025.01.0/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Finalize image ###
-EXPOSE 3939
+EXPOSE 3939/tcp
 ENTRYPOINT ["/usr/local/bin/tini", "--"]
 CMD ["/usr/local/bin/startup.sh"]

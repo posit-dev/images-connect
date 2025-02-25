@@ -12,10 +12,10 @@ ARG QUARTO_VERSION="1.4.557"
 ARG CONNECT_VERSION="2025.01.0"
 
 ### ENV declarations ###
-ENV PCT_LICENSE ""
-ENV PCT_LICENSE_SERVER ""
-ENV PCT_LICENSE_FILE_PATH ""
-ENV STARTUP_DEBUG_MODE 0
+ENV PCT_LICENSE=""
+ENV PCT_LICENSE_SERVER=""
+ENV PCT_LICENSE_FILE_PATH=""
+ENV STARTUP_DEBUG_MODE=0
 
 ### Install Posit Tool Installer ###
 # TODO: Uncomment when PTI is available as a public repository
@@ -74,6 +74,6 @@ LABEL co.posit.image.tools.python="3.12.1" \
       co.posit.image.tools.r="4.4.0" \
       co.posit.image.tools.quarto="1.4.557"
 
-EXPOSE 3939
+EXPOSE 3939/tcp
 ENTRYPOINT ["/usr/local/bin/tini", "--"]
 CMD ["/usr/local/bin/startup.sh"]
