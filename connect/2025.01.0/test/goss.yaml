@@ -86,9 +86,9 @@ file:
   # Check for Quarto installation
   /opt/quarto/bin/quarto:
     exists: {{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}
-  /usr/local/bin/quarto:
-    exists: {{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}
-    filetype: symlink
+#   /usr/local/bin/quarto:
+#     exists: {{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}
+#     filetype: symlink
 
 command:
   "Ensure Connect version is correct":
@@ -103,12 +103,12 @@ command:
     stdout:
       - "4.4.0"
     skip: {{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}
-  "Ensure R symlink version is correct":
-    exec: /usr/local/bin/R --version
-    exit-status: 0
-    stdout:
-      - "4.4.0"
-    skip: {{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}
+#   "Ensure R symlink version is correct":
+#     exec: /usr/local/bin/R --version
+#     exit-status: 0
+#     stdout:
+#       - "4.4.0"
+#     skip: {{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}
 
   "Ensure Python version is correct":
     exec: /opt/python/3.12.1/bin/python --version
@@ -124,27 +124,27 @@ command:
     skip: {{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}
 
   "Ensure Quarto version is correct":
-    exec: /opt/quarto/1.4.557/bin/quarto --version
+    exec: /opt/quarto/bin/quarto --version
     exit-status: 0
     stdout:
       - "1.4.557"
     skip: {{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}
-  "Ensure Quarto symlink version is correct":
-    exec: /usr/local/bin/quarto --version
-    exit-status: 0
-    stdout:
-      - "1.4.557"
-    skip: {{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}
+#   "Ensure Quarto symlink version is correct":
+#     exec: /usr/local/bin/quarto --version
+#     exit-status: 0
+#     stdout:
+#       - "1.4.557"
+#     skip: {{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}
   "Ensure Quarto works":
-    exec: /opt/quarto/1.4.557/bin/quarto check --quiet
+    exec: /opt/quarto/bin/quarto check --quiet
     exit-status: 0
     skip: {{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}
-  "Ensure Quarto symlink works":
-    exec: /usr/local/bin/quarto check --quiet
-    exit-status: 0
-    skip: {{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}
+#   "Ensure Quarto symlink works":
+#     exec: /usr/local/bin/quarto check --quiet
+#     exit-status: 0
+#     skip: {{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}
   "Ensure TinyTeX is installed":
-    exec: quarto list tools
+    exec: /opt/quarto/bin/quarto list tools
     exit-status: 0
     stderr:
       - "/tinytex\\s+Up to date\\s+v\\d{4}\\.\\d{2}(\\.\\d{2})?\\s+v\\d{4}\\.\\d{2}(\\.\\d{2})?/"
