@@ -1,0 +1,7 @@
+bzip2
+curl
+gnupg
+gnupg-agent
+libnss-sss
+libpam-sss
+libglib2.0-0
