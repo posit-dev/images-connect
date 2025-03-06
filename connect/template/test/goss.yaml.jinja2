@@ -64,15 +64,21 @@ file:
   /opt/R/{{ r_version }}/bin/R:
     exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
     filetype: file
+    mode: "0755"
   /opt/R/default/bin/R:
     exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
     filetype: file
+    mode: "0755"
   /usr/local/bin/R{{ r_version }}:
     exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
     filetype: symlink
+    linked-to: /opt/R/{{ r_version }}/bin/R
+    mode: "0777"
   /usr/local/bin/Rscript{{ r_version }}:
     exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
     filetype: symlink
+    linked-to: /opt/R/{{ r_version }}/bin/Rscript
+    mode: "0777"
 
   # Check for Python installation
   /opt/python/{{ python_version }}/bin/python:
@@ -82,16 +88,23 @@ file:
   /usr/local/bin/python{{ python_version }}:
     exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
     filetype: symlink
+    linked-to: /opt/python/{{ python_version }}/bin/python
+    mode: "0777"
   /usr/local/bin/pip{{ python_version }}:
     exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
     filetype: symlink
+    linked-to: /opt/python/{{ python_version }}/bin/pip
+    mode: "0777"
 
   # Check for Quarto installation
   /opt/quarto/bin/quarto:
     exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
+    mode: "0755"
   /usr/local/bin/quarto:
     exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
     filetype: symlink
+    linked-to: /opt/quarto/bin/quarto
+    mode: "0777"
 
 command:
   "Ensure Connect version is correct":
@@ -106,12 +119,12 @@ command:
     stdout:
       - "{{ r_version }}"
     skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
-#   "Ensure R symlink version is correct":
-#     exec: /usr/local/bin/R --version
-#     exit-status: 0
-#     stdout:
-#       - "{{ r_version }}"
-#     skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
+  "Ensure R symlink version is correct":
+    exec: /usr/local/bin/R --version
+    exit-status: 0
+    stdout:
+      - "{{ r_version }}"
+    skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
 
   "Ensure Python version is correct":
     exec: /opt/python/{{ python_version }}/bin/python --version

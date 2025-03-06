@@ -59,15 +59,21 @@ file:
   /opt/R/4.4.0/bin/R:
     exists: {{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}
     filetype: file
+    mode: "0755"
   /opt/R/default/bin/R:
     exists: {{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}
     filetype: file
+    mode: "0755"
   /usr/local/bin/R4.4.0:
     exists: {{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}
     filetype: symlink
+    linked-to: /opt/R/4.4.0/bin/R
+    mode: "0777"
   /usr/local/bin/Rscript4.4.0:
     exists: {{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}
     filetype: symlink
+    linked-to: /opt/R/4.4.0/bin/Rscript
+    mode: "0777"
 
   # Check for Python installation
   /opt/python/3.12.1/bin/python:
@@ -77,16 +83,23 @@ file:
   /usr/local/bin/python3.12.1:
     exists: {{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}
     filetype: symlink
+    linked-to: /opt/python/3.12.1/bin/python
+    mode: "0777"
   /usr/local/bin/pip3.12.1:
     exists: {{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}
     filetype: symlink
+    linked-to: /opt/python/3.12.1/bin/pip
+    mode: "0777"
 
   # Check for Quarto installation
   /opt/quarto/bin/quarto:
     exists: {{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}
+    mode: "0755"
   /usr/local/bin/quarto:
     exists: {{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}
     filetype: symlink
+    linked-to: /opt/quarto/bin/quarto
+    mode: "0777"
 
 command:
   "Ensure Connect version is correct":
@@ -101,12 +114,12 @@ command:
     stdout:
       - "4.4.0"
     skip: {{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}
-#   "Ensure R symlink version is correct":
-#     exec: /usr/local/bin/R --version
-#     exit-status: 0
-#     stdout:
-#       - "4.4.0"
-#     skip: {{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}
+  "Ensure R symlink version is correct":
+    exec: /usr/local/bin/R --version
+    exit-status: 0
+    stdout:
+      - "4.4.0"
+    skip: {{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}
 
   "Ensure Python version is correct":
     exec: /opt/python/3.12.1/bin/python --version

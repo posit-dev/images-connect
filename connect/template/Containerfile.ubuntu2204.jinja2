@@ -1,17 +1,11 @@
 FROM docker.io/library/ubuntu:22.04
 LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
 
-### ARG declarations ###
+### global ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
 ARG PTI_VERSION="0.0.1"
 ARG PTI_NO_COLOR="true"
 ARG PTI_LOG_FORMAT="json"
-{%- if not image_type == "min" %}
-ARG PYTHON_VERSION="{{ python_version }}"
-ARG R_VERSION="{{ r_version }}"
-ARG QUARTO_VERSION="{{ quarto_version }}"
-{%- endif %}
-ARG CONNECT_VERSION="{{ image_version }}"
 
 ### ENV declarations ###
 ENV PCT_LICENSE=""
@@ -31,29 +25,29 @@ COPY --chmod=0755 ./tools/pti /usr/local/bin/pti
 ### Initialize PTI in container ###
 RUN pti init
 
-### Install Apt packages ###
-COPY ./{{ rel_path }}/deps/ubuntu2204_packages.txt /tmp/packages.txt
+### Update apt packages ###
 RUN pti syspkg update \
     && pti syspkg upgrade --dist \
-    && pti syspkg install -f /tmp/packages.txt \
     && pti syspkg clean
 
 ### Install tini ###
 RUN pti tini install
-
-{% if not image_type == "min" -%}
-### Install Quarto and TinyTex ###
-RUN pti quarto install -V ${QUARTO_VERSION} --add-to-path \
-    && pti quarto tinytex install --add-to-path
+{% if not image_type == "min" %}
+### Install Pro Drivers ###
+RUN pti pro-drivers install --copy-odbcinst
 
 ### Install R ###
+ARG R_VERSION="{{ r_version }}"
 RUN pti r install -V ${R_VERSION} --add-to-path --default
 
 ### Install Python and Jupyter ###
+ARG PYTHON_VERSION="{{ python_version }}"
 RUN pti python install -V ${PYTHON_VERSION} --add-to-path --default
 
-### Install Pro Drivers ###
-RUN pti pro-drivers install --copy-odbcinst
+### Install Quarto and TinyTex ###
+ARG QUARTO_VERSION="{{ quarto_version }}"
+RUN pti quarto install -V ${QUARTO_VERSION} --add-to-path \
+    && pti quarto tinytex install --add-to-path
 
 ### Install TensorFlow Serving ###
 COPY --chmod=0775 ./{{ rel_path }}/scripts/install_tensorflow.sh /tmp/install_tensorflow.sh
@@ -61,6 +55,11 @@ RUN /tmp/install_tensorflow.sh \
     && rm -f /tmp/install_tensorflow.sh
 {% endif %}
 ### Install Connect {{ image_version }} ###
+ARG CONNECT_VERSION="{{ image_version }}"
+
+COPY ./{{ rel_path }}/deps/ubuntu2204_packages.txt /tmp/packages.txt
+RUN pti syspkg install -f /tmp/packages.txt
+
 COPY --chmod=0775 ./{{ rel_path }}/scripts/install_connect.sh /tmp/install_connect.sh
 RUN OS_URL=ubuntu22 /tmp/install_connect.sh \
     && rm -f /tmp/install_connect.sh
@@ -73,7 +72,7 @@ VOLUME ["/data"]
 COPY --chmod=0775 ./{{ rel_path }}/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Finalize image ###
-{%- if not image_type == "min" %}
+{% if not image_type == "min" -%}
 LABEL co.posit.image.tools.python="{{ python_version }}" \
       co.posit.image.tools.r="{{ r_version }}" \
       co.posit.image.tools.quarto="{{ quarto_version }}"

@@ -1,12 +1,11 @@
 FROM docker.io/library/ubuntu:22.04
 LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
 
-### ARG declarations ###
+### global ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
 ARG PTI_VERSION="0.0.1"
 ARG PTI_NO_COLOR="true"
 ARG PTI_LOG_FORMAT="json"
-ARG CONNECT_VERSION="2025.01.0"
 
 ### ENV declarations ###
 ENV PCT_LICENSE=""
@@ -26,18 +25,20 @@ COPY --chmod=0755 ./tools/pti /usr/local/bin/pti
 ### Initialize PTI in container ###
 RUN pti init
 
-### Install Apt packages ###
-COPY ./connect/2025.01.0/deps/ubuntu2204_packages.txt /tmp/packages.txt
+### Update apt packages ###
 RUN pti syspkg update \
     && pti syspkg upgrade --dist \
-    && pti syspkg install -f /tmp/packages.txt \
     && pti syspkg clean
 
 ### Install tini ###
 RUN pti tini install
 
-
 ### Install Connect 2025.01.0 ###
+ARG CONNECT_VERSION="2025.01.0"
+
+COPY ./connect/2025.01.0/deps/ubuntu2204_packages.txt /tmp/packages.txt
+RUN pti syspkg install -f /tmp/packages.txt
+
 COPY --chmod=0775 ./connect/2025.01.0/scripts/install_connect.sh /tmp/install_connect.sh
 RUN OS_URL=ubuntu22 /tmp/install_connect.sh \
     && rm -f /tmp/install_connect.sh
@@ -50,6 +51,7 @@ VOLUME ["/data"]
 COPY --chmod=0775 ./connect/2025.01.0/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Finalize image ###
+
 EXPOSE 3939/tcp
 ENTRYPOINT ["/usr/local/bin/tini", "--"]
 CMD ["/usr/local/bin/startup.sh"]
