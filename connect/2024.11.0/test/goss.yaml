@@ -14,6 +14,11 @@ package:
     installed: true
   cracklib-runtime:
     installed: true
+  {{ $apt_package_list := readFile "/tmp/deps/ubuntu2204_packages.txt" | splitList "\n" }}
+  {{- range $apt_package_list }}
+  {{ . }}:
+    installed: true
+  {{ end }}
 
 process:
   connect:
@@ -26,6 +31,9 @@ port:
     skip: {{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}
 
 file:
+  /usr/local/bin/pti:
+    exists: true
+    mode: "0755"
   /etc/rstudio-connect/license.lic:
     # Currently does not exist
     # Be sure it is NOT a directory
@@ -33,8 +41,6 @@ file:
   /opt/rstudio-connect/:
     exists: true
   /opt/rstudio-connect/bin/connect:
-    exists: true
-  /usr/local/bin/tini:
     exists: true
   # Ensure startup file exists
   /usr/local/bin/startup.sh:
@@ -158,5 +164,5 @@ command:
     exec: quarto list tools
     exit-status: 0
     stderr:
-      - "/tinytex\\s+Up to date\\s+v\\d{4}\\.\\d{2}(\\.\\d{2})?\\s+v\\d{4}\\.\\d{2}(\\.\\d{2})?/"
+      - "/tinytex\\s+External Installation/"
     skip: {{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}

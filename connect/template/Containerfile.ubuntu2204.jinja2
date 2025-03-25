@@ -1,11 +1,20 @@
 FROM docker.io/library/ubuntu:22.04
 LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
 
-### global ARG declarations ###
+### Global ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
-ARG PTI_VERSION="0.0.1"
+ARG PTI_VERSION="0.0.3"
 ARG PTI_NO_COLOR="true"
 ARG PTI_LOG_FORMAT="json"
+
+### Release ARG declarations ###
+{% if not image_type == "min" %}
+ARG R_VERSION="{{ r_version }}"
+ARG PYTHON_VERSION="{{ python_version }}"
+ARG QUARTO_VERSION="{{ quarto_version }}"
+{%- endif %}
+ARG CONNECT_VERSION="{{ image_version }}"
+ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
 
 ### ENV declarations ###
 ENV PCT_LICENSE=""
@@ -26,27 +35,24 @@ COPY --chmod=0755 ./tools/pti /usr/local/bin/pti
 RUN pti init
 
 ### Update apt packages ###
+COPY {{ rel_path }}/deps/ubuntu2204_packages.txt /tmp/ubuntu2204_packages.txt
 RUN pti syspkg update \
     && pti syspkg upgrade --dist \
-    && pti syspkg clean
+    && pti syspkg install -f /tmp/ubuntu2204_packages.txt \
+    && rm -f /tmp/ubuntu2204_packages.txt
 
-### Install tini ###
-RUN pti tini install
 {% if not image_type == "min" %}
 ### Install Pro Drivers ###
 RUN pti pro-drivers install --copy-odbcinst
 
 ### Install R ###
-ARG R_VERSION="{{ r_version }}"
-RUN pti r install -V ${R_VERSION} --add-to-path --default
+RUN pti r install --add-to-path --default "${R_VERSION}"
 
 ### Install Python and Jupyter ###
-ARG PYTHON_VERSION="{{ python_version }}"
-RUN pti python install -V ${PYTHON_VERSION} --add-to-path --default
+RUN pti python install --add-to-path --default "${PYTHON_VERSION}"
 
 ### Install Quarto and TinyTex ###
-ARG QUARTO_VERSION="{{ quarto_version }}"
-RUN pti quarto install -V ${QUARTO_VERSION} --add-to-path \
+RUN pti quarto install --add-to-path "${QUARTO_VERSION}" \
     && pti quarto tinytex install --add-to-path
 
 ### Install TensorFlow Serving ###
@@ -54,11 +60,6 @@ COPY --chmod=0775 ./{{ rel_path }}/scripts/install_tensorflow.sh /tmp/install_te
 RUN /tmp/install_tensorflow.sh \
     && rm -f /tmp/install_tensorflow.sh
 {% endif %}
-### Install Connect {{ image_version }} ###
-ARG CONNECT_VERSION="{{ image_version }}"
-
-COPY ./{{ rel_path }}/deps/ubuntu2204_packages.txt /tmp/packages.txt
-RUN pti syspkg install -f /tmp/packages.txt
 
 COPY --chmod=0775 ./{{ rel_path }}/scripts/install_connect.sh /tmp/install_connect.sh
 RUN OS_URL=ubuntu22 /tmp/install_connect.sh \
@@ -78,5 +79,4 @@ LABEL co.posit.image.tools.python="{{ python_version }}" \
       co.posit.image.tools.quarto="{{ quarto_version }}"
 {% endif %}
 EXPOSE 3939/tcp
-ENTRYPOINT ["/usr/local/bin/tini", "--"]
 CMD ["/usr/local/bin/startup.sh"]
