@@ -10,11 +10,12 @@ url = "github.com/posit-dev/images-connect"
 vendor = "Posit Software, PBC"
 maintainer = "docker@posit.co"
 authors = [
-    "Ben Schwedler <ben@posit.co>"
+    "Ben Schwedler <ben@posit.co>",
+    "Ian H. Pittwood <ian.pittwood@posit.co>"
 ]
 
 # Define image registries used by builds in this repository. Images will be tagged appropriately for each registry.
 # Logins for private registries should be managed independently of Bakery.
 [[registries]]
-host = "docker.io"
-namespace = "posit"
+host = "ghcr.io"
+namespace = "posit-dev"
