@@ -50,7 +50,7 @@ jobs:
           bakery build --load
 
       - name: Test images
-        run: bakery run dgoss --run-opt='--privileged' --run-opt='--init'
+        run: bakery run dgoss --privileged
 
 #      TODO: Reenable once we can use override repositories again
 #      - name: Push images
