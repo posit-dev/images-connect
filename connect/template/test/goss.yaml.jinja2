@@ -1,4 +1,4 @@
-{%- set clean_version = image_version | regex_replace('[+-].*', '') -%}
+{%- set clean_version = Image.Version | stripMetadata -%}
 {%- set version_split = clean_version.split('.') -%}
 {%- set major_version = version_split[0]|int -%}
 {%- set minor_version = version_split[1]|int -%}
@@ -20,7 +20,7 @@ package:
   cracklib-runtime:
     installed: true
   {% raw -%}
-  {{ $apt_package_list := readFile "/tmp/deps/ubuntu2204_packages.txt" | splitList "\n" }}
+  {{ $apt_package_list := readFile "/tmp/version/deps/ubuntu2204_packages.txt" | splitList "\n" }}
   {{- range $apt_package_list }}
   {{ . }}:
     installed: true
@@ -30,12 +30,12 @@ package:
 process:
   connect:
     running: true
-    skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
+    skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
 
 port:
   tcp6:3939:
     listening: true
-    skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
+    skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
 
 file:
   /usr/local/bin/pti:
@@ -58,7 +58,7 @@ file:
   # Check that `cracklib-runtime` is present so `chpasswd` works
   /var/cache/cracklib/cracklib_dict.pwd:
     exists: true
-  {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}
+  {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}
   /var/log/rstudio/rstudio-connect/rstudio-connect.log:
     exists: true
     filetype: file
@@ -70,46 +70,46 @@ file:
 
   # Check for R installation
   /opt/R/{{ r_version }}/bin/R:
-    exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
+    exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
     filetype: file
     mode: "0755"
   /opt/R/default/bin/R:
-    exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
+    exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
     filetype: file
     mode: "0755"
   /usr/local/bin/R{{ r_version }}:
-    exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
+    exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
     filetype: symlink
     linked-to: /opt/R/{{ r_version }}/bin/R
     mode: "0777"
   /usr/local/bin/Rscript{{ r_version }}:
-    exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
+    exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
     filetype: symlink
     linked-to: /opt/R/{{ r_version }}/bin/Rscript
     mode: "0777"
 
   # Check for Python installation
   /opt/python/{{ python_version }}/bin/python:
-    exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
+    exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
   /opt/python/default/bin/python:
-    exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
+    exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
   /usr/local/bin/python{{ python_version }}:
-    exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
+    exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
     filetype: symlink
     linked-to: /opt/python/{{ python_version }}/bin/python
     mode: "0777"
   /usr/local/bin/pip{{ python_version }}:
-    exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
+    exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
     filetype: symlink
     linked-to: /opt/python/{{ python_version }}/bin/pip
     mode: "0777"
 
   # Check for Quarto installation
   /opt/quarto/bin/quarto:
-    exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
+    exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
     mode: "0755"
   /usr/local/bin/quarto:
-    exists: {% raw %}{{ if eq .Env.IMAGE_TYPE "std" }}true{{ else }}false{{ end }}{% endraw %}
+    exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
     filetype: symlink
     linked-to: /opt/quarto/bin/quarto
     mode: "0777"
@@ -119,57 +119,57 @@ command:
     exec: /opt/rstudio-connect/bin/connect --version
     exit-status: 0
     stdout:
-      - "{{ image_version }}"
+      - "{{ Image.Version }}"
 
   "Ensure R version is correct":
     exec: /opt/R/{{ r_version }}/bin/R --version
     exit-status: 0
     stdout:
       - "{{ r_version }}"
-    skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
+    skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
   "Ensure R symlink version is correct":
     exec: /usr/local/bin/R --version
     exit-status: 0
     stdout:
       - "{{ r_version }}"
-    skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
+    skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
 
   "Ensure Python version is correct":
     exec: /opt/python/{{ python_version }}/bin/python --version
     exit-status: 0
     stdout:
       - "{{ python_version }}"
-    skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
+    skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
   "Ensure Python symlink version is correct":
     exec: /usr/local/bin/python{{ python_version }} --version
     exit-status: 0
     stdout:
       - "{{ python_version }}"
-    skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
+    skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
 
   "Ensure Quarto version is correct":
     exec: /opt/quarto/bin/quarto --version
     exit-status: 0
     stdout:
       - "{{ quarto_version }}"
-    skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
+    skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
   "Ensure Quarto symlink version is correct":
     exec: /usr/local/bin/quarto --version
     exit-status: 0
     stdout:
       - "{{ quarto_version }}"
-    skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
+    skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
   "Ensure Quarto works":
     exec: /opt/quarto/bin/quarto check --quiet
     exit-status: 0
-    skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
+    skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
   "Ensure Quarto symlink works":
     exec: /usr/local/bin/quarto check --quiet
     exit-status: 0
-    skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
+    skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
   "Ensure TinyTeX is installed":
     exec: quarto list tools
     exit-status: 0
     stderr:
       - "/tinytex\\s+External Installation/"
-    skip: {% raw %}{{ if eq .Env.IMAGE_TYPE "min" }}true{{ else }}false{{ end }}{% endraw %}
+    skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}

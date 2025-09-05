@@ -8,12 +8,11 @@ ARG PTI_NO_COLOR="true"
 ARG PTI_LOG_FORMAT="json"
 
 ### Release ARG declarations ###
-{% if not Image.Variant == "Minimal" %}
-ARG R_VERSION="{{ r_version }}"
-ARG PYTHON_VERSION="{{ python_version }}"
-ARG QUARTO_VERSION="{{ quarto_version }}"
-{%- endif %}
-ARG CONNECT_VERSION="{{ Image.Version }}"
+
+ARG R_VERSION="4.4.0"
+ARG PYTHON_VERSION="3.12.1"
+ARG QUARTO_VERSION="1.4.557"
+ARG CONNECT_VERSION="2025.01.0"
 ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
 
 ### ENV declarations ###
@@ -35,13 +34,13 @@ COPY --chmod=0755 ./tools/pti /usr/local/bin/pti
 RUN pti init
 
 ### Update apt packages ###
-COPY {{ Path.Version }}/deps/ubuntu2204_packages.txt /tmp/ubuntu2204_packages.txt
+COPY connect/2025.01/deps/ubuntu2204_packages.txt /tmp/ubuntu2204_packages.txt
 RUN pti syspkg update \
     && pti syspkg upgrade --dist \
     && pti syspkg install -f /tmp/ubuntu2204_packages.txt \
     && rm -f /tmp/ubuntu2204_packages.txt
 
-{% if not Image.Variant == "Minimal" %}
+
 ### Install Pro Drivers ###
 RUN pti pro-drivers install --copy-odbcinst
 
@@ -56,27 +55,26 @@ RUN pti quarto install --add-to-path "${QUARTO_VERSION}" \
     && pti quarto tinytex install --add-to-path
 
 ### Install TensorFlow Serving ###
-COPY --chmod=0775 ./{{ Path.Version }}/scripts/install_tensorflow.sh /tmp/install_tensorflow.sh
+COPY --chmod=0775 ./connect/2025.01/scripts/install_tensorflow.sh /tmp/install_tensorflow.sh
 RUN /tmp/install_tensorflow.sh \
     && rm -f /tmp/install_tensorflow.sh
-{% endif %}
 
-COPY --chmod=0775 ./{{ Path.Version }}/scripts/install_connect.sh /tmp/install_connect.sh
+
+COPY --chmod=0775 ./connect/2025.01/scripts/install_connect.sh /tmp/install_connect.sh
 RUN OS_URL=ubuntu22 /tmp/install_connect.sh \
     && rm -f /tmp/install_connect.sh
 
 ### Configure application/image ###
-COPY ./{{ Path.Version }}/conf/rstudio-connect.gcfg /etc/rstudio-connect/rstudio-connect.gcfg
+COPY ./connect/2025.01/conf/rstudio-connect.gcfg /etc/rstudio-connect/rstudio-connect.gcfg
 VOLUME ["/data"]
 
 ### Copy scripts ###
-COPY --chmod=0775 ./{{ Path.Version }}/scripts/startup.sh /usr/local/bin/startup.sh
+COPY --chmod=0775 ./connect/2025.01/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Finalize image ###
-{% if not Image.Variant == "Minimal" -%}
-LABEL co.posit.image.tools.python="{{ python_version }}" \
-      co.posit.image.tools.r="{{ r_version }}" \
-      co.posit.image.tools.quarto="{{ quarto_version }}"
-{% endif %}
+LABEL co.posit.image.tools.python="3.12.1" \
+      co.posit.image.tools.r="4.4.0" \
+      co.posit.image.tools.quarto="1.4.557"
+
 EXPOSE 3939/tcp
 CMD ["/usr/local/bin/startup.sh"]
