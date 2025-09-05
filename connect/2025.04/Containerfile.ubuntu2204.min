@@ -1,0 +1,56 @@
+FROM docker.io/library/ubuntu:22.04
+LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
+
+### Global ARG declarations ###
+ARG DEBIAN_FRONTEND=noninteractive
+ARG PTI_VERSION="0.0.4"
+ARG PTI_NO_COLOR="true"
+ARG PTI_LOG_FORMAT="json"
+
+### Release ARG declarations ###
+
+ARG CONNECT_VERSION="2025.04.0"
+ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
+
+### ENV declarations ###
+ENV PCT_LICENSE=""
+ENV PCT_LICENSE_SERVER=""
+ENV PCT_LICENSE_FILE_PATH=""
+ENV STARTUP_DEBUG_MODE=0
+
+### Install Posit Tool Installer ###
+# TODO: Uncomment when PTI is available as a public repository
+#ADD --chmod=0755 \
+#    https://github.com/posit-dev/pti/releases/download/v${PTI_VERSION}/pti_${PTI_VERSION}_linux_amd64 \
+#    /usr/local/bin/pti
+# FIXME(ianpittwood): This is a shim to get around Github private repo authentication. ADD is a better solution once
+#                     pti is available publicly.
+COPY --chmod=0755 ./tools/pti /usr/local/bin/pti
+
+### Initialize PTI in container ###
+RUN pti init
+
+### Update apt packages ###
+COPY connect/2025.04/deps/ubuntu2204_packages.txt /tmp/ubuntu2204_packages.txt
+RUN pti syspkg update \
+    && pti syspkg upgrade --dist \
+    && pti syspkg install -f /tmp/ubuntu2204_packages.txt \
+    && rm -f /tmp/ubuntu2204_packages.txt
+
+
+
+COPY --chmod=0775 ./connect/2025.04/scripts/install_connect.sh /tmp/install_connect.sh
+RUN OS_URL=ubuntu22 /tmp/install_connect.sh \
+    && rm -f /tmp/install_connect.sh
+
+### Configure application/image ###
+COPY ./connect/2025.04/conf/rstudio-connect.gcfg /etc/rstudio-connect/rstudio-connect.gcfg
+VOLUME ["/data"]
+
+### Copy scripts ###
+COPY --chmod=0775 ./connect/2025.04/scripts/startup.sh /usr/local/bin/startup.sh
+
+### Finalize image ###
+
+EXPOSE 3939/tcp
+CMD ["/usr/local/bin/startup.sh"]

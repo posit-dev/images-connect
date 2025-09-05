@@ -44,9 +44,34 @@ images:
         extension: min
         tagDisplayName: min
     versions:
+      - name: 2025.07.0
+        subpath: '2025.07'
+        latest: true
+        os:
+          - name: Ubuntu 22.04
+            primary: true
+      - name: 2025.06.0
+        subpath: '2025.06'
+        os:
+          - name: Ubuntu 22.04
+            primary: true
+      - name: 2025.05.0
+        subpath: '2025.05'
+        os:
+          - name: Ubuntu 22.04
+            primary: true
+      - name: 2025.04.0
+        subpath: '2025.04'
+        os:
+          - name: Ubuntu 22.04
+            primary: true
+      - name: 2025.03.0
+        subpath: '2025.03'
+        os:
+          - name: Ubuntu 22.04
+            primary: true
       - name: 2025.02.0
         subpath: '2025.02'
-        latest: true
         os:
           - name: Ubuntu 22.04
             primary: true
@@ -70,9 +95,34 @@ images:
     description: "A containerized image for initializing Posit Connect content."
     documentationUrl: https://docs.posit.co/connect/
     versions:
+      - name: 2025.07.0
+        subpath: '2025.07'
+        latest: true
+        os:
+          - name: Ubuntu 22.04
+            primary: true
+      - name: 2025.06.0
+        subpath: '2025.06'
+        os:
+          - name: Ubuntu 22.04
+            primary: true
+      - name: 2025.05.0
+        subpath: '2025.05'
+        os:
+          - name: Ubuntu 22.04
+            primary: true
+      - name: 2025.04.0
+        subpath: '2025.04'
+        os:
+          - name: Ubuntu 22.04
+            primary: true
+      - name: 2025.03.0
+        subpath: '2025.03'
+        os:
+          - name: Ubuntu 22.04
+            primary: true
       - name: 2025.02.0
         subpath: '2025.02'
-        latest: true
         os:
           - name: Ubuntu 22.04
             primary: true
