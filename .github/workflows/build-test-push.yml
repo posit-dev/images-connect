@@ -10,7 +10,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    runs-on: ubuntu-latest-4x
+    runs-on: ubuntu-latest-8x
     steps:
 
       - name: GitHub App Token
@@ -43,6 +43,12 @@ jobs:
       - name: Setup just
         uses: extractions/setup-just@v2
 
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: "posit"
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -58,7 +64,10 @@ jobs:
           bakery build --load
 
       - name: Test images
-        run: bakery run dgoss --privileged
+        run: |
+          GOSS_PATH=${GITHUB_WORKSPACE}/tools/goss \
+          DGOSS_PATH=${GITHUB_WORKSPACE}/tools/dgoss \
+          bakery run dgoss
 
       - name: Push images
         env:

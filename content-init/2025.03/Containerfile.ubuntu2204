@@ -8,7 +8,7 @@ ARG PTI_NO_COLOR="true"
 ARG PTI_LOG_FORMAT="json"
 
 ### Release ARG declarations ###
-ARG CONNECT_VERSION="{{ Image.Version }}"
+ARG CONNECT_VERSION="2025.03.0"
 
 ### Install Posit Tool Installer ###
 # TODO: Uncomment when PTI is available as a public repository
@@ -27,9 +27,9 @@ RUN pti syspkg update \
     && pti syspkg upgrade --dist \
     && pti syspkg install -p curl
 
-COPY --chmod=0755 {{ Path.Version }}/scripts/download_runtime.sh /tmp/download_runtime.sh
+COPY --chmod=0755 content-init/2025.03/scripts/download_runtime.sh /tmp/download_runtime.sh
 RUN /tmp/download_runtime.sh \
     && rm -f /tmp/download_runtime.sh
 
-COPY --chmod=0755 {{ Path.Version }}/scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY --chmod=0755 content-init/2025.03/scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
 CMD ["/usr/local/bin/entrypoint.sh"]
