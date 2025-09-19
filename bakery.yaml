@@ -90,7 +90,7 @@ images:
         os:
           - name: Ubuntu 22.04
             primary: true
-  - name: content-init
+  - name: connect-content-init
     displayName: "Posit Connect Content Init"
     description: "A containerized image for initializing Posit Connect content."
     documentationUrl: https://docs.posit.co/connect/
