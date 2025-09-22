@@ -21,9 +21,14 @@ RUN apt-get update -yqq --fix-missing && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --chmod=0755 connect-content-init/2025.05/scripts/download_runtime.sh /tmp/download_runtime.sh
-RUN /tmp/download_runtime.sh && \
-    rm -f /tmp/download_runtime.sh
+RUN mkdir -p /rsc-staging && \
+    RSC_VERSION_URL=$(echo -n "${CONNECT_VERSION}" | sed 's/+/%2B/g') \
+    RSC_VERSION_CLEAN=$(echo -n "${CONNECT_VERSION}" | sed -r 's/([0-9]+\.[0-9]+).*/\1/') \
+    curl -fsSL "https://cdn.posit.co/connect/${RSC_VERSION_CLEAN}/rstudio-connect-runtime-${RSC_VERSION_URL}.tar.gz" -o /rsc-staging/rstudio-connect-runtime.tar.gz && \
+    mkdir -p /opt/rstudio-connect-runtime && \
+    tar -C /opt/rstudio-connect-runtime -xf /rsc-staging/rstudio-connect-runtime.tar.gz && \
+    chmod -R 755 /opt/rstudio-connect-runtime && \
+    rm -rf /rsc-staging
 
 COPY --chmod=0755 connect-content-init/2025.05/scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
 CMD ["/usr/local/bin/entrypoint.sh"]
