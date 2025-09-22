@@ -48,7 +48,9 @@ RUN {{ apt.install(packages="rstudio-drivers") | indent(4) }} && \
 RUN {{ python.copy_from_build_stage() }}
 
 ### Install Quarto and TinyTex ###
-RUN {{ quarto.install(Dependencies.quarto, with_tinytex=True, tinytex_update_path=True) | indent(4) }} && \
+RUN {% for quarto_version in Dependencies.quarto -%}
+    {{ quarto.install(Dependencies.quarto.0, with_tinytex=True, tinytex_update_path=True) | indent(4) }} && \
+    {%- endfor %}
     {{ quarto.symlink_binary(Dependencies.quarto.0, "quarto", "/usr/local/bin/quarto") }}
 
 ### Install TensorFlow Serving ###
@@ -56,16 +58,17 @@ COPY --from=tensorflow/serving:latest /usr/bin/tensorflow_model_server /usr/bin/
 {% endif %}
 
 COPY {{ Path.Version }}/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
-COPY --chmod=0775 ./{{ Path.Version }}/scripts/install_connect.sh /tmp/install_connect.sh
-RUN IMAGE_VARIANT="{{ Image.Variant }}" {% if Image.DownloadURL is defined %}DOWNLOAD_URL="{{ Image.DownloadURL }}" {% endif %}\ /tmp/install_connect.sh && \
-    sed -i 's/<CRAN_URL>/{{ r.get_p3m_cran_repo(Image.OS) }}/g' /etc/rstudio-connect/rstudio-connect.gcfg && \
+COPY --chmod=0775 {{ Path.Version }}/scripts/install_connect.sh /tmp/install_connect.sh
+RUN IMAGE_VARIANT="{{ Image.Variant }}" {% if Image.DownloadURL is defined %}DOWNLOAD_URL="{{ Image.DownloadURL }}" {% endif %}\
+        /tmp/install_connect.sh && \
+    sed -i 's/<CRAN_URL>/{{ r.get_p3m_cran_repo(Image.OS) | replace("/", "\/") }}/g' /etc/rstudio-connect/rstudio-connect.gcfg && \
     rm -f /tmp/install_connect.sh /tmp/rstudio-connect.gcfg
 
-### Configure application/image ###
+### Create data volume ###
 VOLUME ["/data"]
 
 ### Copy scripts ###
-COPY --chmod=0775 ./{{ Path.Version }}/scripts/startup.sh /usr/local/bin/startup.sh
+COPY --chmod=0775 {{ Path.Version }}/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Finalize image ###
 EXPOSE 3939/tcp

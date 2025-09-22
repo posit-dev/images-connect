@@ -60,9 +60,9 @@ RUN RUN_UNATTENDED=1 R_VERSION=4.4.0 bash -c "$(curl -fsSL https://rstd.io/r-ins
 RUN COPY --from=python-builder /opt/python /opt/python
 
 ### Install Quarto and TinyTex ###
-RUN mkdir -p /opt/quarto/[&#39;1.4.557&#39;] && \
-    curl -fsSL "https://github.com/quarto-dev/quarto-cli/releases/download/v[&#39;1.4.557&#39;]/quarto-[&#39;1.4.557&#39;]-linux-amd64.tar.gz" | tar xzf - -C "/opt/quarto/[&#39;1.4.557&#39;]" --strip-components=1 && \
-    /opt/quarto/[&#39;1.4.557&#39;]/bin/quarto install tinytex --update-path && \
+RUN mkdir -p /opt/quarto/1.4.557 && \
+    curl -fsSL "https://github.com/quarto-dev/quarto-cli/releases/download/v1.4.557/quarto-1.4.557-linux-amd64.tar.gz" | tar xzf - -C "/opt/quarto/1.4.557" --strip-components=1 && \
+    /opt/quarto/1.4.557/bin/quarto install tinytex --update-path && \
     ln -s /opt/quarto/1.4.557/bin/quarto /usr/local/bin/quarto
 
 ### Install TensorFlow Serving ###
@@ -70,16 +70,17 @@ COPY --from=tensorflow/serving:latest /usr/bin/tensorflow_model_server /usr/bin/
 
 
 COPY connect/2025.05/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
-COPY --chmod=0775 ./connect/2025.05/scripts/install_connect.sh /tmp/install_connect.sh
-RUN IMAGE_VARIANT="Standard" \ /tmp/install_connect.sh && \
-    sed -i 's/<CRAN_URL>/https://p3m.dev/cran/__linux__/jammy/latest/g' /etc/rstudio-connect/rstudio-connect.gcfg && \
+COPY --chmod=0775 connect/2025.05/scripts/install_connect.sh /tmp/install_connect.sh
+RUN IMAGE_VARIANT="Standard" \
+        /tmp/install_connect.sh && \
+    sed -i 's/<CRAN_URL>/https:\/\/p3m.dev\/cran\/__linux__\/jammy\/latest/g' /etc/rstudio-connect/rstudio-connect.gcfg && \
     rm -f /tmp/install_connect.sh /tmp/rstudio-connect.gcfg
 
-### Configure application/image ###
+### Create data volume ###
 VOLUME ["/data"]
 
 ### Copy scripts ###
-COPY --chmod=0775 ./connect/2025.05/scripts/startup.sh /usr/local/bin/startup.sh
+COPY --chmod=0775 connect/2025.05/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Finalize image ###
 EXPOSE 3939/tcp
