@@ -17,11 +17,11 @@ ARG CONNECT_VERSION="{{ Image.Version }}"
 
 ### Setup environment ###
 RUN {{ apt.update_upgrade(clean=False) }} && \
-    {{ apt.install(packages="curl", update=False, clean=True) }}
+    {{ apt.install(packages=["ca-certificates", "curl"], update=False, clean=True) }}
 
 COPY --chmod=0755 {{ Path.Version }}/scripts/download_runtime.sh /tmp/download_runtime.sh
-RUN /tmp/download_runtime.sh \
-    && rm -f /tmp/download_runtime.sh
+RUN /tmp/download_runtime.sh && \
+    rm -f /tmp/download_runtime.sh
 
 COPY --chmod=0755 {{ Path.Version }}/scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
 CMD ["/usr/local/bin/entrypoint.sh"]

@@ -13,13 +13,14 @@ apt-get upgrade -yqq && \
 apt-get dist-upgrade -yqq && \
 apt-get autoremove -yqq --purge && \
     apt-get install -yqq --no-install-recommends \
+    ca-certificates \
     curl && \
 apt-get clean -yqq && \
 rm -rf /var/lib/apt/lists/*
 
 COPY --chmod=0755 connect-content-init/2025.06/scripts/download_runtime.sh /tmp/download_runtime.sh
-RUN /tmp/download_runtime.sh \
-    && rm -f /tmp/download_runtime.sh
+RUN /tmp/download_runtime.sh && \
+    rm -f /tmp/download_runtime.sh
 
 COPY --chmod=0755 connect-content-init/2025.06/scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
 CMD ["/usr/local/bin/entrypoint.sh"]
