@@ -9,14 +9,17 @@ ARG CONNECT_VERSION="2025.06.0"
 
 ### Setup environment ###
 RUN apt-get update -yqq --fix-missing && \
-apt-get upgrade -yqq && \
-apt-get dist-upgrade -yqq && \
-apt-get autoremove -yqq --purge && \
+    apt-get upgrade -yqq && \
+    apt-get dist-upgrade -yqq && \
+    apt-get autoremove -yqq --purge && \
     apt-get install -yqq --no-install-recommends \
-    ca-certificates \
-    curl && \
-apt-get clean -yqq && \
-rm -rf /var/lib/apt/lists/*
+        curl \
+        ca-certificates \
+        gnupg \
+        tar && \
+    bash -c "$(curl -1fsSL 'https://dl.posit.co/public/pro/setup.deb.sh')" && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY --chmod=0755 connect-content-init/2025.06/scripts/download_runtime.sh /tmp/download_runtime.sh
 RUN /tmp/download_runtime.sh && \
