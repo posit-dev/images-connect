@@ -3,10 +3,6 @@ package:
     installed: true
 
 file:
-  /usr/local/bin/pti:
-    exists: true
-    filetype: file
-    mode: "0755"
   /opt/rstudio-connect-runtime/:
     exists: true
     mode: "0755"

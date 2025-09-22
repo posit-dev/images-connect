@@ -3,29 +3,19 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
 
 ### Global ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
-ARG PTI_VERSION="0.0.3"
-ARG PTI_NO_COLOR="true"
-ARG PTI_LOG_FORMAT="json"
 
 ### Release ARG declarations ###
 ARG CONNECT_VERSION="2025.05.0"
 
-### Install Posit Tool Installer ###
-# TODO: Uncomment when PTI is available as a public repository
-#ADD --chmod=0755 \
-#    https://github.com/posit-dev/pti/releases/download/v${PTI_VERSION}/pti_${PTI_VERSION}_linux_amd64 \
-#    /usr/local/bin/pti
-# FIXME(ianpittwood): This is a shim to get around Github private repo authentication. ADD is a better solution once
-#                     pti is available publicly.
-COPY --chmod=0755 ./tools/pti /usr/local/bin/pti
-
-### Initialize PTI in container ###
-RUN pti init
-
-### Update apt packages ###
-RUN pti syspkg update \
-    && pti syspkg upgrade --dist \
-    && pti syspkg install -p curl
+### Setup environment ###
+RUN apt-get update -yqq --fix-missing && \
+apt-get upgrade -yqq && \
+apt-get dist-upgrade -yqq && \
+apt-get autoremove -yqq --purge && \
+    apt-get install -yqq --no-install-recommends \
+    curl && \
+apt-get clean -yqq && \
+rm -rf /var/lib/apt/lists/*
 
 COPY --chmod=0755 connect-content-init/2025.05/scripts/download_runtime.sh /tmp/download_runtime.sh
 RUN /tmp/download_runtime.sh \
