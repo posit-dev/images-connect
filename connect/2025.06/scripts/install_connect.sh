@@ -4,32 +4,42 @@ set -eou pipefail
 # Output delimiter
 d="===="
 
-CONNECT_VERSION=${CONNECT_VERSION}
-OS_URL=${OS_URL}
+apt-get update -yq
 
-echo "$d Fetching Posit Connect package $d"
+echo "$d Installing Posit Connect 2025.06.0 $d"
 
-# fetch latest deb package
-curl -fsSL "https://cdn.posit.co/connect/$(echo $CONNECT_VERSION | sed -r 's/([0-9]+\.[0-9]+).*/\1/')/rstudio-connect_${CONNECT_VERSION}~${OS_URL}_amd64.deb" -o /tmp/rstudio-connect.deb
+RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1 apt-get install -yf rstudio-connect=2025.06.0
+apt-mark hold rstudio-connect
 
-echo "$d Verify Posit Connect package $d"
-# Verify the deb package
-gpg --keyserver keys.openpgp.org --recv-keys 51C0B5BB19F92D60
-gpg --verify /tmp/rstudio-connect.deb
+mv /tmp/rstudio-connect.gcfg /etc/rstudio-connect/rstudio-connect.gcfg
+if [ "$IMAGE_VARIANT" != "Minimal" ]; then
+cat << EOF >> /etc/rstudio-connect/rstudio-connect.gcfg
+[R]
+Enabled = true
+Executable = /opt/R/4.4.0/bin/R
 
-echo "$d Patching rstudio-connect.deb $d"
-dpkg --unpack /tmp/rstudio-connect.deb
-# The behavior of the post install script is erratic. I'm patching over it like crazy to try to stop Connect from starting up or configuring.
-sed -i '/set +e/a RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION="1"' /var/lib/dpkg/info/rstudio-connect.postinst
-sed -i 's/systemctl enable rstudio-connect.service/#systemctl enable rstudio-connect.service/g' /var/lib/dpkg/info/rstudio-connect.postinst
-sed -i 's/systemctl start rstudio-connect.service/echo "I will not initialize myself."/g' /var/lib/dpkg/info/rstudio-connect.postinst
+[Python]
+Enabled = true
+Executable = /opt/python/cpython-3.12.1-linux-x86_64-gnu/bin/python
 
-# install latest deb package
-echo "$d Installing rstudio-connect.deb $d"
-pti syspkg update
-dpkg --configure rstudio-connect
-apt-get install -yf
+[Quarto]
+Enabled = true
+Executable = /opt/quarto/1.4.557/bin/quarto
+
+[TensorFlow]
+Enabled = true
+Executable = /usr/bin/tensorflow_model_server
+EOF
+else
+cat << EOF >> /etc/rstudio-connect/rstudio-connect.gcfg
+[Quarto]
+Enabled = false
+
+[TensorFlow]
+Enabled = false
+EOF
+fi
 
 # clean up
-pti syspkg clean
-rm -f /tmp/rstudio-connect.deb
+apt-get clean -yqq && \
+rm -rf /var/lib/apt/lists/*
