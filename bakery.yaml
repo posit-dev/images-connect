@@ -61,9 +61,33 @@ images:
           - name: Ubuntu 22.04
             primary: true
     versions:
+      - name: 2025.09.0
+        subpath: '2025.09'
+        latest: true
+        os:
+          - name: Ubuntu 22.04
+            primary: true
+        dependencies:
+          - dependency: R
+            version: 4.5.1
+          - dependency: python
+            version: 3.13.7
+          - dependency: quarto
+            version: 1.8.24
+      - name: 2025.08.0
+        subpath: '2025.08'
+        os:
+          - name: Ubuntu 22.04
+            primary: true
+        dependencies:
+          - dependency: R
+            version: 4.5.1
+          - dependency: python
+            version: 3.13.7
+          - dependency: quarto
+            version: 1.8.24
       - name: 2025.07.0
         subpath: '2025.07'
-        latest: true
         os:
           - name: Ubuntu 22.04
             primary: true

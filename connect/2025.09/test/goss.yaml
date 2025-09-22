@@ -1,0 +1,132 @@
+user:
+  rstudio-connect:
+    exists: true
+    uid: 999
+    gid: 999
+
+group:
+  rstudio-connect:
+    exists: true
+    gid: 999
+
+package:
+  rstudio-connect:
+    installed: true
+  cracklib-runtime:
+    installed: true
+  {{ $apt_package_list := readFile "/tmp/version/deps/ubuntu2204_packages.txt" | splitList "\n" }}
+  {{- range $apt_package_list }}
+  {{ . }}:
+    installed: true
+  {{ end }}
+
+process:
+  connect:
+    running: true
+    skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
+
+port:
+  tcp6:3939:
+    listening: true
+    skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
+
+file:
+  /etc/rstudio-connect/license.lic:
+    # Currently does not exist
+    # Be sure it is NOT a directory
+    exists: false
+  /opt/rstudio-connect/:
+    exists: true
+  /opt/rstudio-connect/bin/connect:
+    exists: true
+  # Ensure startup file exists
+  /usr/local/bin/startup.sh:
+    exists: true
+    owner: root
+    group: root
+    filetype: file
+  # Check that `cracklib-runtime` is present so `chpasswd` works
+  /var/cache/cracklib/cracklib_dict.pwd:
+    exists: true
+  {{ if eq .Env.IMAGE_VARIANT "Standard" }}
+  /var/log/rstudio/rstudio-connect/rstudio-connect.log:
+    exists: true
+    filetype: file
+    contents:
+      - "Startup complete"
+    # Skip for now since logs go to STDERR
+    skip: true
+  {{ end }}
+
+  # Check for R installation
+  /opt/R/4.5.1/bin/R:
+    exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
+    filetype: file
+    mode: "0755"
+
+  # Check for Python installation
+  /opt/python/3.13.7/bin/python:
+    exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
+    filetype: file
+
+  # Check for Quarto installation
+  /opt/quarto/1.8.24/bin/quarto:
+    exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
+    mode: "0755"
+  /usr/local/bin/quarto:
+    exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
+    filetype: symlink
+    linked-to: /opt/quarto/1.8.24/bin/quarto
+    mode: "0777"
+
+command:
+  "Ensure Connect version is correct":
+    exec: /opt/rstudio-connect/bin/connect --version
+    exit-status: 0
+    stdout:
+      - "2025.09.0"
+
+  
+  "Ensure R version is correct":
+    exec: /opt/R/4.5.1/bin/R --version
+    exit-status: 0
+    stdout:
+      - "4.5.1"
+    skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
+  
+
+  "Ensure Python 3.13.7 version is correct":
+    exec: /opt/python/3.13.7/bin/python --version
+    exit-status: 0
+    stdout:
+      - "3.13.7"
+    skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
+
+  
+  "Ensure Quarto version is correct":
+    exec: /opt/quarto/1.8.24/bin/quarto --version
+    exit-status: 0
+    stdout:
+      - "1.8.24"
+    skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
+  
+  "Ensure Quarto symlink version is correct":
+    exec: /usr/local/bin/quarto --version
+    exit-status: 0
+    stdout:
+      - "1.8.24"
+    skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
+  "Ensure Quarto works":
+    exec: /opt/quarto/bin/quarto check --quiet
+    exit-status: 0
+    skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
+  "Ensure Quarto symlink works":
+    exec: /usr/local/bin/quarto check --quiet
+    exit-status: 0
+    skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
+  "Ensure TinyTeX is installed":
+    exec: quarto list tools
+    exit-status: 0
+    stderr:
+      - "/tinytex\\s+Up to date/"
+    skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
