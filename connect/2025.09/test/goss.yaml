@@ -65,7 +65,7 @@ file:
   # Check for Python installation
   /opt/python/cpython-3.13.7-linux-x86_64-gnu/bin/python:
     exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
-    filetype: file
+    filetype: symlink
 
   # Check for Quarto installation
   /opt/quarto/1.8.24/bin/quarto:
