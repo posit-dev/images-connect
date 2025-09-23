@@ -6,7 +6,7 @@ on:
 
 name: Build, Test, and Push
 jobs:
-  build-test-push:
+  build-test-push-${{ matrix.product }}${{ matrix.devVersionStrategy == 'only' && '-dev' || '' }}:
     strategy:
       fail-fast: false
       matrix:
