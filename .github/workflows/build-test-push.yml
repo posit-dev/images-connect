@@ -8,6 +8,7 @@ name: Build, Test, and Push
 jobs:
   build-test-push:
     strategy:
+      fail-fast: false
       matrix:
         devVersionStrategy: ["only", "exclude"]
         product: ["connect", "connect-content-init"]
