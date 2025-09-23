@@ -6,9 +6,9 @@ d="===="
 
 apt-get update -yq
 
-echo "$d Installing Posit Connect 2025.07.0 $d"
+echo "$d Installing Posit Connect 2025.09.0 $d"
 
-RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1 apt-get install -yf rstudio-connect=2025.07.0
+RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1 apt-get install -yf rstudio-connect=2025.09.0
 apt-mark hold rstudio-connect
 
 mv /tmp/rstudio-connect.gcfg /etc/rstudio-connect/rstudio-connect.gcfg
@@ -16,15 +16,15 @@ if [ "$IMAGE_VARIANT" != "Minimal" ]; then
 cat << EOF >> /etc/rstudio-connect/rstudio-connect.gcfg
 [R]
 Enabled = true
-Executable = /opt/R/4.4.0/bin/R
+Executable = /opt/R/4.5.1/bin/R
 
 [Python]
 Enabled = true
-Executable = /opt/python/cpython-3.12.1-linux-x86_64-gnu/bin/python
+Executable = /opt/python/cpython-3.13.7-linux-x86_64-gnu/bin/python
 
 [Quarto]
 Enabled = true
-Executable = /opt/quarto/1.4.557/bin/quarto
+Executable = /opt/quarto/1.8.24/bin/quarto
 
 [TensorFlow]
 Enabled = true

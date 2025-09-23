@@ -1,18 +1,25 @@
+{#-
+Below are imports for Bakery's macros. If any are unneeded, they can be removed.
+Bakery handles bootstrapping the files into template rendering.
+-#}
+{%- import "apt.j2" as apt -%}
+{%- import "python.j2" as python -%}
+{%- import "quarto.j2" as quarto -%}
+{%- import "r.j2" as r -%}
+
+{%- if Image.Variant != "Minimal" -%}
+# Build Python using uv in a separate stage
+{{ python.build_stage(Dependencies.python) }}
+
+{% endif -%}
+
 FROM docker.io/library/ubuntu:22.04
 LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
 
 ### Global ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
-ARG PTI_VERSION="0.0.4"
-ARG PTI_NO_COLOR="true"
-ARG PTI_LOG_FORMAT="json"
 
 ### Release ARG declarations ###
-{% if not Image.Variant == "Minimal" %}
-ARG R_VERSION="{{ r_version }}"
-ARG PYTHON_VERSION="{{ python_version }}"
-ARG QUARTO_VERSION="{{ quarto_version }}"
-{%- endif %}
 ARG CONNECT_VERSION="{{ Image.Version }}"
 ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
 
@@ -22,61 +29,48 @@ ENV PCT_LICENSE_SERVER=""
 ENV PCT_LICENSE_FILE_PATH=""
 ENV STARTUP_DEBUG_MODE=0
 
-### Install Posit Tool Installer ###
-# TODO: Uncomment when PTI is available as a public repository
-#ADD --chmod=0755 \
-#    https://github.com/posit-dev/pti/releases/download/v${PTI_VERSION}/pti_${PTI_VERSION}_linux_amd64 \
-#    /usr/local/bin/pti
-# FIXME(ianpittwood): This is a shim to get around Github private repo authentication. ADD is a better solution once
-#                     pti is available publicly.
-COPY --chmod=0755 ./tools/pti /usr/local/bin/pti
-
-### Initialize PTI in container ###
-RUN pti init
+### Run setup ###
+{{ apt.run_setup() }}
 
 ### Update apt packages ###
 COPY {{ Path.Version }}/deps/ubuntu2204_packages.txt /tmp/ubuntu2204_packages.txt
-RUN pti syspkg update \
-    && pti syspkg upgrade --dist \
-    && pti syspkg install -f /tmp/ubuntu2204_packages.txt \
-    && rm -f /tmp/ubuntu2204_packages.txt
+{{ apt.run_install(files="/tmp/ubuntu2204_packages.txt") }}
 
-{% if not Image.Variant == "Minimal" %}
+{% if Image.Variant != "Minimal" %}
 ### Install Pro Drivers ###
-RUN pti pro-drivers install --copy-odbcinst
+RUN {{ apt.install(packages="rstudio-drivers") | indent(4) }} && \
+    cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
 
 ### Install R ###
-RUN pti r install --add-to-path --default "${R_VERSION}"
+{{ r.run_install(Dependencies.R) }}
 
-### Install Python and Jupyter ###
-RUN pti python install --add-to-path --default "${PYTHON_VERSION}"
+### Install Python ###
+{{ python.copy_from_build_stage() }}
+{{ python.run_install_packages(Dependencies.python, packages=["pip", "setuptools", "virtualenv"]) }}
 
 ### Install Quarto and TinyTex ###
-RUN pti quarto install --add-to-path "${QUARTO_VERSION}" \
-    && pti quarto tinytex install --add-to-path
+RUN {% for quarto_version in Dependencies.quarto -%}
+    {{ quarto.install(Dependencies.quarto.0, with_tinytex=True, tinytex_update_path=True) | indent(4) }} && \
+    {%- endfor %}
+    {{ quarto.symlink_binary(Dependencies.quarto.0, "quarto", "/usr/local/bin/quarto") }}
 
 ### Install TensorFlow Serving ###
-COPY --chmod=0775 ./{{ Path.Version }}/scripts/install_tensorflow.sh /tmp/install_tensorflow.sh
-RUN /tmp/install_tensorflow.sh \
-    && rm -f /tmp/install_tensorflow.sh
+COPY --from=tensorflow/serving:latest /usr/bin/tensorflow_model_server /usr/bin/tensorflow_model_server
 {% endif %}
 
-COPY --chmod=0775 ./{{ Path.Version }}/scripts/install_connect.sh /tmp/install_connect.sh
-RUN OS_URL=ubuntu22 /tmp/install_connect.sh \
-    && rm -f /tmp/install_connect.sh
+COPY {{ Path.Version }}/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
+COPY --chmod=0775 {{ Path.Version }}/scripts/install_connect.sh /tmp/install_connect.sh
+RUN IMAGE_VARIANT="{{ Image.Variant }}" {% if Image.DownloadURL is defined %}DOWNLOAD_URL="{{ Image.DownloadURL }}" {% endif %}\
+        /tmp/install_connect.sh && \
+    sed -i 's/<CRAN_URL>/{{ r.get_p3m_cran_repo(Image.OS) | replace("/", "\/") }}/g' /etc/rstudio-connect/rstudio-connect.gcfg && \
+    rm -f /tmp/install_connect.sh /tmp/rstudio-connect.gcfg
 
-### Configure application/image ###
-COPY ./{{ Path.Version }}/conf/rstudio-connect.gcfg /etc/rstudio-connect/rstudio-connect.gcfg
+### Create data volume ###
 VOLUME ["/data"]
 
 ### Copy scripts ###
-COPY --chmod=0775 ./{{ Path.Version }}/scripts/startup.sh /usr/local/bin/startup.sh
+COPY --chmod=0775 {{ Path.Version }}/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Finalize image ###
-{% if not Image.Variant == "Minimal" -%}
-LABEL co.posit.image.tools.python="{{ python_version }}" \
-      co.posit.image.tools.r="{{ r_version }}" \
-      co.posit.image.tools.quarto="{{ quarto_version }}"
-{% endif %}
 EXPOSE 3939/tcp
 CMD ["/usr/local/bin/startup.sh"]

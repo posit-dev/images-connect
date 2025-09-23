@@ -5,7 +5,7 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
 ARG DEBIAN_FRONTEND=noninteractive
 
 ### Release ARG declarations ###
-ARG CONNECT_VERSION="2025.07.0"
+ARG CONNECT_VERSION="2025.09.0"
 ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
 
 ### ENV declarations ###
@@ -29,7 +29,7 @@ RUN apt-get update -yqq --fix-missing && \
     rm -rf /var/lib/apt/lists/*
 
 ### Update apt packages ###
-COPY connect/2025.07/deps/ubuntu2204_packages.txt /tmp/ubuntu2204_packages.txt
+COPY connect/2025.09/deps/ubuntu2204_packages.txt /tmp/ubuntu2204_packages.txt
 RUN apt-get update -yqq && \
     xargs -a /tmp/ubuntu2204_packages.txt apt-get install -yqq --no-install-recommends && \
     apt-get clean -yqq && \
@@ -37,8 +37,8 @@ RUN apt-get update -yqq && \
 
 
 
-COPY connect/2025.07/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
-COPY --chmod=0775 connect/2025.07/scripts/install_connect.sh /tmp/install_connect.sh
+COPY connect/2025.09/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
+COPY --chmod=0775 connect/2025.09/scripts/install_connect.sh /tmp/install_connect.sh
 RUN IMAGE_VARIANT="Minimal" \
         /tmp/install_connect.sh && \
     sed -i 's/<CRAN_URL>/https:\/\/p3m.dev\/cran\/__linux__\/jammy\/latest/g' /etc/rstudio-connect/rstudio-connect.gcfg && \
@@ -48,7 +48,7 @@ RUN IMAGE_VARIANT="Minimal" \
 VOLUME ["/data"]
 
 ### Copy scripts ###
-COPY --chmod=0775 connect/2025.07/scripts/startup.sh /usr/local/bin/startup.sh
+COPY --chmod=0775 connect/2025.09/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Finalize image ###
 EXPOSE 3939/tcp

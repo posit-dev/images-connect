@@ -1,17 +1,18 @@
+# Build Python using uv in a separate stage
+FROM ghcr.io/astral-sh/uv:bookworm-slim AS python-builder
+
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+ENV UV_PYTHON_INSTALL_DIR=/opt/python
+ENV UV_PYTHON_PREFERENCE=only-managed
+RUN uv python install 3.12.1
+
 FROM docker.io/library/ubuntu:22.04
 LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
 
 ### Global ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
-ARG PTI_VERSION="0.0.4"
-ARG PTI_NO_COLOR="true"
-ARG PTI_LOG_FORMAT="json"
 
 ### Release ARG declarations ###
-
-ARG R_VERSION="4.4.3"
-ARG PYTHON_VERSION="3.12.11"
-ARG QUARTO_VERSION="1.4.557"
 ARG CONNECT_VERSION="2025.07.0"
 ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
 
@@ -21,60 +22,70 @@ ENV PCT_LICENSE_SERVER=""
 ENV PCT_LICENSE_FILE_PATH=""
 ENV STARTUP_DEBUG_MODE=0
 
-### Install Posit Tool Installer ###
-# TODO: Uncomment when PTI is available as a public repository
-#ADD --chmod=0755 \
-#    https://github.com/posit-dev/pti/releases/download/v${PTI_VERSION}/pti_${PTI_VERSION}_linux_amd64 \
-#    /usr/local/bin/pti
-# FIXME(ianpittwood): This is a shim to get around Github private repo authentication. ADD is a better solution once
-#                     pti is available publicly.
-COPY --chmod=0755 ./tools/pti /usr/local/bin/pti
-
-### Initialize PTI in container ###
-RUN pti init
+### Run setup ###
+RUN apt-get update -yqq --fix-missing && \
+    apt-get upgrade -yqq && \
+    apt-get dist-upgrade -yqq && \
+    apt-get autoremove -yqq --purge && \
+    apt-get install -yqq --no-install-recommends \
+        curl \
+        ca-certificates \
+        gnupg \
+        tar && \
+    bash -c "$(curl -1fsSL 'https://dl.posit.co/public/pro/setup.deb.sh')" && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
 
 ### Update apt packages ###
 COPY connect/2025.07/deps/ubuntu2204_packages.txt /tmp/ubuntu2204_packages.txt
-RUN pti syspkg update \
-    && pti syspkg upgrade --dist \
-    && pti syspkg install -f /tmp/ubuntu2204_packages.txt \
-    && rm -f /tmp/ubuntu2204_packages.txt
+RUN apt-get update -yqq && \
+    xargs -a /tmp/ubuntu2204_packages.txt apt-get install -yqq --no-install-recommends && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
 
 
 ### Install Pro Drivers ###
-RUN pti pro-drivers install --copy-odbcinst
+RUN apt-get update -yqq && \
+    apt-get install -yqq --no-install-recommends \
+        rstudio-drivers && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/* && \
+    cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
 
 ### Install R ###
-RUN pti r install --add-to-path --default "${R_VERSION}"
+RUN RUN_UNATTENDED=1 R_VERSION=4.4.0 bash -c "$(curl -fsSL https://rstd.io/r-install)" && \
+    find . -type f -name '[rR]-4.4.0.*\.(deb|rpm)' -delete
 
-### Install Python and Jupyter ###
-RUN pti python install --add-to-path --default "${PYTHON_VERSION}"
+### Install Python ###
+COPY --from=python-builder /opt/python /opt/python
+RUN /opt/python/cpython-3.12.1-linux-x86_64-gnu/bin/pip install --no-cache-dir --upgrade --break-system-packages \
+        pip \
+        setuptools \
+        virtualenv
 
 ### Install Quarto and TinyTex ###
-RUN pti quarto install --add-to-path "${QUARTO_VERSION}" \
-    && pti quarto tinytex install --add-to-path
+RUN mkdir -p /opt/quarto/1.4.557 && \
+    curl -fsSL "https://github.com/quarto-dev/quarto-cli/releases/download/v1.4.557/quarto-1.4.557-linux-amd64.tar.gz" | tar xzf - -C "/opt/quarto/1.4.557" --strip-components=1 && \
+    /opt/quarto/1.4.557/bin/quarto install tinytex --update-path && \
+    ln -s /opt/quarto/1.4.557/bin/quarto /usr/local/bin/quarto
 
 ### Install TensorFlow Serving ###
-COPY --chmod=0775 ./connect/2025.07/scripts/install_tensorflow.sh /tmp/install_tensorflow.sh
-RUN /tmp/install_tensorflow.sh \
-    && rm -f /tmp/install_tensorflow.sh
+COPY --from=tensorflow/serving:latest /usr/bin/tensorflow_model_server /usr/bin/tensorflow_model_server
 
 
-COPY --chmod=0775 ./connect/2025.07/scripts/install_connect.sh /tmp/install_connect.sh
-RUN OS_URL=ubuntu22 /tmp/install_connect.sh \
-    && rm -f /tmp/install_connect.sh
+COPY connect/2025.07/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
+COPY --chmod=0775 connect/2025.07/scripts/install_connect.sh /tmp/install_connect.sh
+RUN IMAGE_VARIANT="Standard" \
+        /tmp/install_connect.sh && \
+    sed -i 's/<CRAN_URL>/https:\/\/p3m.dev\/cran\/__linux__\/jammy\/latest/g' /etc/rstudio-connect/rstudio-connect.gcfg && \
+    rm -f /tmp/install_connect.sh /tmp/rstudio-connect.gcfg
 
-### Configure application/image ###
-COPY ./connect/2025.07/conf/rstudio-connect.gcfg /etc/rstudio-connect/rstudio-connect.gcfg
+### Create data volume ###
 VOLUME ["/data"]
 
 ### Copy scripts ###
-COPY --chmod=0775 ./connect/2025.07/scripts/startup.sh /usr/local/bin/startup.sh
+COPY --chmod=0775 connect/2025.07/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Finalize image ###
-LABEL co.posit.image.tools.python="3.12.11" \
-      co.posit.image.tools.r="4.4.3" \
-      co.posit.image.tools.quarto="1.4.557"
-
 EXPOSE 3939/tcp
 CMD ["/usr/local/bin/startup.sh"]

@@ -29,6 +29,16 @@ images:
     description: "A containerized image of Posit Connect (PCT), which organizes and
       centralizes data science packages across your team, department, or the entire
       organization."
+    dependencyConstraints:
+      - dependency: R
+        constraint:
+          latest: true
+      - dependency: python
+        constraint:
+          latest: true
+      - dependency: quarto
+        constraint:
+          latest: true
     documentationUrl: https://docs.posit.co/connect/
     variants:
       - name: Standard
@@ -43,61 +53,83 @@ images:
       - name: Minimal
         extension: min
         tagDisplayName: min
+    devVersions:
+      - sourceType: stream
+        product: connect
+        stream: daily
+        os:
+          - name: Ubuntu 22.04
+            primary: true
     versions:
-      - name: 2025.07.0
-        subpath: '2025.07'
+      - name: 2025.09.0
+        subpath: '2025.09'
         latest: true
         os:
           - name: Ubuntu 22.04
             primary: true
+        dependencies:
+          - dependency: R
+            version: 4.5.1
+          - dependency: python
+            version: 3.13.7
+          - dependency: quarto
+            version: 1.8.24
+      - name: 2025.07.0
+        subpath: '2025.07'
+        os:
+          - name: Ubuntu 22.04
+            primary: true
+        dependencies:
+          - dependency: R
+            version: 4.4.0
+          - dependency: python
+            version: 3.12.1
+          - dependency: quarto
+            version: 1.4.557
       - name: 2025.06.0
         subpath: '2025.06'
         os:
           - name: Ubuntu 22.04
             primary: true
+        dependencies:
+          - dependency: R
+            version: 4.4.0
+          - dependency: python
+            version: 3.12.1
+          - dependency: quarto
+            version: 1.4.557
       - name: 2025.05.0
         subpath: '2025.05'
         os:
           - name: Ubuntu 22.04
             primary: true
-      - name: 2025.04.0
-        subpath: '2025.04'
-        os:
-          - name: Ubuntu 22.04
-            primary: true
-      - name: 2025.03.0
-        subpath: '2025.03'
-        os:
-          - name: Ubuntu 22.04
-            primary: true
-      - name: 2025.02.0
-        subpath: '2025.02'
-        os:
-          - name: Ubuntu 22.04
-            primary: true
-      - name: 2025.01.0
-        subpath: '2025.01'
-        os:
-          - name: Ubuntu 22.04
-            primary: true
-      - name: 2024.12.0
-        subpath: '2024.12'
-        os:
-          - name: Ubuntu 22.04
-            primary: true
-      - name: 2024.11.0
-        subpath: '2024.11'
-        os:
-          - name: Ubuntu 22.04
-            primary: true
+        dependencies:
+          - dependency: R
+            version: 4.4.0
+          - dependency: python
+            version: 3.12.1
+          - dependency: quarto
+            version: 1.4.557
   - name: connect-content-init
     displayName: "Posit Connect Content Init"
     description: "A containerized image for initializing Posit Connect content."
     documentationUrl: https://docs.posit.co/connect/
+    devVersions:
+      - sourceType: stream
+        product: connect
+        stream: daily
+        os:
+          - name: Ubuntu 22.04
+            primary: true
     versions:
+      - name: 2025.09.0
+        subpath: '2025.09'
+        latest: true
+        os:
+          - name: Ubuntu 22.04
+            primary: true
       - name: 2025.07.0
         subpath: '2025.07'
-        latest: true
         os:
           - name: Ubuntu 22.04
             primary: true
@@ -108,36 +140,6 @@ images:
             primary: true
       - name: 2025.05.0
         subpath: '2025.05'
-        os:
-          - name: Ubuntu 22.04
-            primary: true
-      - name: 2025.04.0
-        subpath: '2025.04'
-        os:
-          - name: Ubuntu 22.04
-            primary: true
-      - name: 2025.03.0
-        subpath: '2025.03'
-        os:
-          - name: Ubuntu 22.04
-            primary: true
-      - name: 2025.02.0
-        subpath: '2025.02'
-        os:
-          - name: Ubuntu 22.04
-            primary: true
-      - name: 2025.01.0
-        subpath: '2025.01'
-        os:
-          - name: Ubuntu 22.04
-            primary: true
-      - name: 2024.12.0
-        subpath: '2024.12'
-        os:
-          - name: Ubuntu 22.04
-            primary: true
-      - name: 2024.11.0
-        subpath: '2024.11'
         os:
           - name: Ubuntu 22.04
             primary: true

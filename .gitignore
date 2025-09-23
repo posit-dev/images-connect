@@ -1,7 +1,6 @@
+.dev-*
 tools/*goss
 tools/pti
 results/
-config.override.toml
-docker-bake.json
+.bakery-bake.json
 .docker-bake.json
-

@@ -29,25 +29,12 @@ Listen = :3939
 ; Specifies the type of user authentication.
 Provider = password
 
-; TODO: Add support for image_type jinja variable
-[python]
-enabled = true
-executable = /opt/python/3.12.11/bin/python
-
-[Quarto]
-Enabled = true
-Executable = /opt/quarto/bin/quarto
-
-[TensorFlow]
-Enabled = true
-Executable = /usr/bin/tensorflow_model_server
-
 ; TODO: Allow the Package Manager OS to be specified
 [RPackageRepository "CRAN"]
-URL = https://packagemanager.posit.co/cran/__linux__/jammy/latest
+URL = <CRAN_URL>
 
 [RPackageRepository "RSPM"]
-URL = https://packagemanager.posit.co/cran/__linux__/jammy/latest
+URL = <CRAN_URL>
 
 [Logging]
 ServiceLog = STDOUT

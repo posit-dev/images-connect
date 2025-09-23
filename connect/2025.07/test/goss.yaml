@@ -12,8 +12,6 @@ group:
 package:
   rstudio-connect:
     installed: true
-  cracklib-runtime:
-    installed: true
   {{ $apt_package_list := readFile "/tmp/version/deps/ubuntu2204_packages.txt" | splitList "\n" }}
   {{- range $apt_package_list }}
   {{ . }}:
@@ -31,9 +29,6 @@ port:
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
 
 file:
-  /usr/local/bin/pti:
-    exists: true
-    mode: "0755"
   /etc/rstudio-connect/license.lic:
     # Currently does not exist
     # Be sure it is NOT a directory
@@ -62,49 +57,24 @@ file:
   {{ end }}
 
   # Check for R installation
-  /opt/R/4.4.3/bin/R:
+  /opt/R/4.4.0/bin/R:
     exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
     filetype: file
     mode: "0755"
-  /opt/R/default/bin/R:
-    exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
-    filetype: file
-    mode: "0755"
-  /usr/local/bin/R4.4.3:
-    exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
-    filetype: symlink
-    linked-to: /opt/R/4.4.3/bin/R
-    mode: "0777"
-  /usr/local/bin/Rscript4.4.3:
-    exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
-    filetype: symlink
-    linked-to: /opt/R/4.4.3/bin/Rscript
-    mode: "0777"
 
   # Check for Python installation
-  /opt/python/3.12.11/bin/python:
-    exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
-  /opt/python/default/bin/python:
-    exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
-  /usr/local/bin/python3.12.11:
+  /opt/python/cpython-3.12.1-linux-x86_64-gnu/bin/python:
     exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
     filetype: symlink
-    linked-to: /opt/python/3.12.11/bin/python
-    mode: "0777"
-  /usr/local/bin/pip3.12.11:
-    exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
-    filetype: symlink
-    linked-to: /opt/python/3.12.11/bin/pip
-    mode: "0777"
 
   # Check for Quarto installation
-  /opt/quarto/bin/quarto:
+  /opt/quarto/1.4.557/bin/quarto:
     exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
     mode: "0755"
   /usr/local/bin/quarto:
     exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
     filetype: symlink
-    linked-to: /opt/quarto/bin/quarto
+    linked-to: /opt/quarto/1.4.557/bin/quarto
     mode: "0777"
 
 command:
@@ -114,38 +84,30 @@ command:
     stdout:
       - "2025.07.0"
 
+  
   "Ensure R version is correct":
-    exec: /opt/R/4.4.3/bin/R --version
+    exec: /opt/R/4.4.0/bin/R --version
     exit-status: 0
     stdout:
-      - "4.4.3"
+      - "4.4.0"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
-  "Ensure R symlink version is correct":
-    exec: /usr/local/bin/R --version
+  
+
+  "Ensure Python 3.12.1 version is correct":
+    exec: /opt/python/cpython-3.12.1-linux-x86_64-gnu/bin/python --version
     exit-status: 0
     stdout:
-      - "4.4.3"
+      - "3.12.1"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
 
-  "Ensure Python version is correct":
-    exec: /opt/python/3.12.11/bin/python --version
-    exit-status: 0
-    stdout:
-      - "3.12.11"
-    skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
-  "Ensure Python symlink version is correct":
-    exec: /usr/local/bin/python3.12.11 --version
-    exit-status: 0
-    stdout:
-      - "3.12.11"
-    skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
-
+  
   "Ensure Quarto version is correct":
-    exec: /opt/quarto/bin/quarto --version
+    exec: /opt/quarto/1.4.557/bin/quarto --version
     exit-status: 0
     stdout:
       - "1.4.557"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
+  
   "Ensure Quarto symlink version is correct":
     exec: /usr/local/bin/quarto --version
     exit-status: 0
@@ -153,7 +115,7 @@ command:
       - "1.4.557"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
   "Ensure Quarto works":
-    exec: /opt/quarto/bin/quarto check --quiet
+    exec: /usr/local/bin/quarto check --quiet
     exit-status: 0
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
   "Ensure Quarto symlink works":
@@ -164,5 +126,5 @@ command:
     exec: quarto list tools
     exit-status: 0
     stderr:
-      - "/tinytex\\s+External Installation/"
+      - "/tinytex\\s+Up to date/"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
