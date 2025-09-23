@@ -46,6 +46,7 @@ RUN {{ apt.install(packages="rstudio-drivers") | indent(4) }} && \
 
 ### Install Python ###
 {{ python.copy_from_build_stage() }}
+{{ python.run_install_packages(Dependencies.python, packages=["pip", "setuptools", "virtualenv"]) }}
 
 ### Install Quarto and TinyTex ###
 RUN {% for quarto_version in Dependencies.quarto -%}

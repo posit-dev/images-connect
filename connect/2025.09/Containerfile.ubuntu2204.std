@@ -58,6 +58,10 @@ RUN RUN_UNATTENDED=1 R_VERSION=4.5.1 bash -c "$(curl -fsSL https://rstd.io/r-ins
 
 ### Install Python ###
 COPY --from=python-builder /opt/python /opt/python
+RUN /opt/python/cpython-3.13.7-linux-x86_64-gnu/bin/pip install --no-cache-dir --upgrade --break-system-packages \
+        pip \
+        setuptools \
+        virtualenv
 
 ### Install Quarto and TinyTex ###
 RUN mkdir -p /opt/quarto/1.8.24 && \
