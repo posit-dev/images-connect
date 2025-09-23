@@ -108,7 +108,7 @@ command:
 
   {% for r_version in Dependencies.R %}
   "Ensure R version is correct":
-    exec: /opt/R/{{ r_version }}/bin/R --version
+    exec: {{ r.get_version_directory(r_version) }}/bin/R --version
     exit-status: 0
     stdout:
       - "{{ r_version }}"
@@ -117,7 +117,7 @@ command:
 
   {% for python_version in Dependencies.python -%}
   "Ensure Python {{ python_version }} version is correct":
-    exec: /opt/python/{{ python_version }}/bin/python --version
+    exec: {{ python.get_version_directory(python_version) }}/bin/python --version
     exit-status: 0
     stdout:
       - "{{ python_version }}"
@@ -139,7 +139,7 @@ command:
       - "{{ Dependencies.quarto.0 }}"
     skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
   "Ensure Quarto works":
-    exec: /opt/quarto/bin/quarto check --quiet
+    exec: /usr/local/bin/quarto check --quiet
     exit-status: 0
     skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
   "Ensure Quarto symlink works":

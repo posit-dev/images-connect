@@ -96,7 +96,7 @@ command:
   
 
   "Ensure Python 3.13.7 version is correct":
-    exec: /opt/python/3.13.7/bin/python --version
+    exec: /opt/python/cpython-3.13.7-linux-x86_64-gnu/bin/python --version
     exit-status: 0
     stdout:
       - "3.13.7"
@@ -117,7 +117,7 @@ command:
       - "1.8.24"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
   "Ensure Quarto works":
-    exec: /opt/quarto/bin/quarto check --quiet
+    exec: /usr/local/bin/quarto check --quiet
     exit-status: 0
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
   "Ensure Quarto symlink works":
