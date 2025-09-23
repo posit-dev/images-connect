@@ -44,8 +44,8 @@ RUN {{ apt.install(packages="rstudio-drivers") | indent(4) }} && \
 ### Install R ###
 {{ r.run_install(Dependencies.R) }}
 
-### Install Python and Jupyter ###
-RUN {{ python.copy_from_build_stage() }}
+### Install Python ###
+{{ python.copy_from_build_stage() }}
 
 ### Install Quarto and TinyTex ###
 RUN {% for quarto_version in Dependencies.quarto -%}

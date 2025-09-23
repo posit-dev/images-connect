@@ -56,8 +56,8 @@ RUN apt-get update -yqq && \
 RUN RUN_UNATTENDED=1 R_VERSION=4.4.0 bash -c "$(curl -fsSL https://rstd.io/r-install)" && \
     find . -type f -name '[rR]-4.4.0.*\.(deb|rpm)' -delete
 
-### Install Python and Jupyter ###
-RUN COPY --from=python-builder /opt/python /opt/python
+### Install Python ###
+COPY --from=python-builder /opt/python /opt/python
 
 ### Install Quarto and TinyTex ###
 RUN mkdir -p /opt/quarto/1.4.557 && \
