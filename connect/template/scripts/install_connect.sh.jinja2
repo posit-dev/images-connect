@@ -22,7 +22,7 @@ curl -fsSL "${DOWNLOAD_URL}" -o /tmp/rstudio-connect.deb
 
 # install latest deb package
 echo "$d Installing Posit Connect {{ Image.Version }} $d"
-apt-get install -yf rstudio-connect.deb
+apt-get install -yf /tmp/rstudio-connect.deb
 {%- else -%}
 echo "$d Installing Posit Connect {{ Image.Version }} $d"
 
