@@ -24,8 +24,6 @@ group:
 package:
   rstudio-connect:
     installed: true
-  cracklib-runtime:
-    installed: true
   {% raw -%}
   {{ $apt_package_list := readFile "/tmp/version/deps/ubuntu2204_packages.txt" | splitList "\n" }}
   {{- range $apt_package_list }}
@@ -82,9 +80,9 @@ file:
 
   # Check for Python installation
   {% for python_version in Dependencies.python -%}
-  /opt/python/{{ python_version }}/bin/python:
+  {{ python.get_version_directory(python_version) }}/bin/python:
     exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
-    filetype: file
+    filetype: symlink
   {%- endfor %}
 
   # Check for Quarto installation

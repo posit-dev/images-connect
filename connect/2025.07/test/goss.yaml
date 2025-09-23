@@ -12,8 +12,6 @@ group:
 package:
   rstudio-connect:
     installed: true
-  cracklib-runtime:
-    installed: true
   {{ $apt_package_list := readFile "/tmp/version/deps/ubuntu2204_packages.txt" | splitList "\n" }}
   {{- range $apt_package_list }}
   {{ . }}:
@@ -65,7 +63,7 @@ file:
     mode: "0755"
 
   # Check for Python installation
-  /opt/python/3.12.1/bin/python:
+  /opt/python/cpython-3.12.1-linux-x86_64-gnu/bin/python:
     exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
     filetype: file
 
