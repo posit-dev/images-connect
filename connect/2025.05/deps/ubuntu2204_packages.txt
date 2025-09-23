@@ -1,4 +1,5 @@
 bzip2
+cracklib-runtime
 curl
 git
 gnupg
