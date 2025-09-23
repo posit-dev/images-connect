@@ -6,7 +6,7 @@ on:
 
 name: Build, Test, and Push
 jobs:
-  build-test-push-${{ matrix.product }}${{ matrix.devVersionStrategy == 'only' && '-dev' || '' }}:
+  build-test-push:
     strategy:
       fail-fast: false
       matrix:
@@ -16,6 +16,7 @@ jobs:
       contents: read
       packages: write
     runs-on: ubuntu-latest-4x
+    name: ${{ matrix.product }}${{ matrix.devVersionStrategy == 'only' && '-dev' || '' }} Image Builds
     steps:
 
       - name: GitHub App Token
