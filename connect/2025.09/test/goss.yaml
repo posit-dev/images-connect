@@ -82,7 +82,7 @@ command:
     exec: /opt/rstudio-connect/bin/connect --version
     exit-status: 0
     stdout:
-      - "2025.09.0"
+      - "2025.09.1"
 
 
   "Ensure R version is correct":
