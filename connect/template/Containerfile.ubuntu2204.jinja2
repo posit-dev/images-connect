@@ -36,7 +36,7 @@ ENV STARTUP_DEBUG_MODE=0
 COPY {{ Path.Version }}/deps/ubuntu2204_packages.txt /tmp/ubuntu2204_packages.txt
 {{ apt.run_install(files="/tmp/ubuntu2204_packages.txt") }}
 
-{% if Image.Variant != "Minimal" %}
+{% if Image.Variant != "Minimal" -%}
 ### Install Pro Drivers ###
 RUN {{ apt.install(packages="rstudio-drivers") | indent(4) }} && \
     cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
@@ -48,15 +48,7 @@ RUN {{ apt.install(packages="rstudio-drivers") | indent(4) }} && \
 {{ python.copy_from_build_stage() }}
 {{ python.run_install_packages(Dependencies.python, packages=["pip", "setuptools", "virtualenv"]) }}
 
-### Install Quarto and TinyTex ###
-RUN {% for quarto_version in Dependencies.quarto -%}
-    {{ quarto.install(Dependencies.quarto.0, with_tinytex=True, tinytex_update_path=True) | indent(4) }} && \
-    {%- endfor %}
-    {{ quarto.symlink_binary(Dependencies.quarto.0, "quarto", "/usr/local/bin/quarto") }}
-
-### Install TensorFlow Serving ###
-COPY --from=tensorflow/serving:latest /usr/bin/tensorflow_model_server /usr/bin/tensorflow_model_server
-{% endif %}
+{% endif -%}
 
 COPY {{ Path.Version }}/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
 COPY --chmod=0775 {{ Path.Version }}/scripts/install_connect.sh /tmp/install_connect.sh
@@ -65,11 +57,30 @@ RUN IMAGE_VARIANT="{{ Image.Variant }}" {% if Image.DownloadURL is defined %}DOW
     sed -i 's/<CRAN_URL>/{{ r.get_p3m_cran_repo(Image.OS) | replace("/", "\/") }}/g' /etc/rstudio-connect/rstudio-connect.gcfg && \
     rm -f /tmp/install_connect.sh /tmp/rstudio-connect.gcfg
 
-### Create data volume ###
-VOLUME ["/data"]
-
 ### Copy scripts ###
 COPY --chmod=0775 {{ Path.Version }}/scripts/startup.sh /usr/local/bin/startup.sh
+
+{% if Image.Variant != "Minimal" -%}
+### Install Quarto ###
+RUN {% for quarto_version in Dependencies.quarto -%}
+    {{ quarto.install(quarto_version) | indent(4) }} && \
+    {% if loop.first -%}{{ quarto.symlink_binary(quarto_version, "quarto", "/usr/local/bin/quarto") }}{% endif %} {% if not loop.last %}&& \{% endif %}
+    {%- endfor %}
+
+### Install TinyTex ###
+ADD https://api.github.com/repos/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
+RUN {% for quarto_version in Dependencies.quarto -%}
+    {{ quarto.install_tinytex_command(quarto.get_version_directory(quarto_version | trim) + "/bin/quarto", loop.first) | indent(4) }} && \
+    {%- endfor %}
+    rm -f /tmp/tinytex-release.json
+
+### Install TensorFlow Serving ###
+COPY --from=tensorflow/serving:latest /usr/bin/tensorflow_model_server /usr/bin/tensorflow_model_server
+
+{% endif -%}
+
+### Create data volume ###
+VOLUME ["/data"]
 
 ### Finalize image ###
 EXPOSE 3939/tcp
