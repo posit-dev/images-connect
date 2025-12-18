@@ -60,6 +60,10 @@ images:
         os:
           - name: Ubuntu 22.04
             primary: true
+        overrideRegistries:
+          - host: "ghcr.io"
+            namespace: "posit-dev"
+            repository: "connect-preview"
     versions:
       - name: 2025.10.0
         latest: true
@@ -132,6 +136,10 @@ images:
         os:
           - name: Ubuntu 22.04
             primary: true
+        overrideRegistries:
+          - host: "ghcr.io"
+            namespace: "posit-dev"
+            repository: "connect-content-init-preview"
     versions:
       - name: 2025.10.0
         latest: true

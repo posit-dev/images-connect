@@ -66,6 +66,7 @@ jobs:
       APP_ID: ${{ secrets.APP_ID }}
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
     with:
+      runs-on: ubuntu-latest-4x
       dev-versions: "exclude"
       # Push images only for merges into main and weekly schduled re-builds.
       push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event.schedule == '15 3 * * 0' }}
@@ -76,7 +77,7 @@ jobs:
     #
     # Builds all development versions of each image in parallel.
     #
-    # Run on merges to main, or on hourly scheduled re-builds.
+    # Run on merges to main, or on daily scheduled re-builds.
     if: contains(fromJSON('["push", "pull_request"]'), github.event_name) || github.event.schedule == '45 4 * * *'
 
     permissions:
@@ -88,8 +89,7 @@ jobs:
       APP_ID: ${{ secrets.APP_ID }}
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
     with:
+      runs-on: ubuntu-latest-4x
       dev-versions: "only"
-      # Push images only for merges into main and hourly schduled re-builds.
-      # TODO: Override image registry before enabling pushing
-      # push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event.schedule == '45 4 * * *' }}
-      push: false
+      # Push images only for merges into main and daily schduled re-builds.
+      push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event.schedule == '45 4 * * *' }}
