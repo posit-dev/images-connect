@@ -29,5 +29,5 @@ RUN mkdir -p /rsc-staging && \
     chmod -R 755 /opt/rstudio-connect-runtime && \
     rm -rf /rsc-staging
 
-COPY --chmod=0755 connect-content-init/2025.10.0/scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY --chmod=0755 connect-content-init/2025.10/scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
 CMD ["/usr/local/bin/entrypoint.sh"]
