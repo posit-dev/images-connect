@@ -66,6 +66,7 @@ images:
             repository: "connect-preview"
     versions:
       - name: 2025.10.0
+        subpath: '2025.10'
         latest: true
         os:
           - name: Ubuntu 22.04
@@ -142,6 +143,7 @@ images:
             repository: "connect-content-init-preview"
     versions:
       - name: 2025.10.0
+        subpath: '2025.10'
         latest: true
         os:
           - name: Ubuntu 22.04
