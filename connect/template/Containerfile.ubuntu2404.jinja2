@@ -1,0 +1,87 @@
+{#-
+Below are imports for Bakery's macros. If any are unneeded, they can be removed.
+Bakery handles bootstrapping the files into template rendering.
+-#}
+{%- import "apt.j2" as apt -%}
+{%- import "python.j2" as python -%}
+{%- import "quarto.j2" as quarto -%}
+{%- import "r.j2" as r -%}
+
+{%- if Image.Variant != "Minimal" -%}
+# Build Python using uv in a separate stage
+{{ python.build_stage(Dependencies.python) }}
+
+{% endif -%}
+
+FROM docker.io/library/ubuntu:24.04
+LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
+
+### Global ARG declarations ###
+ARG DEBIAN_FRONTEND=noninteractive
+
+### Release ARG declarations ###
+ARG CONNECT_VERSION="{{ Image.Version }}"
+ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
+
+### ENV declarations ###
+ENV PCT_LICENSE=""
+ENV PCT_LICENSE_SERVER=""
+ENV PCT_LICENSE_FILE_PATH=""
+ENV STARTUP_DEBUG_MODE=0
+
+### Run setup ###
+{{ apt.run_setup() }}
+
+### Update apt packages ###
+COPY {{ Path.Version }}/deps/ubuntu2404_packages.txt /tmp/ubuntu2404_packages.txt
+{{ apt.run_install(files="/tmp/ubuntu2404_packages.txt") }}
+
+{% if Image.Variant != "Minimal" -%}
+### Install Pro Drivers ###
+RUN {{ apt.install(packages="rstudio-drivers") | indent(4) }} && \
+    cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
+
+### Install R ###
+{{ r.run_install(Dependencies.R) }}
+
+### Install Python ###
+{{ python.copy_from_build_stage() }}
+{{ python.run_install_packages(Dependencies.python, packages=["pip", "setuptools", "virtualenv"]) }}
+
+{% endif -%}
+
+COPY {{ Path.Version }}/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
+COPY --chmod=0775 {{ Path.Version }}/scripts/install_connect.sh /tmp/install_connect.sh
+RUN IMAGE_VARIANT="{{ Image.Variant }}" {% if Image.DownloadURL is defined %}DOWNLOAD_URL="{{ Image.DownloadURL }}" {% endif %}\
+        /tmp/install_connect.sh && \
+    sed -i 's/<CRAN_URL>/{{ r.get_p3m_cran_repo(Image.OS) | replace("/", "\/") }}/g' /etc/rstudio-connect/rstudio-connect.gcfg && \
+    rm -f /tmp/install_connect.sh /tmp/rstudio-connect.gcfg
+
+### Copy scripts ###
+COPY --chmod=0775 {{ Path.Version }}/scripts/startup.sh /usr/local/bin/startup.sh
+
+{% if Image.Variant != "Minimal" -%}
+### Install Quarto ###
+RUN {% for quarto_version in Dependencies.quarto -%}
+    {{ quarto.install(quarto_version) | indent(4) }} && \
+    {% if loop.first -%}{{ quarto.symlink_binary(quarto_version, "quarto", "/usr/local/bin/quarto") }}{% endif %} {% if not loop.last %}&& \{% endif %}
+    {%- endfor %}
+
+### Install TinyTex ###
+ADD https://api.github.com/repos/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
+RUN {% for quarto_version in Dependencies.quarto -%}
+    {{ quarto.install_tinytex_command(quarto.get_version_directory(quarto_version | trim) + "/bin/quarto", loop.first) | indent(4) }} && \
+    {%- endfor %}
+    rm -f /tmp/tinytex-release.json
+
+### Install TensorFlow Serving ###
+COPY --from=tensorflow/serving:latest /usr/bin/tensorflow_model_server /usr/bin/tensorflow_model_server
+
+{% endif -%}
+
+### Create data volume ###
+VOLUME ["/data"]
+
+### Finalize image ###
+EXPOSE 3939/tcp
+CMD ["/usr/local/bin/startup.sh"]
