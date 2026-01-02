@@ -71,8 +71,8 @@ images:
         latest: true
         os:
           - name: Ubuntu 22.04
-            primary: true
           - name: Ubuntu 24.04
+            primary: true
         dependencies:
           - dependency: R
             version: 4.5.2
@@ -85,7 +85,6 @@ images:
         os:
           - name: Ubuntu 22.04
             primary: true
-          - name: Ubuntu 24.04
         dependencies:
           - dependency: R
             version: 4.5.2
@@ -98,7 +97,6 @@ images:
         os:
           - name: Ubuntu 22.04
             primary: true
-          - name: Ubuntu 24.04
         dependencies:
           - dependency: R
             version: 4.5.1
@@ -111,7 +109,6 @@ images:
         os:
           - name: Ubuntu 22.04
             primary: true
-          - name: Ubuntu 24.04
         dependencies:
           - dependency: R
             version: 4.5.1
@@ -124,7 +121,6 @@ images:
         os:
           - name: Ubuntu 22.04
             primary: true
-          - name: Ubuntu 24.04
         dependencies:
           - dependency: R
             version: 4.4.0
@@ -137,7 +133,6 @@ images:
         os:
           - name: Ubuntu 22.04
             primary: true
-          - name: Ubuntu 24.04
         dependencies:
           - dependency: R
             version: 4.4.0
@@ -150,7 +145,6 @@ images:
         os:
           - name: Ubuntu 22.04
             primary: true
-          - name: Ubuntu 24.04
         dependencies:
           - dependency: R
             version: 4.4.0
@@ -179,42 +173,36 @@ images:
         subpath: '2025.12'
         os:
           - name: Ubuntu 22.04
-            primary: true
           - name: Ubuntu 24.04
+            primary: true
       - name: 2025.11.0
         subpath: '2025.11'
         latest: true
         os:
           - name: Ubuntu 22.04
             primary: true
-          - name: Ubuntu 24.04
       - name: 2025.10.0
         subpath: '2025.10'
         os:
           - name: Ubuntu 22.04
             primary: true
-          - name: Ubuntu 24.04
       - name: 2025.09.1
         subpath: '2025.09'
         os:
           - name: Ubuntu 22.04
             primary: true
-          - name: Ubuntu 24.04
       - name: 2025.07.0
         subpath: '2025.07'
         os:
           - name: Ubuntu 22.04
             primary: true
-          - name: Ubuntu 24.04
       - name: 2025.06.0
         subpath: '2025.06'
         os:
           - name: Ubuntu 22.04
             primary: true
-          - name: Ubuntu 24.04
       - name: 2025.05.0
         subpath: '2025.05'
         os:
           - name: Ubuntu 22.04
             primary: true
-          - name: Ubuntu 24.04
