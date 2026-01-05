@@ -13,8 +13,8 @@ Bakery handles bootstrapping the files into template rendering.
 
 {% endif -%}
 
-FROM docker.io/library/ubuntu:22.04
-LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
+FROM docker.io/library/ubuntu:24.04
+LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
 
 ### Global ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
@@ -33,8 +33,8 @@ ENV STARTUP_DEBUG_MODE=0
 {{ apt.run_setup() }}
 
 ### Update apt packages ###
-COPY {{ Path.Version }}/deps/ubuntu-22.04_packages.txt /tmp/ubuntu-22.04_packages.txt
-{{ apt.run_install(files="/tmp/ubuntu-22.04_packages.txt") }}
+COPY {{ Path.Version }}/deps/ubuntu-24.04_packages.txt /tmp/ubuntu-24.04_packages.txt
+{{ apt.run_install(files="/tmp/ubuntu-24.04_packages.txt") }}
 
 {% if Image.Variant != "Minimal" -%}
 ### Install Pro Drivers ###

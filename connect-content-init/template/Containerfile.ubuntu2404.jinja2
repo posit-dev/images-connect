@@ -1,0 +1,30 @@
+{#-
+Below are imports for Bakery's macros. If any are unneeded, they can be removed.
+Bakery handles bootstrapping the files into template rendering.
+-#}
+{%- import "apt.j2" as apt -%}
+{%- import "python.j2" as python -%}
+{%- import "quarto.j2" as quarto -%}
+{%- import "r.j2" as r -%}
+FROM docker.io/library/ubuntu:24.04
+LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
+
+### Global ARG declarations ###
+ARG DEBIAN_FRONTEND=noninteractive
+
+### Release ARG declarations ###
+ARG CONNECT_VERSION="{{ Image.Version }}"
+
+### Setup environment ###
+{{ apt.run_setup() }}
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN mkdir -p /rsc-staging && \
+    curl -fsSL "https://cdn.posit.co/connect/{{ (Image.Version | split("."))[0:-1] | join(".") }}/rstudio-connect-runtime-{{ Image.Version | urlencode }}.tar.gz" -o /rsc-staging/rstudio-connect-runtime.tar.gz && \
+    mkdir -p /opt/rstudio-connect-runtime && \
+    tar -C /opt/rstudio-connect-runtime -xf /rsc-staging/rstudio-connect-runtime.tar.gz && \
+    chmod -R 755 /opt/rstudio-connect-runtime && \
+    rm -rf /rsc-staging
+
+COPY --chmod=0755 {{ Path.Version }}/scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
+CMD ["/usr/local/bin/entrypoint.sh"]

@@ -12,7 +12,8 @@ group:
 package:
   rstudio-connect:
     installed: true
-  {{ $apt_package_list := readFile "/tmp/version/deps/ubuntu2204_packages.txt" | splitList "\n" }}
+  {{ $apt_package_list_path := printf "/tmp/version/deps/%s-%s_packages.txt" .Env.IMAGE_OS_NAME .Env.IMAGE_OS_VERSION }}
+  {{ $apt_package_list := readFile $apt_package_list_path | splitList "\n" }}
   {{- range $apt_package_list }}
   {{ . }}:
     installed: true
@@ -63,7 +64,7 @@ file:
     mode: "0755"
 
   # Check for Python installation
-  /opt/python/cpython-3.14.2-linux-x86_64-gnu/bin/python:
+  /opt/python/3.14.2/bin/python:
     exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
     filetype: symlink
 
@@ -94,7 +95,7 @@ command:
   
 
   "Ensure Python 3.14.2 version is correct":
-    exec: /opt/python/cpython-3.14.2-linux-x86_64-gnu/bin/python --version
+    exec: /opt/python/3.14.2/bin/python --version
     exit-status: 0
     stdout:
       - "3.14.2"

@@ -8,8 +8,8 @@ RUN uv python install 3.14.2
 RUN mv /opt/python/cpython-3.14.2-linux-*/ /opt/python/3.14.2
 
 
-FROM docker.io/library/ubuntu:22.04
-LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
+FROM docker.io/library/ubuntu:24.04
+LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
 
 ### Global ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
@@ -39,9 +39,9 @@ RUN apt-get update -yqq --fix-missing && \
     rm -rf /var/lib/apt/lists/*
 
 ### Update apt packages ###
-COPY connect/2025.12/deps/ubuntu-22.04_packages.txt /tmp/ubuntu-22.04_packages.txt
+COPY connect/2025.12/deps/ubuntu-24.04_packages.txt /tmp/ubuntu-24.04_packages.txt
 RUN apt-get update -yqq && \
-    xargs -a /tmp/ubuntu-22.04_packages.txt apt-get install -yqq --no-install-recommends && \
+    xargs -a /tmp/ubuntu-24.04_packages.txt apt-get install -yqq --no-install-recommends && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
@@ -68,7 +68,7 @@ COPY connect/2025.12/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
 COPY --chmod=0775 connect/2025.12/scripts/install_connect.sh /tmp/install_connect.sh
 RUN IMAGE_VARIANT="Standard" \
         /tmp/install_connect.sh && \
-    sed -i 's/<CRAN_URL>/https:\/\/p3m.dev\/cran\/__linux__\/jammy\/latest/g' /etc/rstudio-connect/rstudio-connect.gcfg && \
+    sed -i 's/<CRAN_URL>/https:\/\/p3m.dev\/cran\/__linux__\/noble\/latest/g' /etc/rstudio-connect/rstudio-connect.gcfg && \
     rm -f /tmp/install_connect.sh /tmp/rstudio-connect.gcfg
 
 ### Copy scripts ###
