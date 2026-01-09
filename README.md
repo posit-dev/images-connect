@@ -2,12 +2,17 @@
 
 Container images for [Posit Connect](https://docs.posit.co/connect/).
 
+> [!IMPORTANT]
+> These images are under active development and testing and are not yet supported by Posit.
+>
+> Please see [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products) for officially supported images.
+
 ## Images
 
 | Image | Docker Hub | GitHub Container Registry |
 |:------|:-----------|:--------------------------|
-| [connect](./connect) | [`docker.io/posit/connect`](https://hub.docker.com/repository/docker/posit/connect/tags) | [`ghcr.io/posit-dev/connect`](https://github.com/posit-dev/images-connect/pkgs/container/connect) |
-| [connect-content-init](./connect-content-init) | [`docker.io/posit/connect-content-init`](https://hub.docker.com/repository/docker/posit/connect-content-init/tags) | [`ghcr.io/posit-dev/connect-content-init`](https://github.com/posit-dev/images-connect/pkgs/container/connect-content-init) |
+| [connect](./connect/) | `docker.io/posit/connect` | [`ghcr.io/posit-dev/connect`](https://github.com/posit-dev/images-connect/pkgs/container/connect) |
+| [connect-content-init](./connect-content-init/) | `docker.io/posit/connect-content-init` | [`ghcr.io/posit-dev/connect-content-init`](https://github.com/posit-dev/images-connect/pkgs/container/connect-content-init) |
 
 Additional Posit container images are published to [Docker Hub](https://hub.docker.com/u/posit) and [GitHub Container Registry](https://github.com/orgs/posit-dev/packages).
 
@@ -21,7 +26,7 @@ You can interact with this repository in multiple ways:
 
 ## Build
 
-You can build OCI container images from the defitions in this repository using one of the following container build tools:
+You can build OCI container images from the definitions in this repository using one of the following container build tools:
 
 * [buildah](https://github.com/containers/buildah/blob/main/install.md)
 * [docker buildx](https://github.com/docker/buildx#installing)
@@ -30,7 +35,7 @@ The root of the bakery project is used as the build context for each Containerfi
 Here, the `bakery.yaml` file, or project, is in the root of this repository.
 
 ```shell
-PCT_VERSION="2025.07"
+PCT_VERSION="2025.12"
 
 # Build the standard Connect image using docker
 docker buildx build \
@@ -43,11 +48,17 @@ buildah build \
     --tag connect:${PCT_VERSION} \
     --file connect/${PCT_VERSION}/Containerfile.ubuntu2204.min \
     .
+
+# Build the minimal Connect image using podman
+podman build \
+    --tag connect:${PCT_VERSION} \
+    --file connect/${PCT_VERSION}/Containerfile.ubuntu2204.min \
+    .
 ```
 
 ## Using `bakery`
 
-The structure and contents of this reposity were created following the steps in [bakery usage](https://github.com/posit-dev/images-shared/tree/main/posit-bakery#usage).
+The structure and contents of this repository were created following the steps in [bakery usage](https://github.com/posit-dev/images-shared/tree/main/posit-bakery#usage).
 
 ### Prerequisites
 
@@ -91,6 +102,10 @@ bakery run dgoss
 ```
 
 You can use CLI flags to limit the tests to run against a subset of images.
+
+## Share your Feedback
+
+We invite you to join us on [GitHub Discussions](https://github.com/posit-dev/images/discussions) to ask questions and share feedback.
 
 ## Issues
 

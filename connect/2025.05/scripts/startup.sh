@@ -29,6 +29,11 @@ deactivate() {
 }
 trap deactivate EXIT
 
+# Backward compatibility for RSC_ prefixed environment variables
+PCT_LICENSE=${PCT_LICENSE:-$RSC_LICENSE}
+PCT_LICENSE_SERVER=${PCT_LICENSE_SERVER:-$RSC_LICENSE_SERVER}
+PCT_LICENSE_FILE_PATH=${PCT_LICENSE_FILE_PATH:-$RSC_LICENSE_FILE_PATH}
+
 # Activate License
 PCT_LICENSE_FILE_PATH=${PCT_LICENSE_FILE_PATH:-/etc/rstudio-connect/license.lic}
 if ! [ -z "$PCT_LICENSE" ]; then
@@ -42,6 +47,8 @@ fi
 # ensure these cannot be inherited by child processes
 unset PCT_LICENSE
 unset PCT_LICENSE_SERVER
+unset RSC_LICENSE
+unset RSC_LICENSE_SERVER
 
 # Start RStudio Connect
 /opt/rstudio-connect/bin/connect --config /etc/rstudio-connect/rstudio-connect.gcfg
