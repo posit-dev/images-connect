@@ -47,7 +47,10 @@ RUN curl -fsSL "https://yihui.org/tinytex/install-bin-unix.sh" | sh && \
     rm -f /tmp/tinytex-release.json
 
 ### Install R ###
-{{ r.run_install(r.build_arg()) }}
+RUN apt-get update -yqq && \
+    {{ r.install(r.build_arg()) | indent(4) }} && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
 
 ### Install odbc R package ###
 RUN {{ r.get_version_directory(r.build_arg()) }}/bin/R -e 'install.packages("odbc", repos="https://packagemanager.posit.co/cran/__linux__/jammy/latest")'

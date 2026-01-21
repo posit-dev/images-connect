@@ -61,8 +61,11 @@ RUN curl -fsSL "https://yihui.org/tinytex/install-bin-unix.sh" | sh && \
     rm -f /tmp/tinytex-release.json
 
 ### Install R ###
-RUN RUN_UNATTENDED=1 R_VERSION=$R_VERSION bash -c "$(curl -fsSL https://rstd.io/r-install)" && \
-    find . -type f -name '[rR]-$R_VERSION.*\.(deb|rpm)' -delete
+RUN apt-get update -yqq && \
+    RUN_UNATTENDED=1 R_VERSION=$R_VERSION bash -c "$(curl -fsSL https://rstd.io/r-install)" && \
+    find . -type f -name '[rR]-$R_VERSION.*\.(deb|rpm)' -delete && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
 
 ### Install odbc R package ###
 RUN /opt/R/$R_VERSION/bin/R -e 'install.packages("odbc", repos="https://packagemanager.posit.co/cran/__linux__/noble/latest")'
