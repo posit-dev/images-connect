@@ -1,8 +1,8 @@
-name: Production
+name: Content Image CI
 on:
   schedule:
     # Weekly rebuild of all images, to pick up any upstream changes.
-    - cron: "15 3 * * 0" # At 03:15 on Sunday
+    - cron: "15 4 * * 0" # At 04:15 on Sunday
 
   pull_request:
 
@@ -17,30 +17,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  ci:
-    name: CI
-    # This should be the only action checked as required in the repo settings.
-    #
-    # This is a meta-job, here to express the conditions we require
-    # in order to consider a CI run to be successful.
-    if: always()
-
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs:
-      - build
-
-    steps:
-      - uses: re-actors/alls-green@release/v1
-        with:
-          jobs: ${{ toJSON(needs) }}
-          allowed-skips: clean
 
   build:
     name: Build
-    # Build all images, excluding dev versions and matrix versions.
+    # Build all matrix images.
     #
     # Builds all versions of each image in parallel.
+    #
+    # Run on merges to main, or on weekly scheduled re-builds.
+    if: contains(fromJSON('["push", "pull_request"]'), github.event_name) || github.event.schedule == '15 4 * * 0'
     permissions:
       contents: read
       packages: write
@@ -49,11 +34,10 @@ jobs:
     secrets:
       DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
     with:
-      runs-on: ubuntu-latest-4x
-      dev-versions: "exclude"
-      matrix-versions: "exclude"
-      # Push images only for merges into main and weekly schduled re-builds.
-      push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'schedule' }}
+      runs-on: ubuntu-latest
+      matrix-versions: "only"
+      # Push images only for merges into main and weekly scheduled re-builds.
+      push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event.schedule == '15 4 * * 0' }}
 
   clean:
     name: Clean

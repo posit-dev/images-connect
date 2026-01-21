@@ -1,0 +1,63 @@
+{#-
+Below are imports for Bakery's macros. If any are unneeded, they can be removed.
+Bakery handles bootstrapping the files into template rendering.
+-#}
+{%- import "apt.j2" as apt -%}
+{%- import "python.j2" as python -%}
+{%- import "quarto.j2" as quarto -%}
+{%- import "r.j2" as r -%}
+
+# Build Python using uv in a separate stage
+{{ python.build_stage(python.build_arg(), prerun=python.declare_build_arg()) }}
+
+FROM docker.io/library/ubuntu:24.04
+LABEL maintainer="Posit Docker <docker@posit.co>"
+LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
+
+### ARG declarations ###
+ARG DEBIAN_FRONTEND=noninteractive
+{{ r.declare_build_arg() }}
+{{ python.declare_build_arg() }}
+{{ quarto.declare_build_arg() }}
+
+### Locale configuration ###
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends locales && \
+    localedef -i en_US -f UTF-8 en_US.UTF-8 && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+ENV TZ=UTC
+
+### Install Apt Packages ###
+{{ apt.run_setup() }}
+
+COPY {{ Path.Version }}/deps/ubuntu-24.04_packages.txt /tmp/ubuntu-24.04_packages.txt
+{{ apt.run_install(files = '/tmp/ubuntu-24.04_packages.txt') }}
+
+### Install TinyTeX ###
+ADD https://api.github.com/repos/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
+RUN curl -fsSL "https://yihui.org/tinytex/install-bin-unix.sh" | sh && \
+    /root/.TinyTeX/bin/*/tlmgr path remove && \
+    mv /root/.TinyTeX/ /opt/TinyTeX && \
+    /opt/TinyTeX/bin/*/tlmgr option sys_bin /usr/local/bin && \
+    /opt/TinyTeX/bin/*/tlmgr path add && \
+    rm -f /tmp/tinytex-release.json
+
+### Install R ###
+{{ r.run_install(r.build_arg()) }}
+
+### Install odbc R package ###
+RUN {{ r.get_version_directory(r.build_arg()) }}/bin/R -e 'install.packages("odbc", repos="https://packagemanager.posit.co/cran/__linux__/noble/latest")'
+
+### Install Python from build stage ###
+{{ python.copy_from_build_stage() }}
+
+### Upgrade setuptools ###
+RUN {{ python.get_version_directory(python.build_arg()) }}/bin/python -m pip install --no-cache-dir --break-system-packages --upgrade setuptools
+
+### Install Quarto ###
+RUN {{ quarto.install(quarto.build_arg(), False, True) | indent(4) }} && \
+    {{ quarto.symlink_binary(quarto.build_arg(), "quarto", "/usr/local/bin/quarto") | indent(4) }}
