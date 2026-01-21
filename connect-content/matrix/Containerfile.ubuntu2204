@@ -51,6 +51,9 @@ RUN apt-get update -yqq && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
+### Configure ODBC drivers ###
+RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
+
 ### Install TinyTeX ###
 ADD https://api.github.com/repos/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
 RUN curl -fsSL "https://yihui.org/tinytex/install-bin-unix.sh" | sh && \
@@ -68,7 +71,7 @@ RUN apt-get update -yqq && \
     rm -rf /var/lib/apt/lists/*
 
 ### Install odbc R package ###
-RUN /opt/R/$R_VERSION/bin/R -e 'install.packages("odbc", repos="https://packagemanager.posit.co/cran/__linux__/jammy/latest")'
+RUN /opt/R/$R_VERSION/bin/R -e 'install.packages("odbc", repos="https://p3m.dev/cran/__linux__/jammy/latest")'
 
 ### Install Python from build stage ###
 COPY --from=python-builder /opt/python /opt/python
