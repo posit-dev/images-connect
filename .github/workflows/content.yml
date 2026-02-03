@@ -1,4 +1,4 @@
-name: Content Image CI
+name: Content Image
 on:
   schedule:
     # Weekly rebuild of all images, to pick up any upstream changes.
