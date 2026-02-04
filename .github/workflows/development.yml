@@ -44,9 +44,6 @@ jobs:
       packages: write
 
     uses: "posit-dev/images-shared/.github/workflows/bakery-build.yml@main"
-    secrets:
-      APP_ID: ${{ secrets.APP_ID }}
-      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
     with:
       runs-on: ubuntu-latest-4x
       dev-versions: "only"
