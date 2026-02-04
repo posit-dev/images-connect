@@ -155,6 +155,30 @@ images:
             version: 3.12.1
           - dependency: quarto
             version: 1.4.557
+  - name: connect-content
+    displayName: "Posit Connect Content"
+    description: "Content execution images for Posit Connect with R, Python, Quarto,
+      TinyTeX, system dependencies for popular R packages, and Posit Professional
+      Drivers for database connectivity."
+    documentationUrl: https://docs.posit.co/connect/admin/runtimes/content-images/
+    matrix:
+      namePattern: "R{{ Dependencies.R }}-python{{ Dependencies.python }}"
+      dependencyConstraints:
+        - dependency: R
+          constraint:
+            min: "4.3"
+            latest: true
+        - dependency: python
+          constraint:
+            min: "3.11"
+            latest: true
+        - dependency: quarto
+          constraint:
+            latest: true
+      os:
+        - name: Ubuntu 24.04
+          primary: true
+        - name: Ubuntu 22.04
   - name: connect-content-init
     displayName: "Posit Connect Content Init"
     description: "A containerized image for initializing Posit Connect content."

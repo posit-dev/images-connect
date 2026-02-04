@@ -1,0 +1,54 @@
+{%- import "goss.j2" as goss -%}
+{%- import "python.j2" as python -%}
+{%- import "quarto.j2" as quarto -%}
+{%- import "r.j2" as r -%}
+
+package:
+  {% raw -%}
+  {{ $apt_package_list_path := printf "/tmp/version/deps/%s-%s_packages.txt" .Env.IMAGE_OS_NAME .Env.IMAGE_OS_VERSION }}
+  {{ $apt_package_list := readFile $apt_package_list_path | splitList "\n" }}
+  {{- range $apt_package_list }}
+  {{.}}:
+    installed: true
+  {{end}}
+  {%- endraw %}
+
+file:
+  python-{{ goss.build_arg_env_var("PYTHON_VERSION") }}:
+    exists: true
+    path: {{ python.get_version_directory(goss.build_arg_env_var("PYTHON_VERSION")) }}
+  r-{{ goss.build_arg_env_var("R_VERSION") }}:
+    exists: true
+    path: {{ r.get_version_directory(goss.build_arg_env_var("R_VERSION")) }}
+  quarto-{{ goss.build_arg_env_var("QUARTO_VERSION") }}:
+    exists: true
+    path: {{ quarto.get_version_directory(goss.build_arg_env_var("QUARTO_VERSION")) }}
+  tinytex:
+    exists: true
+    path: /opt/TinyTeX
+
+command:
+  "Verify R installation is version {{ goss.build_arg_env_var("R_VERSION") }}":
+    exec: {{ r.get_version_directory(goss.build_arg_env_var("R_VERSION")) }}/bin/R --version
+    exit-status: 0
+    stdout:
+      - "R version {{ goss.build_arg_env_var("R_VERSION") }}"
+  "Verify Python installation is version {{ goss.build_arg_env_var("PYTHON_VERSION") }}":
+    exec: {{ python.get_version_directory(goss.build_arg_env_var("PYTHON_VERSION")) }}/bin/python --version
+    exit-status: 0
+    stdout:
+      - "{{ goss.build_arg_env_var("PYTHON_VERSION") }}"
+  "Verify Quarto":
+    exec: /usr/local/bin/quarto check --quiet
+    exit-status: 0
+  "Verify TinyTeX is installed":
+    exec: /opt/TinyTeX/bin/*/tlmgr --version
+    exit-status: 0
+  "Verify R odbc package is installed":
+    exec: {{ r.get_version_directory(goss.build_arg_env_var("R_VERSION")) }}/bin/R -e "library(odbc)"
+    exit-status: 0
+  "Verify ODBC drivers are configured":
+    exec: cat /etc/odbcinst.ini
+    exit-status: 0
+    stdout:
+      - "/PostgreSQL|MySQL|SQLServer/"
