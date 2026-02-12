@@ -35,6 +35,8 @@ Two variants are available:
 | `std` (Standard) | Opinionated image with R, Python, and Quarto pre-installed, runs out of the box |
 | `min` (Minimal) | Small image you can extend with desired dependencies, *will not run as is* |
 
+See [extending examples](https://github.com/posit-dev/images-examples/tree/main/extending) for how to build on the Minimal image.
+
 ## Image Tags
 
 Images are published to:
