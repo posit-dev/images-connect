@@ -73,7 +73,6 @@ Build prerequisites
 * [pipx](https://pipx.pypa.io/stable/installation/)
 * [docker buildx bake](https://github.com/docker/buildx#installing)
 * [just](https://just.systems/man/en/prerequisites.html)
-* [gh](https://github.com/cli/cli#installation) (required while repositories are private)
 * `bakery`
 
     ```shell
