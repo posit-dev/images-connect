@@ -174,6 +174,14 @@ images:
       TinyTeX, system dependencies for popular R packages, and Posit Professional
       Drivers for database connectivity."
     documentationUrl: https://docs.posit.co/connect/admin/runtimes/content-images/
+    variants:
+      - name: base
+        extension: base
+        tagDisplayName: base
+        primary: true
+      - name: pro
+        extension: pro
+        tagDisplayName: pro
     matrix:
       namePattern: "R{{ Dependencies.R }}-python{{ Dependencies.python }}"
       dependencyConstraints:
