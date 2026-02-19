@@ -12,6 +12,7 @@ Container images for [Posit Connect](https://docs.posit.co/connect/).
 | Image | Docker Hub | GitHub Container Registry |
 |:------|:-----------|:--------------------------|
 | [connect](./connect/) | `docker.io/posit/connect` | [`ghcr.io/posit-dev/connect`](https://github.com/posit-dev/images-connect/pkgs/container/connect) |
+| [connect-content](./connect-content/) | `docker.io/posit/connect-content` | [`ghcr.io/posit-dev/connect-content`](https://github.com/posit-dev/images-connect/pkgs/container/connect-content) |
 | [connect-content-init](./connect-content-init/) | `docker.io/posit/connect-content-init` | [`ghcr.io/posit-dev/connect-content-init`](https://github.com/posit-dev/images-connect/pkgs/container/connect-content-init) |
 
 Additional Posit container images are published to [Docker Hub](https://hub.docker.com/u/posit) and [GitHub Container Registry](https://github.com/orgs/posit-dev/packages).
@@ -73,7 +74,6 @@ Build prerequisites
 * [pipx](https://pipx.pypa.io/stable/installation/)
 * [docker buildx bake](https://github.com/docker/buildx#installing)
 * [just](https://just.systems/man/en/prerequisites.html)
-* [gh](https://github.com/cli/cli#installation) (required while repositories are private)
 * `bakery`
 
     ```shell

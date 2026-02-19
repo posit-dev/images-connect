@@ -5,6 +5,8 @@ package:
   {{.}}:
     installed: true
   {{end}}
+  rstudio-drivers:
+    installed: {{ if eq .Env.IMAGE_VARIANT "pro" }}true{{ else }}false{{ end }}
 
 file:
   python-{{ .Env.BUILD_ARG_PYTHON_VERSION }}:
@@ -40,8 +42,10 @@ command:
   "Verify R odbc package is installed":
     exec: /opt/R/{{ .Env.BUILD_ARG_R_VERSION }}/bin/R -e "library(odbc)"
     exit-status: 0
+    skip: {{ if ne .Env.IMAGE_VARIANT "pro" }}true{{ else }}false{{ end }}
   "Verify ODBC drivers are configured":
     exec: cat /etc/odbcinst.ini
     exit-status: 0
     stdout:
       - "/PostgreSQL|MySQL|SQLServer/"
+    skip: {{ if ne .Env.IMAGE_VARIANT "pro" }}true{{ else }}false{{ end }}
