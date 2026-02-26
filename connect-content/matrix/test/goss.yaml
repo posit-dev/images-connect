@@ -18,9 +18,6 @@ file:
   quarto-{{ .Env.BUILD_ARG_QUARTO_VERSION }}:
     exists: true
     path: /opt/quarto/{{ .Env.BUILD_ARG_QUARTO_VERSION }}
-  tinytex:
-    exists: true
-    path: /opt/TinyTeX
 
 command:
   "Verify R installation is version {{ .Env.BUILD_ARG_R_VERSION }}":
@@ -36,9 +33,11 @@ command:
   "Verify Quarto":
     exec: /usr/local/bin/quarto check --quiet
     exit-status: 0
-  "Verify TinyTeX is installed":
-    exec: /opt/TinyTeX/bin/*/tlmgr --version
+  "Verify Quarto has TinyTeX installed":
+    exec: quarto list tools
     exit-status: 0
+    stderr:
+      - "/tinytex\\s+Up to date/"
   "Verify R odbc package is installed":
     exec: /opt/R/{{ .Env.BUILD_ARG_R_VERSION }}/bin/R -e "library(odbc)"
     exit-status: 0
