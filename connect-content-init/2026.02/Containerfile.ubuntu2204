@@ -1,0 +1,33 @@
+FROM docker.io/library/ubuntu:22.04
+LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
+
+### Global ARG declarations ###
+ARG DEBIAN_FRONTEND=noninteractive
+
+### Release ARG declarations ###
+ARG CONNECT_VERSION="2026.02.0"
+
+### Setup environment ###
+RUN apt-get update -yqq --fix-missing && \
+    apt-get upgrade -yqq && \
+    apt-get dist-upgrade -yqq && \
+    apt-get autoremove -yqq --purge && \
+    apt-get install -yqq --no-install-recommends \
+        curl \
+        ca-certificates \
+        gnupg \
+        tar && \
+    bash -c "$(curl -1fsSL 'https://dl.posit.co/public/pro/setup.deb.sh')" && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN mkdir -p /rsc-staging && \
+    curl -fsSL "https://cdn.posit.co/connect/2026.02/rstudio-connect-runtime-2026.02.0.tar.gz" -o /rsc-staging/rstudio-connect-runtime.tar.gz && \
+    mkdir -p /opt/rstudio-connect-runtime && \
+    tar -C /opt/rstudio-connect-runtime -xf /rsc-staging/rstudio-connect-runtime.tar.gz && \
+    chmod -R 755 /opt/rstudio-connect-runtime && \
+    rm -rf /rsc-staging
+
+COPY --chmod=0755 connect-content-init/2026.02/scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
+CMD ["/usr/local/bin/entrypoint.sh"]
