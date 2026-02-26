@@ -23,7 +23,7 @@ RUN apt-get update -yqq --fix-missing && \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN mkdir -p /rsc-staging && \
-    curl -fsSL "https://cdn.posit.co/connect/2026.02/rstudio-connect-runtime-2026.02.0.tar.gz" -o /rsc-staging/rstudio-connect-runtime.tar.gz && \
+    curl -fsSL "https://cdn.posit.co/connect/2026.02/rstudio-connect-runtime-2026.02.0-${TARGETARCH}.tar.gz" -o /rsc-staging/rstudio-connect-runtime.tar.gz && \
     mkdir -p /opt/rstudio-connect-runtime && \
     tar -C /opt/rstudio-connect-runtime -xf /rsc-staging/rstudio-connect-runtime.tar.gz && \
     chmod -R 755 /opt/rstudio-connect-runtime && \
