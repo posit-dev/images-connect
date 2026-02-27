@@ -64,8 +64,6 @@ images:
           - name: Ubuntu 24.04
             primary: true
             platforms:
-              - "linux/amd64"
-              - "linux/arm64"
           - name: Ubuntu 22.04
         overrideRegistries:
           - host: "ghcr.io"
@@ -78,9 +76,6 @@ images:
         os:
           - name: Ubuntu 22.04
           - name: Ubuntu 24.04
-            platforms:
-              - "linux/amd64"
-              - "linux/arm64"
             primary: true
         dependencies:
           - dependency: R
@@ -219,13 +214,7 @@ images:
       os:
         - name: Ubuntu 24.04
           primary: true
-          platforms:
-            - "linux/amd64"
-            - "linux/arm64"
         - name: Ubuntu 22.04
-          platforms:
-            - "linux/amd64"
-            - "linux/arm64"
   - name: connect-content-init
     displayName: "Posit Connect Content Init"
     description: "A containerized image for initializing Posit Connect content."
