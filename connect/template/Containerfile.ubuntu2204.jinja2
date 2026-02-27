@@ -32,6 +32,8 @@ ENV PCT_LICENSE_SERVER=""
 ENV PCT_LICENSE_FILE_PATH=""
 ENV STARTUP_DEBUG_MODE=0
 
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+
 ### Run setup ###
 {{ apt.run_setup() }}
 

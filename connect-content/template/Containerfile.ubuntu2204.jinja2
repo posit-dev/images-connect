@@ -22,6 +22,8 @@ ARG TARGETARCH=${BUILDARCH}
 {{ python.declare_build_arg() }}
 {{ quarto.declare_build_arg() }}
 
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+
 ### Locale configuration ###
 RUN apt-get update && \
     apt-get install -y --no-install-recommends locales && \

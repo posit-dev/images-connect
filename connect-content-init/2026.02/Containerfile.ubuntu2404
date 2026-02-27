@@ -8,6 +8,8 @@ ARG TARGETARCH
 ### Release ARG declarations ###
 ARG CONNECT_VERSION="2026.02.0"
 
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+
 ### Setup environment ###
 RUN apt-get update -yqq --fix-missing && \
     apt-get upgrade -yqq && \

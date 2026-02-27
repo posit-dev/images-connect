@@ -16,6 +16,8 @@ ARG TARGETARCH
 ### Release ARG declarations ###
 ARG CONNECT_VERSION="{{ Image.Version }}"
 
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+
 ### Setup environment ###
 {{ apt.run_setup() }}
 
