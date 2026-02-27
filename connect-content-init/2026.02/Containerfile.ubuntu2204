@@ -3,6 +3,7 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
 
 ### Global ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
+ARG TARGETARCH
 
 ### Release ARG declarations ###
 ARG CONNECT_VERSION="2026.02.0"
