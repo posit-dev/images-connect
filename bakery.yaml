@@ -63,7 +63,6 @@ images:
         os:
           - name: Ubuntu 24.04
             primary: true
-            platforms:
           - name: Ubuntu 22.04
         overrideRegistries:
           - host: "ghcr.io"
