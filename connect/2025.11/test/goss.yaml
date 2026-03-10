@@ -12,7 +12,8 @@ group:
 package:
   rstudio-connect:
     installed: true
-  {{ $apt_package_list := readFile "/tmp/version/deps/ubuntu2204_packages.txt" | splitList "\n" }}
+  {{ $apt_package_list_path := printf "/tmp/version/deps/%s-%s_packages.txt" .Env.IMAGE_OS_NAME .Env.IMAGE_OS_VERSION }}
+  {{ $apt_package_list := readFile $apt_package_list_path | splitList "\n" }}
   {{- range $apt_package_list }}
   {{ . }}:
     installed: true

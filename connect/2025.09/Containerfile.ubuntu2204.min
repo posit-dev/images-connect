@@ -5,6 +5,8 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
 ARG DEBIAN_FRONTEND=noninteractive
 
 ### Release ARG declarations ###
+ARG BUILDARCH
+ARG TARGETARCH=${BUILDARCH}
 ARG CONNECT_VERSION="2025.09.1"
 ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
 
@@ -29,9 +31,9 @@ RUN apt-get update -yqq --fix-missing && \
     rm -rf /var/lib/apt/lists/*
 
 ### Update apt packages ###
-COPY connect/2025.09/deps/ubuntu2204_packages.txt /tmp/ubuntu2204_packages.txt
+COPY connect/2025.09/deps/ubuntu-22.04_packages.txt /tmp/ubuntu-22.04_packages.txt
 RUN apt-get update -yqq && \
-    xargs -a /tmp/ubuntu2204_packages.txt apt-get install -yqq --no-install-recommends && \
+    xargs -a /tmp/ubuntu-22.04_packages.txt apt-get install -yqq --no-install-recommends && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
