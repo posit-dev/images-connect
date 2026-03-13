@@ -25,9 +25,6 @@ file:
   quarto-{{ goss.build_arg_env_var("QUARTO_VERSION") }}:
     exists: true
     path: {{ quarto.get_version_directory(goss.build_arg_env_var("QUARTO_VERSION")) }}
-  tinytex:
-    exists: true
-    path: /opt/TinyTeX
 
 command:
   "Verify R installation is version {{ goss.build_arg_env_var("R_VERSION") }}":
@@ -43,9 +40,11 @@ command:
   "Verify Quarto":
     exec: /usr/local/bin/quarto check --quiet
     exit-status: 0
-  "Verify TinyTeX is installed":
-    exec: /opt/TinyTeX/bin/*/tlmgr --version
+  "Verify Quarto has TinyTeX installed":
+    exec: quarto list tools
     exit-status: 0
+    stderr:
+      - "/tinytex\\s+Up to date/"
   "Verify R odbc package is installed":
     exec: {{ r.get_version_directory(goss.build_arg_env_var("R_VERSION")) }}/bin/R -e "library(odbc)"
     exit-status: 0

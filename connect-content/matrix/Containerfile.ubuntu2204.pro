@@ -22,6 +22,8 @@ ARG R_VERSION
 ARG PYTHON_VERSION
 ARG QUARTO_VERSION
 
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+
 ### Locale configuration ###
 RUN apt-get update && \
     apt-get install -y --no-install-recommends locales && \
@@ -63,15 +65,6 @@ RUN apt-get update -yqq && \
 ### Configure ODBC drivers ###
 RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
 
-### Install TinyTeX ###
-ADD https://api.github.com/repos/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
-RUN curl -fsSL "https://yihui.org/tinytex/install-bin-unix.sh" | sh && \
-    /root/.TinyTeX/bin/*/tlmgr path remove && \
-    mv /root/.TinyTeX/ /opt/TinyTeX && \
-    /opt/TinyTeX/bin/*/tlmgr option sys_bin /usr/local/bin && \
-    /opt/TinyTeX/bin/*/tlmgr path add && \
-    rm -f /tmp/tinytex-release.json
-
 ### Install R ###
 RUN apt-get update -yqq && \
     RUN_UNATTENDED=1 R_VERSION=$R_VERSION bash -c "$(curl -fsSL https://rstd.io/r-install)" && \
@@ -89,6 +82,8 @@ COPY --from=python-builder /opt/python /opt/python
 RUN /opt/python/$PYTHON_VERSION/bin/python -m pip install --no-cache-dir --break-system-packages --upgrade setuptools
 
 ### Install Quarto ###
+ADD https://api.github.com/repos/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
 RUN mkdir -p /opt/quarto/$QUARTO_VERSION && \
     curl -fsSL "https://github.com/quarto-dev/quarto-cli/releases/download/v$QUARTO_VERSION/quarto-$QUARTO_VERSION-linux-${TARGETARCH}.tar.gz" | tar xzf - -C "/opt/quarto/$QUARTO_VERSION" --strip-components=1 && \
+    /opt/quarto/$QUARTO_VERSION/bin/quarto install tinytex --no-prompt --quiet --update-path && \
     ln -s /opt/quarto/$QUARTO_VERSION/bin/quarto /usr/local/bin/quarto

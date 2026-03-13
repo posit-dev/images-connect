@@ -26,7 +26,7 @@ apt-get install -yf /tmp/rstudio-connect.deb
 {%- else -%}
 echo "$d Installing Posit Connect {{ Image.Version }} $d"
 
-RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1 apt-get install -yf rstudio-connect={{ Image.Version }}
+RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1 apt-get install -yf rstudio-connect={{ Image.Version }}-1
 apt-mark hold rstudio-connect
 {%- endif %}
 
