@@ -1,11 +1,11 @@
 # Build Python using uv in a separate stage
-FROM ghcr.io/astral-sh/uv:debian-slim AS python-builder
+FROM ghcr.io/astral-sh/uv:bookworm-slim AS python-builder
 
 ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
 ENV UV_PYTHON_INSTALL_DIR=/opt/python
 ENV UV_PYTHON_PREFERENCE=only-managed
-RUN uv python install 3.12.1
-RUN mv /opt/python/cpython-3.12.1-linux-*/ /opt/python/3.12.1
+RUN uv python install 3.14.3
+RUN mv /opt/python/cpython-3.14.3-linux-*/ /opt/python/3.14.3
 
 
 FROM docker.io/library/ubuntu:22.04
@@ -13,11 +13,11 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
 
 ### Global ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
-
-### Release ARG declarations ###
 ARG BUILDARCH
 ARG TARGETARCH=${BUILDARCH}
-ARG CONNECT_VERSION="2025.07.0"
+
+### Release ARG declarations ###
+ARG CONNECT_VERSION="2026.02.0"
 ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
 
 ### ENV declarations ###
@@ -25,6 +25,8 @@ ENV PCT_LICENSE=""
 ENV PCT_LICENSE_SERVER=""
 ENV PCT_LICENSE_FILE_PATH=""
 ENV STARTUP_DEBUG_MODE=0
+
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 ### Run setup ###
 RUN apt-get update -yqq --fix-missing && \
@@ -41,7 +43,7 @@ RUN apt-get update -yqq --fix-missing && \
     rm -rf /var/lib/apt/lists/*
 
 ### Update apt packages ###
-COPY connect/2025.07/deps/ubuntu-22.04_packages.txt /tmp/ubuntu-22.04_packages.txt
+COPY connect/2026.02/deps/ubuntu-22.04_packages.txt /tmp/ubuntu-22.04_packages.txt
 RUN apt-get update -yqq && \
     xargs -a /tmp/ubuntu-22.04_packages.txt apt-get install -yqq --no-install-recommends && \
     apt-get clean -yqq && \
@@ -56,34 +58,34 @@ RUN apt-get update -yqq && \
     cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
 
 ### Install R ###
-RUN RUN_UNATTENDED=1 R_VERSION=4.4.0 bash -c "$(curl -fsSL https://rstd.io/r-install)" && \
-    find . -type f -name '[rR]-4.4.0.*\.(deb|rpm)' -delete
+RUN RUN_UNATTENDED=1 R_VERSION=4.5.2 bash -c "$(curl -fsSL https://rstd.io/r-install)" && \
+    find . -type f -name '[rR]-4.5.2.*\.(deb|rpm)' -delete
 
 ### Install Python ###
 COPY --from=python-builder /opt/python /opt/python
-RUN /opt/python/3.12.1/bin/pip install --no-cache-dir --upgrade --break-system-packages \
+RUN /opt/python/3.14.3/bin/pip install --no-cache-dir --upgrade --break-system-packages \
         pip \
         setuptools \
         virtualenv
 
-COPY connect/2025.07/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
-COPY --chmod=0775 connect/2025.07/scripts/install_connect.sh /tmp/install_connect.sh
+COPY connect/2026.02/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
+COPY --chmod=0775 connect/2026.02/scripts/install_connect.sh /tmp/install_connect.sh
 RUN IMAGE_VARIANT="Standard" \
         /tmp/install_connect.sh && \
     sed -i 's/<CRAN_URL>/https:\/\/p3m.dev\/cran\/__linux__\/jammy\/latest/g' /etc/rstudio-connect/rstudio-connect.gcfg && \
     rm -f /tmp/install_connect.sh /tmp/rstudio-connect.gcfg
 
 ### Copy scripts ###
-COPY --chmod=0775 connect/2025.07/scripts/startup.sh /usr/local/bin/startup.sh
+COPY --chmod=0775 connect/2026.02/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Install Quarto ###
-RUN mkdir -p /opt/quarto/1.4.557 && \
-    curl -fsSL "https://github.com/quarto-dev/quarto-cli/releases/download/v1.4.557/quarto-1.4.557-linux-${TARGETARCH}.tar.gz" | tar xzf - -C "/opt/quarto/1.4.557" --strip-components=1 && \
-    ln -s /opt/quarto/1.4.557/bin/quarto /usr/local/bin/quarto 
+RUN mkdir -p /opt/quarto/1.8.27 && \
+    curl -fsSL "https://github.com/quarto-dev/quarto-cli/releases/download/v1.8.27/quarto-1.8.27-linux-${TARGETARCH}.tar.gz" | tar xzf - -C "/opt/quarto/1.8.27" --strip-components=1 && \
+    ln -s /opt/quarto/1.8.27/bin/quarto /usr/local/bin/quarto 
 
 ### Install TinyTex ###
 ADD https://api.github.com/repos/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
-RUN /opt/quarto/1.4.557/bin/quarto install tinytex --no-prompt --quiet --update-path && \
+RUN /opt/quarto/1.8.27/bin/quarto install tinytex --no-prompt --quiet --update-path && \
     rm -f /tmp/tinytex-release.json
 
 ### Install TensorFlow Serving ###

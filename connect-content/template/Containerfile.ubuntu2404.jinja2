@@ -16,9 +16,13 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
 
 ### ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
+ARG BUILDARCH
+ARG TARGETARCH=${BUILDARCH}
 {{ r.declare_build_arg() }}
 {{ python.declare_build_arg() }}
 {{ quarto.declare_build_arg() }}
+
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 ### Locale configuration ###
 RUN apt-get update && \
@@ -45,14 +49,6 @@ COPY {{ Path.Version }}/deps/ubuntu-24.04_packages.txt /tmp/ubuntu-24.04_package
 RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
 
 {% endif -%}
-### Install TinyTeX ###
-ADD https://api.github.com/repos/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
-RUN curl -fsSL "https://yihui.org/tinytex/install-bin-unix.sh" | sh && \
-    /root/.TinyTeX/bin/*/tlmgr path remove && \
-    mv /root/.TinyTeX/ /opt/TinyTeX && \
-    /opt/TinyTeX/bin/*/tlmgr option sys_bin /usr/local/bin && \
-    /opt/TinyTeX/bin/*/tlmgr path add && \
-    rm -f /tmp/tinytex-release.json
 
 ### Install R ###
 RUN apt-get update -yqq && \
@@ -72,5 +68,7 @@ RUN {{ r.get_version_directory(r.build_arg()) }}/bin/R -e 'install.packages("odb
 RUN {{ python.get_version_directory(python.build_arg()) }}/bin/python -m pip install --no-cache-dir --break-system-packages --upgrade setuptools
 
 ### Install Quarto ###
+ADD https://api.github.com/repos/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
 RUN {{ quarto.install(quarto.build_arg(), False, True) | indent(4) }} && \
+    {{ quarto.install_tinytex_command(quarto.get_version_directory(quarto.build_arg() | trim) + "/bin/quarto", True) | indent(4) }} && \
     {{ quarto.symlink_binary(quarto.build_arg(), "quarto", "/usr/local/bin/quarto") | indent(4) }}

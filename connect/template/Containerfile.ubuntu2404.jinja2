@@ -18,8 +18,12 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
 
 ### Global ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
+ARG BUILDARCH
+ARG TARGETARCH=${BUILDARCH}
 
 ### Release ARG declarations ###
+ARG BUILDARCH
+ARG TARGETARCH=${BUILDARCH}
 ARG CONNECT_VERSION="{{ Image.Version }}"
 ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
 
@@ -28,6 +32,8 @@ ENV PCT_LICENSE=""
 ENV PCT_LICENSE_SERVER=""
 ENV PCT_LICENSE_FILE_PATH=""
 ENV STARTUP_DEBUG_MODE=0
+
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 ### Run setup ###
 {{ apt.run_setup() }}

@@ -1,5 +1,5 @@
 # Build Python using uv in a separate stage
-FROM ghcr.io/astral-sh/uv:bookworm-slim AS python-builder
+FROM ghcr.io/astral-sh/uv:debian-slim AS python-builder
 
 ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
 ENV UV_PYTHON_INSTALL_DIR=/opt/python
@@ -13,6 +13,8 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
 ARG DEBIAN_FRONTEND=noninteractive
 
 ### Release ARG declarations ###
+ARG BUILDARCH
+ARG TARGETARCH=${BUILDARCH}
 ARG CONNECT_VERSION="2025.09.1"
 ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
 
@@ -37,9 +39,9 @@ RUN apt-get update -yqq --fix-missing && \
     rm -rf /var/lib/apt/lists/*
 
 ### Update apt packages ###
-COPY connect/2025.09/deps/ubuntu2204_packages.txt /tmp/ubuntu2204_packages.txt
+COPY connect/2025.09/deps/ubuntu-22.04_packages.txt /tmp/ubuntu-22.04_packages.txt
 RUN apt-get update -yqq && \
-    xargs -a /tmp/ubuntu2204_packages.txt apt-get install -yqq --no-install-recommends && \
+    xargs -a /tmp/ubuntu-22.04_packages.txt apt-get install -yqq --no-install-recommends && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
@@ -74,7 +76,7 @@ COPY --chmod=0775 connect/2025.09/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Install Quarto ###
 RUN mkdir -p /opt/quarto/1.8.25 && \
-    curl -fsSL "https://github.com/quarto-dev/quarto-cli/releases/download/v1.8.25/quarto-1.8.25-linux-amd64.tar.gz" | tar xzf - -C "/opt/quarto/1.8.25" --strip-components=1 && \
+    curl -fsSL "https://github.com/quarto-dev/quarto-cli/releases/download/v1.8.25/quarto-1.8.25-linux-${TARGETARCH}.tar.gz" | tar xzf - -C "/opt/quarto/1.8.25" --strip-components=1 && \
     ln -s /opt/quarto/1.8.25/bin/quarto /usr/local/bin/quarto 
 
 ### Install TinyTex ###

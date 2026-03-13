@@ -11,16 +11,20 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
 
 ### Global ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
+ARG BUILDARCH
+ARG TARGETARCH=${BUILDARCH}
 
 ### Release ARG declarations ###
 ARG CONNECT_VERSION="{{ Image.Version }}"
+
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 ### Setup environment ###
 {{ apt.run_setup() }}
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN mkdir -p /rsc-staging && \
-    curl -fsSL "https://cdn.posit.co/connect/{{ (Image.Version | split("."))[0:-1] | join(".") }}/rstudio-connect-runtime-{{ Image.Version | urlencode }}.tar.gz" -o /rsc-staging/rstudio-connect-runtime.tar.gz && \
+    curl -fsSL "https://cdn.posit.co/connect/{{ (Image.Version | split("."))[0:-1] | join(".") }}/rstudio-connect-runtime-{{ Image.Version | urlencode }}-${TARGETARCH}.tar.gz" -o /rsc-staging/rstudio-connect-runtime.tar.gz && \
     mkdir -p /opt/rstudio-connect-runtime && \
     tar -C /opt/rstudio-connect-runtime -xf /rsc-staging/rstudio-connect-runtime.tar.gz && \
     chmod -R 755 /opt/rstudio-connect-runtime && \

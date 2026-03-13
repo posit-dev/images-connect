@@ -5,6 +5,8 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
 ARG DEBIAN_FRONTEND=noninteractive
 
 ### Release ARG declarations ###
+ARG BUILDARCH
+ARG TARGETARCH=${BUILDARCH}
 ARG CONNECT_VERSION="2026.01.1"
 ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
 

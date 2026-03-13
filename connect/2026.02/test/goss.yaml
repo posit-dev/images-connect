@@ -64,18 +64,18 @@ file:
     mode: "0755"
 
   # Check for Python installation
-  /opt/python/cpython-3.14.2-linux-x86_64-gnu/bin/python:
+  /opt/python/3.14.3/bin/python:
     exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
     filetype: symlink
 
   # Check for Quarto installation
-  /opt/quarto/1.8.26/bin/quarto:
+  /opt/quarto/1.8.27/bin/quarto:
     exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
     mode: "0755"
   /usr/local/bin/quarto:
     exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
     filetype: symlink
-    linked-to: /opt/quarto/1.8.26/bin/quarto
+    linked-to: /opt/quarto/1.8.27/bin/quarto
     mode: "0777"
 
 command:
@@ -83,7 +83,7 @@ command:
     exec: /opt/rstudio-connect/bin/connect --version
     exit-status: 0
     stdout:
-      - "2025.11.0"
+      - "2026.02.0"
 
   
   "Ensure R version is correct":
@@ -94,26 +94,26 @@ command:
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
   
 
-  "Ensure Python 3.14.2 version is correct":
-    exec: /opt/python/cpython-3.14.2-linux-x86_64-gnu/bin/python --version
+  "Ensure Python 3.14.3 version is correct":
+    exec: /opt/python/3.14.3/bin/python --version
     exit-status: 0
     stdout:
-      - "3.14.2"
+      - "3.14.3"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
 
   
   "Ensure Quarto version is correct":
-    exec: /opt/quarto/1.8.26/bin/quarto --version
+    exec: /opt/quarto/1.8.27/bin/quarto --version
     exit-status: 0
     stdout:
-      - "1.8.26"
+      - "1.8.27"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
   
   "Ensure Quarto symlink version is correct":
     exec: /usr/local/bin/quarto --version
     exit-status: 0
     stdout:
-      - "1.8.26"
+      - "1.8.27"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
   "Ensure Quarto works":
     exec: /usr/local/bin/quarto check --quiet
