@@ -59,7 +59,7 @@ RUN RUN_UNATTENDED=1 R_VERSION=4.4.0 bash -c "$(curl -fsSL https://rstd.io/r-ins
 
 ### Install Python ###
 COPY --from=python-builder /opt/python /opt/python
-RUN /opt/python/3.12.1/bin/pip install --no-cache-dir --upgrade --break-system-packages \
+RUN /opt/python/cpython-3.12.1-linux-x86_64-gnu/bin/pip install --no-cache-dir --upgrade --break-system-packages \
         pip \
         setuptools \
         virtualenv
