@@ -29,8 +29,9 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
 
+      # REVERTME: Use bakery branch for testing. Revert to @main before merging.
       - name: Install bakery
-        uses: posit-dev/images-shared/setup-bakery@main
+        uses: posit-dev/images-shared/setup-bakery@bakery-cli-release-workflow
 
       - name: Parse version
         id: parse
