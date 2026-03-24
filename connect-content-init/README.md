@@ -7,7 +7,15 @@ This container image is an "init container" used to pull runtime components into
 
 ## Overview
 
-The Content Init container provides runtime components that are copied into a shared volume during pod initialization. These components enable Posit Connect to execute content in isolated Kubernetes pods via the Launcher.
+The `connect-content-init` container provides runtime components that are copied into a shared volume during pod initialization. These components enable Posit Connect to execute content in isolated Kubernetes pods via the Launcher.
+
+| Image | Description | Docker Hub | GHCR |
+|:------|:------------|:-----------|:-----|
+| `connect` | The Posit Connect server | [posit/connect](https://hub.docker.com/r/posit/connect) | [posit-dev/connect](https://github.com/posit-dev/images-connect/pkgs/container/connect) |
+| `connect-content` | Runtime images for executing published content | [posit/connect-content](https://hub.docker.com/r/posit/connect-content) | [posit-dev/connect-content](https://github.com/posit-dev/images-connect/pkgs/container/connect-content) |
+| `connect-content-init` | Init container for Kubernetes deployments | [posit/connect-content-init](https://hub.docker.com/r/posit/connect-content-init) | [posit-dev/connect-content-init](https://github.com/posit-dev/images-connect/pkgs/container/connect-content-init) |
+
+See the [repository README](https://github.com/posit-dev/images-connect#deploying-on-kubernetes) for Helm configuration.
 
 This container [can be extended to include additional content](https://docs.posit.co/helm/examples/connect/container-images/custom-images.html) beyond what is provided by default.
 

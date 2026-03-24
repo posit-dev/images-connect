@@ -7,7 +7,15 @@ These container images provide the runtime environments for executing content de
 
 ## Overview
 
-When Posit Connect runs on Kubernetes with the Job Launcher, published content (Shiny apps, Plumber APIs, Quarto documents, Jupyter notebooks, etc.) executes inside content containers. Each content image provides a specific R and Python version pair.
+When [Posit Connect](https://docs.posit.co/connect/) runs on Kubernetes with the Job Launcher, published content (Shiny apps, Plumber APIs, Quarto documents, Jupyter notebooks, etc.) executes inside content containers. Each `connect-content` image provides a specific R and Python version pair.
+
+| Image | Description | Docker Hub | GHCR |
+|:------|:------------|:-----------|:-----|
+| `connect` | The Posit Connect server | [posit/connect](https://hub.docker.com/r/posit/connect) | [posit-dev/connect](https://github.com/posit-dev/images-connect/pkgs/container/connect) |
+| `connect-content` | Runtime images for executing published content | [posit/connect-content](https://hub.docker.com/r/posit/connect-content) | [posit-dev/connect-content](https://github.com/posit-dev/images-connect/pkgs/container/connect-content) |
+| `connect-content-init` | Init container for Kubernetes deployments | [posit/connect-content-init](https://hub.docker.com/r/posit/connect-content-init) | [posit-dev/connect-content-init](https://github.com/posit-dev/images-connect/pkgs/container/connect-content-init) |
+
+See the [repository README](https://github.com/posit-dev/images-connect#deploying-on-kubernetes) for Helm configuration.
 
 ## Image Variants
 
