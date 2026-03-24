@@ -2,10 +2,8 @@
 
 This container image is an "init container" used to pull runtime components into another container, which can then be used with Posit Connect and Launcher to build and run content. This image is primarily used in Kubernetes deployments and is leveraged by the Posit Connect Helm chart.
 
-> [!IMPORTANT]
-> This image is under active development and testing and is not yet supported by Posit.
->
-> Please see [rstudio-connect-content-init image](https://github.com/rstudio/rstudio-docker-products/tree/main/connect-content-init) in `rstudio/rstudio-docker-products` for the officially supported image.
+> [!NOTE]
+> These images are in preview as Posit migrates container images from [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products). The existing images remain supported.
 
 ## Overview
 
@@ -20,9 +18,9 @@ Images are published to:
 - GitHub Container Registry: `ghcr.io/posit-dev/connect-content-init`
 
 Tag formats:
-- `2025.11.0` - Full version (Ubuntu 22.04)
-- `2025.11.0-ubuntu-22.04` - Explicit OS
-- `latest` - Latest stable release (currently 2025.11.0, Ubuntu 22.04)
+- `2026.02.0` - Full version (Ubuntu 24.04)
+- `2026.02.0-ubuntu-24.04` - Explicit OS
+- `latest` - Latest stable release (Ubuntu 24.04)
 
 ## Usage
 
@@ -33,7 +31,7 @@ This image is designed to be used as an init container in Kubernetes. It copies 
 ```yaml
 initContainers:
   - name: connect-content-init
-    image: posit/connect-content-init:2025.11.0
+    image: ghcr.io/posit-dev/connect-content-init:2026.02.0
     volumeMounts:
       - name: connect-runtime
         mountPath: /opt/rstudio-connect-runtime
@@ -50,7 +48,7 @@ This image differs from the legacy [`rstudio/rstudio-connect-content-init`](http
 | Aspect           | This Image                      | rstudio/rstudio-connect-content-init |
 |------------------|---------------------------------|--------------------------------------|
 | Registry         | `posit/connect-content-init`    | `rstudio/rstudio-connect-content-init` |
-| Base OS options  | Ubuntu 22.04                    | Ubuntu 22.04                         |
+| Base OS options  | Ubuntu 24.04, Ubuntu 22.04      | Ubuntu 22.04                         |
 
 ## Caveats
 

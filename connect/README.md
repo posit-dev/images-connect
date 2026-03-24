@@ -2,29 +2,33 @@
 
 This container image provides [Posit Connect](https://docs.posit.co/connect/) (PCT), a publishing platform that connects you and the work you do with others. Deploy Shiny applications, R Markdown documents, Plumber APIs, Python applications (Flask, Dash, FastAPI, Bokeh, Streamlit), Jupyter notebooks, Quarto documents, and more.
 
-> [!IMPORTANT]
-> This image is under active development and testing and is not yet supported by Posit.
->
-> Please see [rstudio-connect image](https://github.com/rstudio/rstudio-docker-products/tree/main/connect) in `rstudio/rstudio-docker-products` for the officially supported image.
+> [!NOTE]
+> These images are in preview as Posit migrates container images from [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products). The existing images remain supported.
 
 ## Quick Start
 
 ```bash
-PCT_VERSION="2025.12.1"
+PCT_VERSION="2026.02.0"
+PCT_IMAGE="ghcr.io/posit-dev/connect"  # or docker.io/posit/connect
+PCT_LICENSE="/path/to/license.lic"
 docker run -d \
   --name connect \
   --privileged \
   -p 3939:3939 \
-  -v /path/to/license.lic:/etc/rstudio-connect/license.lic \
-  posit/connect:${PCT_VERSION}-ubuntu-22.04
+  -v ${PCT_LICENSE}:/etc/rstudio-connect/license.lic \
+  ${PCT_IMAGE}:${PCT_VERSION}
 ```
 
 Access Posit Connect at `http://localhost:3939`.
 
-> IMPORTANT: To use Posit Connect with more than one user, you will need to
-> define `Server.Address` in the `rstudio-connect.gcfg` file. Update your
-> configuration file with the URL that users will use to visit Connect,
-> then start or restart the container.
+> [!NOTE]
+> The `--privileged` flag is required for Connect to manage sandboxed content execution environments.
+> This example does not mount a data volume. Application data will not persist when the container stops. See [Volume Mounts](#volume-mounts) for persistent storage.
+
+> [!IMPORTANT]
+> To use Posit Connect with more than one user, define `Server.Address` in
+> the `rstudio-connect.gcfg` file. Set it to the URL that users will use to
+> visit Connect, then start or restart the container.
 
 ## Image Variants
 
@@ -43,17 +47,20 @@ Images are published to:
 - Docker Hub: `docker.io/posit/connect`
 - GitHub Container Registry: `ghcr.io/posit-dev/connect`
 
+Ubuntu 24.04 is the default OS.
+
 Tag formats:
-- `2025.12.1` - Full version (standard variant, Ubuntu 22.04)
-- `2025.12.1-ubuntu-22.04-std` - Explicit OS and variant
-- `2025.12.1-ubuntu-22.04-min` - Minimal variant
-- `latest` - Latest stable release (standard variant, Ubuntu 22.04)
+- `2026.02.0` - Latest OS, standard variant
+- `2026.02.0-ubuntu-24.04` - Explicit OS, standard variant
+- `2026.02.0-ubuntu-24.04-std` - Explicit OS and variant
+- `2026.02.0-ubuntu-24.04-min` - Minimal variant
+- `latest` - Latest version, default OS, standard variant
 
 ## Configuration
 
 ### License Activation
 
-A valid license is required. Posit Connect must also run with the `--privileged` flag. Choose one license activation method:
+A [product license](https://docs.posit.co/licensing/licensing-faq.html) is required. Posit recommends license file activation. Connect must also run with the `--privileged` flag. Choose one activation method:
 
 **Option 1: License File (Recommended)**
 ```bash
@@ -139,7 +146,7 @@ This image differs from the legacy [`rstudio/rstudio-connect`](https://hub.docke
 | Registry         | `posit/connect`                        | `rstudio/rstudio-connect`                                     |
 | License env vars | `PCT_` prefix                          | `RSC_` prefix                                                 |
 | Variants         | `std` (with R/Python), `min` (minimal) | Single variant; multiple tags for different R/Python versions |
-| Base OS options  | Ubuntu 22.04                           | Ubuntu 22.04                                                  |
+| Base OS options  | Ubuntu 24.04, Ubuntu 22.04             | Ubuntu 22.04                                                  |
 
 ## Caveats
 
