@@ -5,6 +5,15 @@ This container image provides [Posit Connect](https://docs.posit.co/connect/) (P
 > [!NOTE]
 > These images are in preview as Posit migrates container images from [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products). The existing images remain supported.
 
+## Related Images
+
+For Kubernetes deployments, Connect uses all three images together. See the [repository README](https://github.com/posit-dev/images-connect#deploying-on-kubernetes) for Helm configuration.
+
+| Image | Description | Docker Hub | GHCR |
+|:------|:------------|:-----------|:-----|
+| `connect-content` | Runtime images for executing published content | [posit/connect-content](https://hub.docker.com/r/posit/connect-content) | [posit-dev/connect-content](https://github.com/posit-dev/images-connect/pkgs/container/connect-content) |
+| `connect-content-init` | Init container for Kubernetes deployments | [posit/connect-content-init](https://hub.docker.com/r/posit/connect-content-init) | [posit-dev/connect-content-init](https://github.com/posit-dev/images-connect/pkgs/container/connect-content-init) |
+
 ## Quick Start
 
 ```bash
