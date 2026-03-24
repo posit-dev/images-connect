@@ -32,7 +32,7 @@ For local Docker, you only need the `connect` image. The `connect-content` and `
 - [Connect Content](./connect-content/) — Runtime images for executing content (Kubernetes)
 - [Connect Content Init](./connect-content-init/) — Init container for Kubernetes deployments
 
-See the [Connect installation guide](https://docs.posit.co/connect/admin/getting-started/installation/) for full setup instructions.
+See the [Connect installation guide](https://docs.posit.co/connect/admin/getting-started/) for full setup instructions.
 
 ## Deploying on Kubernetes
 
@@ -168,7 +168,7 @@ Additional documentation:
 Build prerequisites
 
 * [python](https://docs.astral.sh/uv/guides/install-python/)
-* [pipx](https://pipx.pypa.io/stable/installation/)
+* [pipx](https://pipx.pypa.io/stable/how-to/install-pipx/)
 * [docker buildx bake](https://github.com/docker/buildx#installing)
 * [just](https://just.systems/man/en/prerequisites.html)
 * `bakery`
