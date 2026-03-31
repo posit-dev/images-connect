@@ -49,8 +49,7 @@ jobs:
     with:
       dev-versions: "only"
       matrix-versions: "exclude"
-      # Push images only for merges into main and daily schduled re-builds.
-      push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'schedule' }}
+      push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
 
   clean:
     name: Clean
