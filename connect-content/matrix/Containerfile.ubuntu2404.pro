@@ -56,14 +56,16 @@ RUN apt-get update -yqq && \
     rm -rf /var/lib/apt/lists/*
 
 ### Install Pro Drivers and ODBC ###
-RUN apt-get update -yqq && \
-    apt-get install -yqq --no-install-recommends \
-        rstudio-drivers && \
-    apt-get clean -yqq && \
-    rm -rf /var/lib/apt/lists/*
-
-### Configure ODBC drivers ###
-RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+        apt-get update -yqq && \
+        apt-get install -yqq --no-install-recommends \
+            rstudio-drivers && \
+        apt-get clean -yqq && \
+        rm -rf /var/lib/apt/lists/* && \
+        cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini; \
+    else \
+        echo "Pro Drivers will not be installed for architecture: $TARGETARCH"; \
+    fi
 
 ### Install R ###
 RUN apt-get update -yqq && \
