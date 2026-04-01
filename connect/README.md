@@ -50,6 +50,9 @@ Two variants are available:
 
 See [extending examples](https://github.com/posit-dev/images-examples/tree/main/extending) for how to build on the Minimal image.
 
+> [!WARNING]
+> Standard image builds for linux/arm64 do not include the Pro Drivers due to platform support limitations.
+
 ## Image Tags
 
 Images are published to:
