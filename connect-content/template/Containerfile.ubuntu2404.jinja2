@@ -43,10 +43,12 @@ COPY {{ Path.Version }}/deps/ubuntu-24.04_packages.txt /tmp/ubuntu-24.04_package
 
 {% if Image.Variant == "pro" -%}
 ### Install Pro Drivers and ODBC ###
-{{ apt.run_install(packages="rstudio-drivers") }}
-
-### Configure ODBC drivers ###
-RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+        {{ apt.install(packages="rstudio-drivers") | indent(8) }} && \
+        cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini; \
+    else \
+        echo "Pro Drivers will not be installed for architecture: $TARGETARCH"; \
+    fi
 
 {% endif -%}
 
