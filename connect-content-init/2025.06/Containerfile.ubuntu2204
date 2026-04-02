@@ -3,9 +3,13 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
 
 ### Global ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
+ARG BUILDARCH
+ARG TARGETARCH=${BUILDARCH}
 
 ### Release ARG declarations ###
 ARG CONNECT_VERSION="2025.06.0"
+
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 ### Setup environment ###
 RUN apt-get update -yqq --fix-missing && \

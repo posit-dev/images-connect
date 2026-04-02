@@ -13,6 +13,8 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
 
 ### Global ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
+ARG BUILDARCH
+ARG TARGETARCH=${BUILDARCH}
 
 ### Release ARG declarations ###
 ARG BUILDARCH
@@ -25,6 +27,8 @@ ENV PCT_LICENSE=""
 ENV PCT_LICENSE_SERVER=""
 ENV PCT_LICENSE_FILE_PATH=""
 ENV STARTUP_DEBUG_MODE=0
+
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 ### Run setup ###
 RUN apt-get update -yqq --fix-missing && \

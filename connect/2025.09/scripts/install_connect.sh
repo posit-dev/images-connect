@@ -20,7 +20,7 @@ Executable = /opt/R/4.5.1/bin/R
 
 [Python]
 Enabled = true
-Executable = /opt/python/cpython-3.13.7-linux-x86_64-gnu/bin/python
+Executable = /opt/python/3.13.7/bin/python
 
 [Quarto]
 Enabled = true
