@@ -24,6 +24,9 @@ See the [repository README](https://github.com/posit-dev/images-connect#deployin
 | Base | (none) | Open-source R and Python |
 | Pro | `-pro` | Includes Posit Professional Drivers for database connectivity |
 
+> [!WARNING]
+> Pro image builds for linux/arm64 do not include the Pro Drivers due to platform support limitations.
+
 ## Image Tags
 
 Images are published to:
