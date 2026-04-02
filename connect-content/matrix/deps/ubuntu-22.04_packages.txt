@@ -43,3 +43,4 @@ unixodbc
 unixodbc-dev
 wget
 zlib1g-dev
+xz-utils
