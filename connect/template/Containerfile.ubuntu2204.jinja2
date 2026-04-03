@@ -80,9 +80,6 @@ RUN {% for quarto_version in Dependencies.quarto -%}
     {%- endfor %}
     rm -f /tmp/tinytex-release.json
 
-### Install TensorFlow Serving ###
-COPY --from=tensorflow/serving:latest /usr/bin/tensorflow_model_server /usr/bin/tensorflow_model_server
-
 {% endif -%}
 
 ### Create data volume ###

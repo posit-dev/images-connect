@@ -84,18 +84,6 @@ RUN {% for quarto_version in Dependencies.quarto -%}
     {%- endfor %}
     rm -f /tmp/tinytex-release.json
 
-### Install TensorFlow Serving ###
-COPY --from=tensorflow/serving:latest /usr/bin/tensorflow_model_server /usr/bin/tensorflow_model_server
-
-### Configure TensorFlow ###
-RUN if [ "$TARGETARCH" = "amd64" ]; then \
-        printf '\n[TensorFlow]\nEnabled = true\nExecutable = /usr/bin/tensorflow_model_server\n' \
-            >> /etc/rstudio-connect/rstudio-connect.gcfg; \
-    else \
-        echo "TensorFlow installation will be skipped for architecture: $TARGETARCH"; \
-        rm -f /usr/bin/tensorflow_model_server; \
-    fi
-
 {% endif -%}
 
 ### Create data volume ###
