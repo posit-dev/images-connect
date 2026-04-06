@@ -6,9 +6,9 @@ d="===="
 
 apt-get update -yq
 
-echo "$d Installing Posit Connect 2026.03.0 $d"
+echo "$d Installing Posit Connect 2026.03.1 $d"
 
-RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1 apt-get install -yf rstudio-connect=2026.03.0-1
+RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1 apt-get install -yf rstudio-connect=2026.03.1-1
 apt-mark hold rstudio-connect
 
 mv /tmp/rstudio-connect.gcfg /etc/rstudio-connect/rstudio-connect.gcfg

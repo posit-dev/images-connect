@@ -17,7 +17,7 @@ For Kubernetes deployments, Connect uses all three images together. See the [rep
 ## Quick Start
 
 ```bash
-PCT_VERSION="2026.03.0"
+PCT_VERSION="2026.03.1"
 PCT_IMAGE="ghcr.io/posit-dev/connect"  # or docker.io/posit/connect
 PCT_LICENSE="/path/to/license.lic"
 docker run -d \
@@ -62,10 +62,10 @@ Images are published to:
 Ubuntu 24.04 is the default OS.
 
 Tag formats:
-- `2026.03.0` - Latest OS, standard variant
-- `2026.03.0-ubuntu-24.04` - Explicit OS, standard variant
-- `2026.03.0-ubuntu-24.04-std` - Explicit OS and variant
-- `2026.03.0-ubuntu-24.04-min` - Minimal variant
+- `2026.03.1` - Latest OS, standard variant
+- `2026.03.1-ubuntu-24.04` - Explicit OS, standard variant
+- `2026.03.1-ubuntu-24.04-std` - Explicit OS and variant
+- `2026.03.1-ubuntu-24.04-min` - Minimal variant
 - `latest` - Latest version, default OS, standard variant
 
 ## Configuration

@@ -50,12 +50,12 @@ kubectl create secret generic posit-connect-license \
   --from-file=license.lic=/path/to/license.lic
 ```
 
-The `executionEnvironments` list uses [declarative management](https://docs.posit.co/connect/admin/appendix/off-host/execution-environments/#declarative-management) (Connect 2026.03.0+). Unlike the legacy `customRuntimeYaml`, changes take effect on every `helm upgrade` without requiring a pod restart or database reset. Setting `customRuntimeYaml` to an empty images list prevents the chart from bootstrapping its default set of 12 content images on first start.
+The `executionEnvironments` list uses [declarative management](https://docs.posit.co/connect/admin/appendix/off-host/execution-environments/#declarative-management). Unlike the legacy `customRuntimeYaml`, changes take effect on every `helm upgrade` without requiring a pod restart or database reset. Setting `customRuntimeYaml` to an empty images list prevents the chart from bootstrapping its default set of 12 content images on first start.
 
 ```yaml
 image:
   repository: ghcr.io/posit-dev/connect
-  tag: "2026.03.0"
+  tag: "2026.03.1"
 
 license:
   file:
@@ -69,7 +69,7 @@ launcher:
     images: []
   defaultInitContainer:
     repository: ghcr.io/posit-dev/connect-content-init
-    tag: "2026.03.0"
+    tag: "2026.03.1"
 
 executionEnvironments:
   - name: ghcr.io/posit-dev/connect-content:R4.5.2-python3.14.3-ubuntu-24.04
