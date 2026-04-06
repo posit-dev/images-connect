@@ -1,5 +1,9 @@
 # Posit Connect Container Images
 
+[![Build](https://github.com/posit-dev/images-connect/actions/workflows/production.yml/badge.svg?branch=main)](https://github.com/posit-dev/images-connect/actions/workflows/production.yml)
+[![Content](https://github.com/posit-dev/images-connect/actions/workflows/content.yml/badge.svg?branch=main)](https://github.com/posit-dev/images-connect/actions/workflows/content.yml)
+[![Latest](https://img.shields.io/docker/v/posit/connect?sort=semver&label=latest)](https://hub.docker.com/r/posit/connect/tags)
+
 Container images for [Posit Connect](https://docs.posit.co/connect/).
 
 > [!NOTE]
