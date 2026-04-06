@@ -26,8 +26,8 @@ Images are published to:
 - GitHub Container Registry: `ghcr.io/posit-dev/connect-content-init`
 
 Tag formats:
-- `2026.03.0` - Full version (Ubuntu 24.04)
-- `2026.03.0-ubuntu-24.04` - Explicit OS
+- `2026.03.1` - Full version (Ubuntu 24.04)
+- `2026.03.1-ubuntu-24.04` - Explicit OS
 - `latest` - Latest stable release (Ubuntu 24.04)
 
 ## Usage
@@ -39,7 +39,7 @@ This image is designed to be used as an init container in Kubernetes. It copies 
 ```yaml
 initContainers:
   - name: connect-content-init
-    image: ghcr.io/posit-dev/connect-content-init:2026.03.0
+    image: ghcr.io/posit-dev/connect-content-init:2026.03.1
     volumeMounts:
       - name: connect-runtime
         mountPath: /opt/rstudio-connect-runtime
