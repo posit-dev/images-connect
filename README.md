@@ -133,7 +133,7 @@ The root of the bakery project is used as the build context for each Containerfi
 Here, the [`bakery.yaml`](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#bakery-configuration) file, or project, is in the root of this repository.
 
 ```shell
-PCT_VERSION="2026.02"
+PCT_VERSION="2026.03"
 
 # Build the standard Connect image using docker
 docker buildx build \
