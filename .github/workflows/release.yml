@@ -9,7 +9,7 @@ on:
 
 jobs:
   release:
-    uses: posit-dev/images-shared/.github/workflows/product-release.yml@main
+    uses: posit-dev/images-shared/.github/workflows/product-release.yml@worktree-fix-readme-update
     with:
       version: ${{ inputs.version }}
       images: "connect connect-content-init"
