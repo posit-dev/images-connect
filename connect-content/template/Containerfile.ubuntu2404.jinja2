@@ -70,7 +70,12 @@ RUN {{ r.get_version_directory(r.build_arg()) }}/bin/R -e 'install.packages("odb
 RUN {{ python.get_version_directory(python.build_arg()) }}/bin/python -m pip install --no-cache-dir --break-system-packages --upgrade setuptools
 
 ### Install Quarto ###
-ADD https://api.github.com/repos/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
-RUN {{ quarto.install(quarto.build_arg(), False, True) | indent(4) }} && \
-    {{ quarto.install_tinytex_command(quarto.get_version_directory(quarto.build_arg() | trim) + "/bin/quarto", True) | indent(4) }} && \
+RUN {{ quarto.install(quarto.build_arg()) | indent(4) }} && \
     {{ quarto.symlink_binary(quarto.build_arg(), "quarto", "/usr/local/bin/quarto") | indent(4) }}
+
+### Install TinyTeX ###
+# Caches won't invalidate correctly on new releases for TinyTeX installs.
+# This ADD instruction is a workaround to bust the cache on new releases.
+ADD https://api.github.com/repos/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
+RUN {{ quarto.install_tinytex_command(quarto.get_version_directory(quarto.build_arg() | trim) + "/bin/quarto", True) | indent(4) }} && \
+    rm -f /tmp/tinytex-release.json
