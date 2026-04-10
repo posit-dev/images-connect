@@ -10,7 +10,6 @@ on:
 
   workflow_dispatch:
 
-permissions: {}
 
 concurrency:
   # Only cancel in-progress runs for pull_request events, this prevents cancelling workflows against main or tags
