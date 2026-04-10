@@ -74,7 +74,7 @@ RUN {% for quarto_version in Dependencies.quarto -%}
     {%- endfor %}
 
 ### Install TinyTex ###
-ADD https://api.github.com/repos/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
+ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
 RUN {% for quarto_version in Dependencies.quarto -%}
     {{ quarto.install_tinytex_command(quarto.get_version_directory(quarto_version | trim) + "/bin/quarto", loop.first) | indent(4) }} && \
     {%- endfor %}

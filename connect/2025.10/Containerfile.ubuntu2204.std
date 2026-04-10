@@ -86,7 +86,7 @@ RUN mkdir -p /opt/quarto/1.8.25 && \
     ln -s /opt/quarto/1.8.25/bin/quarto /usr/local/bin/quarto 
 
 ### Install TinyTex ###
-ADD https://api.github.com/repos/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
+ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
 RUN /opt/quarto/1.8.25/bin/quarto install tinytex --no-prompt --quiet --update-path && \
     rm -f /tmp/tinytex-release.json
 
