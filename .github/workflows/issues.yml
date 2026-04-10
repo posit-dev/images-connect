@@ -4,11 +4,14 @@ on:
     types:
       - opened
 
+permissions: {}
+
 jobs:
   issue:
     # only run in posit-dev/images-connect.
     if: github.repository == 'posit-dev/images-connect'
     runs-on: ubuntu-latest
+    permissions: {}
     steps:
 
       - name: GitHub App Token
