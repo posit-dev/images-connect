@@ -85,14 +85,14 @@ command:
     stdout:
       - "2025.10.0"
 
-  
+
   "Ensure R version is correct":
     exec: /opt/R/4.5.1/bin/R --version
     exit-status: 0
     stdout:
       - "4.5.1"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
-  
+
 
   "Ensure Python 3.14.0 version is correct":
     exec: /opt/python/3.14.0/bin/python --version
@@ -101,14 +101,14 @@ command:
       - "3.14.0"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
 
-  
+
   "Ensure Quarto version is correct":
     exec: /opt/quarto/1.8.25/bin/quarto --version
     exit-status: 0
     stdout:
       - "1.8.25"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
-  
+
   "Ensure Quarto symlink version is correct":
     exec: /usr/local/bin/quarto --version
     exit-status: 0
