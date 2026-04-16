@@ -1,6 +1,5 @@
 .dev-*
 tools/*goss
-tools/pti
 results/
 .bakery-bake.json
 .docker-bake.json
