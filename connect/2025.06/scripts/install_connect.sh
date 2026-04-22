@@ -24,7 +24,7 @@ Executable = /opt/python/3.12.1/bin/python
 
 [Quarto]
 Enabled = true
-Executable = /opt/quarto/1.4.557/bin/quarto
+Executable = /opt/quarto/bin/quarto
 
 [TensorFlow]
 Enabled = true

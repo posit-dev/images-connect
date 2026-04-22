@@ -47,9 +47,7 @@ Executable = {{ python.get_version_directory(python_version) }}/bin/python
 
 [Quarto]
 Enabled = true
-{% for quarto_version in Dependencies.quarto -%}
-Executable = {{ quarto.get_version_directory(quarto_version) }}/bin/quarto
-{%- endfor %}
+Executable = /opt/quarto/bin/quarto
 
 [TensorFlow]
 Enabled = true

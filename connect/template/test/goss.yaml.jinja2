@@ -87,16 +87,13 @@ file:
   {%- endfor %}
 
   # Check for Quarto installation
-  {% for quarto_version in Dependencies.quarto -%}
-  /opt/quarto/{{ quarto_version }}/bin/quarto:
+  /opt/quarto/bin/quarto:
     exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
     mode: "0755"
   /usr/local/bin/quarto:
     exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
     filetype: symlink
-    linked-to: /opt/quarto/{{ quarto_version }}/bin/quarto
-    mode: "0777"
-  {%- endfor %}
+    linked-to: /opt/quarto/bin/quarto
 
 command:
   "Ensure Connect version is correct":
@@ -123,14 +120,12 @@ command:
     skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
   {%- endfor %}
 
-  {% for quarto_version in Dependencies.quarto %}
   "Ensure Quarto version is correct":
-    exec: {{ quarto.get_version_directory(quarto_version) }}/bin/quarto --version
+    exec: /opt/quarto/bin/quarto --version
     exit-status: 0
     stdout:
-      - "{{ quarto_version }}"
+      - "{{ Dependencies.quarto.0 }}"
     skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
-  {% endfor %}
   "Ensure Quarto symlink version is correct":
     exec: /usr/local/bin/quarto --version
     exit-status: 0

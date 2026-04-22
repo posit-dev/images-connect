@@ -81,13 +81,20 @@ RUN IMAGE_VARIANT="Standard" \
 COPY --chmod=0775 connect/2025.05/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Install Quarto ###
-RUN mkdir -p /opt/quarto/1.4.557 && \
-    curl -fsSL "https://github.com/quarto-dev/quarto-cli/releases/download/v1.4.557/quarto-1.4.557-linux-${TARGETARCH}.tar.gz" | tar xzf - -C "/opt/quarto/1.4.557" --strip-components=1 && \
-    ln -s /opt/quarto/1.4.557/bin/quarto /usr/local/bin/quarto 
+RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')" && \
+    apt-get install -yqq --no-install-recommends \
+        quarto=1.4.557 && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
 
 ### Install TinyTex ###
 ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
-RUN /opt/quarto/1.4.557/bin/quarto install tinytex --no-prompt --quiet --update-path && \
+RUN apt-get update -yqq && \
+    apt-get install -yqq --no-install-recommends \
+        xz-utils && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/* && \
+    /opt/quarto/bin/quarto install tinytex --no-prompt --quiet --update-path && \
     rm -f /tmp/tinytex-release.json
 
 ### Install TensorFlow Serving ###

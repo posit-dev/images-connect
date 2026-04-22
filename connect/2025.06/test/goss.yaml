@@ -69,14 +69,13 @@ file:
     filetype: symlink
 
   # Check for Quarto installation
-  /opt/quarto/1.4.557/bin/quarto:
+  /opt/quarto/bin/quarto:
     exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
     mode: "0755"
   /usr/local/bin/quarto:
     exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
     filetype: symlink
-    linked-to: /opt/quarto/1.4.557/bin/quarto
-    mode: "0777"
+    linked-to: /opt/quarto/bin/quarto
 
 command:
   "Ensure Connect version is correct":
@@ -103,7 +102,7 @@ command:
 
   
   "Ensure Quarto version is correct":
-    exec: /opt/quarto/1.4.557/bin/quarto --version
+    exec: /opt/quarto/bin/quarto --version
     exit-status: 0
     stdout:
       - "1.4.557"
