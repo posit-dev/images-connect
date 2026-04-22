@@ -87,6 +87,7 @@ RUN /opt/python/$PYTHON_VERSION/bin/python -m pip install --no-cache-dir --break
 RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')" && \
     apt-get install -yqq --no-install-recommends \
         quarto=$QUARTO_VERSION && \
+    apt-mark hold quarto && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 

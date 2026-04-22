@@ -84,6 +84,7 @@ COPY --chmod=0775 connect/2026.01/scripts/startup.sh /usr/local/bin/startup.sh
 RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')" && \
     apt-get install -yqq --no-install-recommends \
         quarto=1.8.27 && \
+    apt-mark hold quarto && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
