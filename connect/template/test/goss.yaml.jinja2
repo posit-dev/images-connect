@@ -105,14 +105,14 @@ command:
     stdout:
       - "{{ Image.Version }}"
 
-  {% for r_version in Dependencies.R %}
+{% for r_version in Dependencies.R %}
   "Ensure R version is correct":
     exec: {{ r.get_version_directory(r_version) }}/bin/R --version
     exit-status: 0
     stdout:
       - "{{ r_version }}"
     skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
-  {% endfor %}
+{% endfor %}
 
   {% for python_version in Dependencies.python -%}
   "Ensure Python {{ python_version }} version is correct":
@@ -123,14 +123,14 @@ command:
     skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
   {%- endfor %}
 
-  {% for quarto_version in Dependencies.quarto %}
+{% for quarto_version in Dependencies.quarto %}
   "Ensure Quarto version is correct":
     exec: {{ quarto.get_version_directory(quarto_version) }}/bin/quarto --version
     exit-status: 0
     stdout:
       - "{{ quarto_version }}"
     skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
-  {% endfor %}
+{% endfor %}
   "Ensure Quarto symlink version is correct":
     exec: /usr/local/bin/quarto --version
     exit-status: 0

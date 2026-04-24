@@ -83,7 +83,7 @@ COPY --chmod=0775 connect/2026.03/scripts/startup.sh /usr/local/bin/startup.sh
 ### Install Quarto ###
 RUN mkdir -p /opt/quarto/1.9.36 && \
     curl -fsSL "https://github.com/quarto-dev/quarto-cli/releases/download/v1.9.36/quarto-1.9.36-linux-${TARGETARCH}.tar.gz" | tar xzf - -C "/opt/quarto/1.9.36" --strip-components=1 && \
-    ln -s /opt/quarto/1.9.36/bin/quarto /usr/local/bin/quarto 
+    ln -s /opt/quarto/1.9.36/bin/quarto /usr/local/bin/quarto
 
 ### Install TinyTex ###
 ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json

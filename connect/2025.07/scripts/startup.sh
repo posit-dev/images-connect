@@ -14,8 +14,9 @@ deactivate() {
       /opt/rstudio-connect/bin/license-manager deactivate >/dev/null 2>&1
       is_deactivated=1
       ((retries+=1))
+      # shellcheck disable=SC2045
       for file in $(ls -A /var/lib/.local); do
-        if [ -s /var/lib/.local/$file ]; then
+        if [ -s "/var/lib/.local/$file" ]; then
           if [[ $retries -lt 3 ]]; then
             echo "License did not deactivate, retry ${retries}..."
             is_deactivated=0
@@ -37,11 +38,11 @@ PCT_LICENSE_FILE_PATH=${PCT_LICENSE_FILE_PATH:-$RSC_LICENSE_FILE_PATH}
 # Activate License
 PCT_LICENSE_FILE_PATH=${PCT_LICENSE_FILE_PATH:-/etc/rstudio-connect/license.lic}
 if ! [ -z "$PCT_LICENSE" ]; then
-    /opt/rstudio-connect/bin/license-manager activate $PCT_LICENSE
+    /opt/rstudio-connect/bin/license-manager activate "$PCT_LICENSE"
 elif ! [ -z "$PCT_LICENSE_SERVER" ]; then
-    /opt/rstudio-connect/bin/license-manager license-server $PCT_LICENSE_SERVER
+    /opt/rstudio-connect/bin/license-manager license-server "$PCT_LICENSE_SERVER"
 elif test -f "$PCT_LICENSE_FILE_PATH"; then
-    /opt/rstudio-connect/bin/license-manager activate-file $PCT_LICENSE_FILE_PATH
+    /opt/rstudio-connect/bin/license-manager activate-file "$PCT_LICENSE_FILE_PATH"
 fi
 
 # ensure these cannot be inherited by child processes
