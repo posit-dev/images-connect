@@ -19,5 +19,5 @@ jobs:
       version: ${{ inputs.version }}
       images: "connect connect-content-init"
     secrets:
-      APP_ID: ${{ secrets.APP_ID }}
-      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+      APP_ID: ${{ secrets.POSIT_CONNECT_PROJECTS_APP_ID }}
+      APP_PRIVATE_KEY: ${{ secrets.POSIT_CONNECT_PROJECTS_PEM }}
