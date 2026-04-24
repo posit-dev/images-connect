@@ -11,6 +11,15 @@ on:
       - main
 
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Product version to build (e.g. 2026.04.0)"
+        required: false
+        type: string
+      stream:
+        description: "Dev stream to build (e.g. 'daily')"
+        required: false
+        type: string
 
 concurrency:
   # Only cancel in-progress runs for pull_request events, this prevents cancelling workflows against main or tags
@@ -56,7 +65,9 @@ jobs:
     with:
       dev-versions: "only"
       matrix-versions: "exclude"
-      # Push images only for merges into main and daily schduled re-builds.
+      image-version: ${{ inputs.version }}
+      dev-stream: ${{ inputs.stream }}
+      # Push on merges to main, scheduled rebuilds, and dispatches targeting main.
       push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
 
   clean:
