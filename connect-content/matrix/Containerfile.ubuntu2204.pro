@@ -82,13 +82,27 @@ COPY --from=python-builder /opt/python /opt/python
 RUN /opt/python/$PYTHON_VERSION/bin/python -m pip install --no-cache-dir --break-system-packages --upgrade setuptools
 
 ### Install Quarto ###
-RUN mkdir -p /opt/quarto/$QUARTO_VERSION && \
-    curl -fsSL "https://github.com/quarto-dev/quarto-cli/releases/download/v$QUARTO_VERSION/quarto-$QUARTO_VERSION-linux-${TARGETARCH}.tar.gz" | tar xzf - -C "/opt/quarto/$QUARTO_VERSION" --strip-components=1 && \
-    ln -s /opt/quarto/$QUARTO_VERSION/bin/quarto /usr/local/bin/quarto
+RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')" && \
+    apt-get install -yqq --no-install-recommends \
+        quarto=$QUARTO_VERSION && \
+    apt-mark hold quarto && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
 
 ### Install TinyTeX ###
 # Caches won't invalidate correctly on new releases for TinyTeX installs.
 # This ADD instruction is a workaround to bust the cache on new releases.
+#
+# TinyTeX is installed under HOME="/opt" so the install lands at /opt/.TinyTeX,
+# which is readable by non-root runtime users. `--update-path` makes tlmgr
+# symlink the TinyTeX binaries into /usr/local/bin.
+# TODO: Remove `HOME="/opt"` once Quarto supports custom install locations
+# for TinyTeX, see https://github.com/quarto-dev/quarto-cli/issues/11800.
 ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
-RUN /opt/quarto/$QUARTO_VERSION/bin/quarto install tinytex --no-prompt --quiet --update-path && \
+RUN apt-get update -yqq && \
+    apt-get install -yqq --no-install-recommends \
+        xz-utils && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/* && \
+    HOME="/opt" /opt/quarto/bin/quarto install tinytex --no-prompt --quiet --update-path && \
     rm -f /tmp/tinytex-release.json

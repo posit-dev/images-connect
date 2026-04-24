@@ -87,16 +87,26 @@ file:
   {%- endfor %}
 
   # Check for Quarto installation
-  {% for quarto_version in Dependencies.quarto -%}
-  /opt/quarto/{{ quarto_version }}/bin/quarto:
+  /opt/quarto/bin/quarto:
     exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
     mode: "0755"
   /usr/local/bin/quarto:
     exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
     filetype: symlink
-    linked-to: /opt/quarto/{{ quarto_version }}/bin/quarto
-    mode: "0777"
-  {%- endfor %}
+    linked-to: /opt/quarto/bin/quarto
+
+  # TinyTeX is installed under /opt/.TinyTeX (via HOME="/opt") so the rstudio-connect
+  # runtime user can read the install; tlmgr path add symlinks the binaries into
+  # /usr/local/bin so they are on PATH.
+  /opt/.TinyTeX:
+    exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
+    filetype: directory
+  /usr/local/bin/tlmgr:
+    exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
+    filetype: symlink
+  /usr/local/bin/pdflatex:
+    exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
+    filetype: symlink
 
 command:
   "Ensure Connect version is correct":
@@ -123,14 +133,12 @@ command:
     skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
   {%- endfor %}
 
-  {% for quarto_version in Dependencies.quarto %}
   "Ensure Quarto version is correct":
-    exec: {{ quarto.get_version_directory(quarto_version) }}/bin/quarto --version
+    exec: /opt/quarto/bin/quarto --version
     exit-status: 0
     stdout:
-      - "{{ quarto_version }}"
+      - "{{ Dependencies.quarto.0 }}"
     skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
-  {% endfor %}
   "Ensure Quarto symlink version is correct":
     exec: /usr/local/bin/quarto --version
     exit-status: 0
@@ -149,5 +157,29 @@ command:
     exec: quarto list tools
     exit-status: 0
     stderr:
-      - "/tinytex\\s+Up to date/"
+      # "External Installation" is reported because TinyTeX is installed under
+      # HOME="/opt" so Quarto does not consider it one of its managed installs.
+      # TODO: Switch back to "Up to date" once Quarto supports a custom TinyTeX
+      # install location, see https://github.com/quarto-dev/quarto-cli/issues/11800.
+      - "/tinytex\\s+External Installation/"
+    skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
+  "Ensure TinyTeX is readable and executable by rstudio-connect":
+    # Runs tlmgr and pdflatex as the rstudio-connect runtime user to confirm
+    # the /opt/.TinyTeX install is accessible to non-root. `command -v` also
+    # forces PATH resolution, not just direct invocation — proves the
+    # /usr/local/bin symlinks are on the user's PATH. Guards against
+    # regressions in placement, permissions, or PATH setup.
+    exec: su -s /bin/sh -c 'command -v tlmgr && command -v pdflatex && tlmgr --version && pdflatex --version' rstudio-connect
+    exit-status: 0
+    stdout:
+      - "tlmgr"
+      - "pdfTeX"
+    skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
+  "Ensure quarto package is held":
+    # Guards against apt upgrade inside the container drifting quarto off
+    # the pinned version the image is labeled with.
+    exec: apt-mark showhold
+    exit-status: 0
+    stdout:
+      - "/^quarto$/"
     skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}

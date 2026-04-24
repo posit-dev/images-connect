@@ -81,13 +81,26 @@ RUN IMAGE_VARIANT="Standard" \
 COPY --chmod=0775 connect/2026.01/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Install Quarto ###
-RUN mkdir -p /opt/quarto/1.8.27 && \
-    curl -fsSL "https://github.com/quarto-dev/quarto-cli/releases/download/v1.8.27/quarto-1.8.27-linux-${TARGETARCH}.tar.gz" | tar xzf - -C "/opt/quarto/1.8.27" --strip-components=1 && \
-    ln -s /opt/quarto/1.8.27/bin/quarto /usr/local/bin/quarto 
+RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')" && \
+    apt-get install -yqq --no-install-recommends \
+        quarto=1.8.27 && \
+    apt-mark hold quarto && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
 
 ### Install TinyTex ###
+# TinyTeX is installed under HOME="/opt" so the install lands at /opt/.TinyTeX,
+# which is readable by non-root runtime users. `--update-path` makes tlmgr
+# symlink the TinyTeX binaries into /usr/local/bin.
+# TODO: Remove `HOME="/opt"` once Quarto supports custom install locations
+# for TinyTeX, see https://github.com/quarto-dev/quarto-cli/issues/11800.
 ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
-RUN /opt/quarto/1.8.27/bin/quarto install tinytex --no-prompt --quiet --update-path && \
+RUN apt-get update -yqq && \
+    apt-get install -yqq --no-install-recommends \
+        xz-utils && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/* && \
+    HOME="/opt" /opt/quarto/bin/quarto install tinytex --no-prompt --quiet --update-path && \
     rm -f /tmp/tinytex-release.json
 
 ### Install TensorFlow Serving ###

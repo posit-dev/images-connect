@@ -71,17 +71,19 @@ RUN IMAGE_VARIANT="{{ Image.Variant }}" {% if Image.DownloadURL is defined %}DOW
 COPY --chmod=0775 {{ Path.Version }}/scripts/startup.sh /usr/local/bin/startup.sh
 
 {% if Image.Variant != "Minimal" -%}
+{%- set quarto_version = Dependencies.quarto[0] -%}
 ### Install Quarto ###
-RUN {% for quarto_version in Dependencies.quarto -%}
-    {{ quarto.install(quarto_version) | indent(4) }} && \
-    {% if loop.first -%}{{ quarto.symlink_binary(quarto_version, "quarto", "/usr/local/bin/quarto") }}{% endif %} {% if not loop.last %}&& \{% endif %}
-    {%- endfor %}
+RUN {{ quarto.install(quarto_version) | indent(4) }}
 
 ### Install TinyTex ###
+# TinyTeX is installed under HOME="/opt" so the install lands at /opt/.TinyTeX,
+# which is readable by non-root runtime users. `--update-path` makes tlmgr
+# symlink the TinyTeX binaries into /usr/local/bin.
+# TODO: Remove `HOME="/opt"` once Quarto supports custom install locations
+# for TinyTeX, see https://github.com/quarto-dev/quarto-cli/issues/11800.
 ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
-RUN {% for quarto_version in Dependencies.quarto -%}
-    {{ quarto.install_tinytex_command(quarto.get_version_directory(quarto_version | trim) + "/bin/quarto", loop.first) | indent(4) }} && \
-    {%- endfor %}
+RUN {{ apt.install(packages="xz-utils") | indent(4) }} && \
+    {{ quarto.install_tinytex_command("/opt/quarto/bin/quarto", update_path=True, home_path="/opt") | indent(4) }} && \
     rm -f /tmp/tinytex-release.json
 
 {% endif -%}
