@@ -91,6 +91,5 @@ RUN mkdir -p /opt/quarto/$QUARTO_VERSION && \
 # This ADD instruction is a workaround to bust the cache on new releases.
 ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
 RUN --mount=type=secret,id=github_token,required=false \
-    if [ -s /run/secrets/github_token ]; then export GH_TOKEN="$(cat /run/secrets/github_token)"; fi && \
-    HOME="/opt" /opt/quarto/$QUARTO_VERSION/bin/quarto install tinytex --no-prompt --quiet --update-path && \
+    GH_TOKEN="$([ -s /run/secrets/github_token ] && cat /run/secrets/github_token)" HOME="/opt" /opt/quarto/$QUARTO_VERSION/bin/quarto install tinytex --no-prompt --quiet --update-path && \
     rm -f /tmp/tinytex-release.json
