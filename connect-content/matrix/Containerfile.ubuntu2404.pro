@@ -92,5 +92,6 @@ RUN mkdir -p /opt/quarto/$QUARTO_VERSION && \
 # Caches won't invalidate correctly on new releases for TinyTeX installs.
 # This ADD instruction is a workaround to bust the cache on new releases.
 ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
-RUN /opt/quarto/$QUARTO_VERSION/bin/quarto install tinytex --no-prompt --quiet --update-path && \
+RUN --mount=type=secret,id=github_token,required=false \
+    GH_TOKEN="$([ -s /run/secrets/github_token ] && cat /run/secrets/github_token)" HOME="/opt" /opt/quarto/$QUARTO_VERSION/bin/quarto install tinytex --no-prompt --quiet --update-path && \
     rm -f /tmp/tinytex-release.json
