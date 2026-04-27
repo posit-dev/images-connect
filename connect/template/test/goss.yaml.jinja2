@@ -141,12 +141,8 @@ command:
     exec: /usr/local/bin/quarto check --quiet
     exit-status: 0
     skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
-  "Ensure Quarto symlink works":
-    exec: /usr/local/bin/quarto check --quiet
-    exit-status: 0
-    skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
   "Ensure TinyTeX is installed":
-    exec: quarto list tools
+    exec: "HOME='/opt' quarto list tools"
     exit-status: 0
     stderr:
       - "/tinytex\\s+Up to date/"

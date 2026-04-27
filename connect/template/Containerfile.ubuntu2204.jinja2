@@ -81,7 +81,7 @@ RUN {% for quarto_version in Dependencies.quarto -%}
 {% endif -%}
 ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
 RUN {{ quarto.github_token_secret_mount() }} \
-    {{ quarto.install_tinytex_command(quarto.get_version_directory(quarto_version | trim) + "/bin/quarto", True) | indent(4) }} && \
+    {{ quarto.install_tinytex_command(quarto.get_version_directory(quarto_version | trim) + "/bin/quarto", True, home_path="/opt") | indent(4) }} && \
     rm -f /tmp/tinytex-release.json
 
 {% endif -%}

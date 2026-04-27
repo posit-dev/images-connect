@@ -89,7 +89,7 @@ RUN mkdir -p /opt/quarto/1.8.26 && \
 ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
 RUN --mount=type=secret,id=github_token,required=false \
     if [ -s /run/secrets/github_token ]; then export GH_TOKEN="$(cat /run/secrets/github_token)"; fi && \
-    /opt/quarto/1.8.26/bin/quarto install tinytex --no-prompt --quiet --update-path && \
+    HOME="/opt" /opt/quarto/1.8.26/bin/quarto install tinytex --no-prompt --quiet --update-path && \
     rm -f /tmp/tinytex-release.json
 
 ### Install TensorFlow Serving ###
