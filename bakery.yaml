@@ -29,6 +29,10 @@ images:
     description: "A containerized image of Posit Connect (PCT), which organizes and
       centralizes data science packages across your team, department, or the entire
       organization."
+    documentationUrl: https://docs.posit.co/connect/
+    buildSecrets:
+      - id: github_token
+        envVar: GITHUB_TOKEN
     dependencyConstraints:
       - dependency: R
         constraint:
@@ -39,7 +43,6 @@ images:
       - dependency: quarto
         constraint:
           latest: true
-    documentationUrl: https://docs.posit.co/connect/
     variants:
       - name: Standard
         extension: std
@@ -204,6 +207,9 @@ images:
       Drivers for database connectivity."
     documentationUrl:
       https://docs.posit.co/connect/admin/runtimes/content-images/
+    buildSecrets:
+      - id: github_token
+        envVar: GITHUB_TOKEN
     variants:
       - name: base
         extension: base
