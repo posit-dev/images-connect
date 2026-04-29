@@ -75,9 +75,22 @@ images:
             namespace: "posit-dev"
             repository: "connect-preview"
     versions:
+      - name: 2026.04.0
+        subpath: '2026.04'
+        latest: true
+        os:
+          - name: Ubuntu 22.04
+          - name: Ubuntu 24.04
+            primary: true
+        dependencies:
+          - dependency: R
+            version: 4.6.0
+          - dependency: python
+            version: 3.14.4
+          - dependency: quarto
+            version: 1.9.37
       - name: 2026.03.1
         subpath: '2026.03'
-        latest: true
         os:
           - name: Ubuntu 22.04
           - name: Ubuntu 24.04
@@ -205,7 +218,7 @@ images:
     description: "Content execution images for Posit Connect with R, Python, Quarto,
       TinyTeX, system dependencies for popular R packages, and Posit Professional
       Drivers for database connectivity."
-    documentationUrl:
+    documentationUrl: 
       https://docs.posit.co/connect/admin/runtimes/content-images/
     buildSecrets:
       - id: github_token
@@ -259,9 +272,18 @@ images:
             namespace: "posit-dev"
             repository: "connect-content-init-preview"
     versions:
+      - name: 2026.04.0
+        subpath: '2026.04'
+        latest: true
+        os:
+          - name: Ubuntu 22.04
+          - name: Ubuntu 24.04
+            primary: true
+            platforms:
+              - linux/amd64
+              - linux/arm64
       - name: 2026.03.1
         subpath: '2026.03'
-        latest: true
         os:
           - name: Ubuntu 22.04
           - name: Ubuntu 24.04
