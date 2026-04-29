@@ -55,7 +55,7 @@ The `executionEnvironments` list uses [declarative management](https://docs.posi
 ```yaml
 image:
   repository: ghcr.io/posit-dev/connect
-  tag: "2026.03.1"
+  tag: "2026.04.0"
 
 license:
   file:
@@ -69,7 +69,7 @@ launcher:
     images: []
   defaultInitContainer:
     repository: ghcr.io/posit-dev/connect-content-init
-    tag: "2026.03.1"
+    tag: "2026.04.0"
 
 executionEnvironments:
   - name: ghcr.io/posit-dev/connect-content:R4.5.2-python3.14.3-ubuntu-24.04
@@ -133,7 +133,7 @@ The root of the bakery project is used as the build context for each Containerfi
 Here, the [`bakery.yaml`](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#bakery-configuration) file, or project, is in the root of this repository.
 
 ```shell
-PCT_VERSION="2026.03"
+PCT_VERSION="2026.04"
 
 # Build the standard Connect image using docker
 docker buildx build \
