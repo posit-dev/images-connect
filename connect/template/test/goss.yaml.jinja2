@@ -31,6 +31,8 @@ package:
   {{ . }}:
     installed: true
   {{ end }}
+  rstudio-drivers:
+    installed: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
   {%- endraw %}
 
 process:
@@ -162,6 +164,12 @@ command:
       # TODO: Switch back to "Up to date" once Quarto supports a custom TinyTeX
       # install location, see https://github.com/quarto-dev/quarto-cli/issues/11800.
       - "/tinytex\\s+External Installation/"
+    skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
+  "Verify ODBC drivers are configured":
+    exec: cat /etc/odbcinst.ini
+    exit-status: 0
+    stdout:
+      - "/PostgreSQL|MySQL|SQLServer/"
     skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
   "Ensure TinyTeX is readable and executable by rstudio-connect":
     # Runs tlmgr and pdflatex as the rstudio-connect runtime user to confirm

@@ -42,10 +42,8 @@ COPY {{ Path.Version }}/deps/ubuntu-22.04_packages.txt /tmp/ubuntu-22.04_package
 {{ apt.run_install(files = '/tmp/ubuntu-22.04_packages.txt') }}
 
 {% if Image.Variant == "pro" -%}
-### Install Pro Drivers and ODBC ###
+### Install Pro Drivers ###
 {{ apt.run_install(packages="rstudio-drivers") }}
-
-### Configure ODBC drivers ###
 RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
 
 {% endif -%}

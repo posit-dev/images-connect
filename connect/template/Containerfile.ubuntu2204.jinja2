@@ -44,8 +44,8 @@ COPY {{ Path.Version }}/deps/ubuntu-22.04_packages.txt /tmp/ubuntu-22.04_package
 
 {% if Image.Variant != "Minimal" -%}
 ### Install Pro Drivers ###
-RUN {{ apt.install(packages="rstudio-drivers") | indent(4) }} && \
-    cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
+{{ apt.run_install(packages="rstudio-drivers") }}
+RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
 
 ### Install R ###
 {{ r.run_install(Dependencies.R) }}

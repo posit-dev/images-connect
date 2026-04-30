@@ -18,6 +18,8 @@ package:
   {{ . }}:
     installed: true
   {{ end }}
+  rstudio-drivers:
+    installed: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
 
 process:
   connect:
@@ -124,4 +126,10 @@ command:
     exit-status: 0
     stderr:
       - "/tinytex\\s+Up to date/"
+    skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
+  "Verify ODBC drivers are configured":
+    exec: cat /etc/odbcinst.ini
+    exit-status: 0
+    stdout:
+      - "/PostgreSQL|MySQL|SQLServer/"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
