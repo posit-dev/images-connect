@@ -79,9 +79,7 @@ file:
     filetype: symlink
     linked-to: /opt/quarto/bin/quarto
 
-  # TinyTeX is installed under /opt/.TinyTeX (via HOME="/opt") so the rstudio-connect
-  # runtime user can read the install; tlmgr path add symlinks the binaries into
-  # /usr/local/bin so they are on PATH.
+  # TinyTeX is installed under /opt/.TinyTeX; tlmgr path add symlinks binaries into /usr/local/bin.
   /opt/.TinyTeX:
     exists: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
     filetype: directory
@@ -134,27 +132,14 @@ command:
   "Ensure Quarto symlink works":
     exec: /usr/local/bin/quarto check --quiet
     exit-status: 0
+    skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
   "Ensure TinyTeX is installed":
     exec: quarto list tools
     exit-status: 0
     stderr:
-      # "External Installation" is reported because TinyTeX is installed under
-      # HOME="/opt" so Quarto does not consider it one of its managed installs.
-      # TODO: Switch back to "Up to date" once Quarto supports a custom TinyTeX
-      # install location, see https://github.com/quarto-dev/quarto-cli/issues/11800.
+      # "External Installation" because Quarto doesn't recognize TinyTeX installed under HOME="/opt".
+      # TODO: Switch to "Up to date" once https://github.com/quarto-dev/quarto-cli/issues/11800 lands.
       - "/tinytex\\s+External Installation/"
-    skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
-  "Ensure TinyTeX is readable and executable by rstudio-connect":
-    # Runs tlmgr and pdflatex as the rstudio-connect runtime user to confirm
-    # the /opt/.TinyTeX install is accessible to non-root. `command -v` also
-    # forces PATH resolution, not just direct invocation — proves the
-    # /usr/local/bin symlinks are on the user's PATH. Guards against
-    # regressions in placement, permissions, or PATH setup.
-    exec: su -s /bin/sh -c 'command -v tlmgr && command -v pdflatex && tlmgr --version && pdflatex --version' rstudio-connect
-    exit-status: 0
-    stdout:
-      - "tlmgr"
-      - "pdfTeX"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
   "Verify ODBC drivers are configured":
     exec: cat /etc/odbcinst.ini
@@ -162,9 +147,15 @@ command:
     stdout:
       - "/PostgreSQL|MySQL|SQLServer/"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
+  "Ensure TinyTeX is readable and executable by rstudio-connect":
+    exec: su -s /bin/sh -c 'command -v tlmgr && command -v pdflatex && tlmgr --version && pdflatex --version' rstudio-connect
+    exit-status: 0
+    stdout:
+      - "tlmgr"
+      - "pdfTeX"
+    skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
   "Ensure quarto package is held":
-    # Guards against apt upgrade inside the container drifting quarto off
-    # the pinned version the image is labeled with.
+    # Guards against apt upgrade drifting quarto off the pinned version.
     exec: apt-mark showhold
     exit-status: 0
     stdout:
