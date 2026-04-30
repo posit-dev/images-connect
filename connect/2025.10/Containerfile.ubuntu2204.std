@@ -56,8 +56,8 @@ RUN apt-get update -yqq && \
     apt-get install -yqq --no-install-recommends \
         rstudio-drivers && \
     apt-get clean -yqq && \
-    rm -rf /var/lib/apt/lists/* && \
-    cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
+    rm -rf /var/lib/apt/lists/*
+RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
 
 ### Install R ###
 RUN RUN_UNATTENDED=1 R_VERSION=4.5.1 bash -c "$(curl -fsSL https://rstd.io/r-install)" && \

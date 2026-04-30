@@ -55,14 +55,12 @@ RUN apt-get update -yqq && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
-### Install Pro Drivers and ODBC ###
+### Install Pro Drivers ###
 RUN apt-get update -yqq && \
     apt-get install -yqq --no-install-recommends \
         rstudio-drivers && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
-
-### Configure ODBC drivers ###
 RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
 
 ### Install R ###
