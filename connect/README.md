@@ -145,12 +145,12 @@ Posit publishes Connect images for `linux/amd64`. Pull a tag that matches your b
 
 ## Environment variables
 
-| Variable                | Description                                                          |
-|-------------------------|----------------------------------------------------------------------|
-| `PCT_LICENSE`           | License key for activation                                           |
-| `PCT_LICENSE_SERVER`    | URL of floating license server                                       |
-| `PCT_LICENSE_FILE_PATH` | Path to license file (default: `/etc/rstudio-connect/license.lic`)   |
-| `STARTUP_DEBUG_MODE`    | Set to `1` for verbose startup logging                               |
+| Variable                 | Description                                                          |
+|--------------------------|----------------------------------------------------------------------|
+| `PCT_LICENSE`            | License key for activation                                           |
+| `PCT_LICENSE_SERVER`     | URL of floating license server                                       |
+| `PCT_LICENSE_FILE_PATH`  | Path to license file (default: `/etc/rstudio-connect/license.lic`)   |
+| `PCT_STARTUP_DEBUG` | Set to `1` for verbose startup logging                               |
 
 If you are migrating from `rstudio/rstudio-connect`, see [Environment variables](#environment-variables-1) under the migration guide for the legacy `RSC_` names and deprecation timeline.
 
@@ -293,11 +293,12 @@ The legacy image shipped a single variant containing two R versions, two Python 
 
 License and debug environment variables now use the `PCT_` prefix:
 
-| New variable             | Legacy variable          |
-|--------------------------|--------------------------|
-| `PCT_LICENSE`            | `RSC_LICENSE`            |
-| `PCT_LICENSE_SERVER`     | `RSC_LICENSE_SERVER`     |
-| `PCT_LICENSE_FILE_PATH`  | `RSC_LICENSE_FILE_PATH`  |
+| New variable            | Legacy variable         |
+|-------------------------|-------------------------|
+| `PCT_LICENSE`           | `RSC_LICENSE`           |
+| `PCT_LICENSE_SERVER`    | `RSC_LICENSE_SERVER`    |
+| `PCT_LICENSE_FILE_PATH` | `RSC_LICENSE_FILE_PATH` |
+| `PCT_STARTUP_DEBUG`     | `STARTUP_DEBUG_MODE`    |
 
 The image accepts the legacy `RSC_` license names as a fallback during the deprecation window.
 
