@@ -250,7 +250,16 @@ Connect exposes an unauthenticated health endpoint at `/__ping__` on port `3939`
 curl http://localhost:3939/__ping__
 ```
 
-This image does not declare a Docker `HEALTHCHECK` directive. For Kubernetes liveness and readiness probes or load balancer health checks, hit the `/__ping__` endpoint directly.
+The image declares a Docker `HEALTHCHECK` against this endpoint:
+
+```dockerfile
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+    CMD curl --fail --silent --output /dev/null http://localhost:3939/__ping__
+```
+
+Both variants inherit the same directive. The `min` variant will report unhealthy until extended with R, Python, and Quarto, since Connect does not serve content without them. To disable the directive in a derived image, add `HEALTHCHECK NONE`.
+
+For Kubernetes liveness and readiness probes, or load balancer health checks, hit the same endpoint directly rather than relying on the Docker healthcheck.
 
 ## User
 
