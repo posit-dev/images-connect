@@ -1,28 +1,71 @@
 # Posit Connect Content container image
 
-These container images provide the runtime environments for executing content deployed to [Posit Connect](https://docs.posit.co/connect/) in Kubernetes. Each image includes a specific combination of R, Python, and Quarto.
+These container images provide the runtime environments for executing content deployed to [Posit Connect](https://docs.posit.co/connect/) in Kubernetes. Each image bundles a specific combination of R, Python, and Quarto so that content runs in an environment matching its language requirements.
+
+![Docker Pulls](https://img.shields.io/docker/pulls/posit/connect-content)
+![Docker Image Size](https://img.shields.io/docker/image-size/posit/connect-content/latest)
 
 > [!NOTE]
-> These images are in preview as Posit migrates container images from [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products). The [rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products) images remain supported.
+> These images are in preview as Posit migrates container images from [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products). The previous `rstudio/content-base` and `rstudio/content-pro` images remain supported.
 
-## Overview
+> [!TIP]
+> Deploying on Kubernetes? Try the [Posit Connect Helm chart](https://docs.posit.co/helm/charts/rstudio-connect/README.html)!
 
-When [Connect](https://docs.posit.co/connect/) runs on Kubernetes with the Job Launcher, published content (Shiny apps, Plumber APIs, Quarto documents, Jupyter notebooks, etc.) executes inside content containers. Each `connect-content` image provides a specific R and Python version pair.
+## Supported tags
+
+The standard set of content images covers a matrix of R and Python versions, paired by minor release:
+
+| R version | Python versions                   |
+|-----------|-----------------------------------|
+| 4.5.2     | 3.14.3, 3.13.12, 3.12.12, 3.11.14 |
+| 4.4.3     | 3.14.3, 3.13.12, 3.12.12, 3.11.14 |
+| 4.3.3     | 3.14.3, 3.13.12, 3.12.12, 3.11.14 |
+
+Each pair is built for both Ubuntu 24.04 (default) and Ubuntu 22.04, in both Base and Pro variants. Tags follow the format `R{r_version}-python{python_version}-{os}[-pro]`.
+
+For a full list of available tags, see the [Tags tab](https://hub.docker.com/r/posit/connect-content/tags) on Docker Hub.
+
+## Quick reference
+
+| | |
+|---|---|
+| **Maintained by** | [the Posit Docker team](https://github.com/posit-dev/images) |
+| **Where to get help** | [GitHub Issues](https://github.com/posit-dev/images-connect/issues), [Images Discussion Board](https://github.com/posit-dev/images/discussions), [the Posit Community Forum](https://forum.posit.co/c/posit-professional-hosted/posit-connect/27), [Posit Support](https://support.posit.co/hc/en-us) |
+| **Where to file issues** | [https://github.com/posit-dev/images-connect/issues](https://github.com/posit-dev/images-connect/issues) |
+| **Source** | [https://github.com/posit-dev/images-connect](https://github.com/posit-dev/images-connect) |
+| **License** | [MIT](https://github.com/posit-dev/images-connect/blob/main/LICENSE.md) |
+
+## Related images
+
+For Kubernetes deployments, Connect uses three images together. See the [repository README](https://github.com/posit-dev/images-connect#deploying-on-kubernetes) for Helm configuration.
 
 | Image | Description | Docker Hub | GHCR |
 |:------|:------------|:-----------|:-----|
 | `connect` | The Posit Connect server | [posit/connect](https://hub.docker.com/r/posit/connect) | [posit-dev/connect](https://github.com/posit-dev/images-connect/pkgs/container/connect) |
-| `connect-content` | Runtime images for executing published content | [posit/connect-content](https://hub.docker.com/r/posit/connect-content) | [posit-dev/connect-content](https://github.com/posit-dev/images-connect/pkgs/container/connect-content) |
 | `connect-content-init` | Init container for Kubernetes deployments | [posit/connect-content-init](https://hub.docker.com/r/posit/connect-content-init) | [posit-dev/connect-content-init](https://github.com/posit-dev/images-connect/pkgs/container/connect-content-init) |
 
-See the [repository README](https://github.com/posit-dev/images-connect#deploying-on-kubernetes) for Helm configuration.
+## How to use this image
+
+Do not run these images directly. Connect's Job Launcher schedules them as content execution pods when published content runs on Kubernetes. Each pod executes Shiny applications, Plumber APIs, Quarto documents, Jupyter notebooks, and other Connect content using the R and Python versions baked into the image.
+
+Configure these images as execution environments in Connect through any of the following methods:
+
+1. **Helm chart values:** The `rstudio/rstudio-connect` Helm chart includes a default set of content images. See the [repository README](https://github.com/posit-dev/images-connect#deploying-on-kubernetes) for configuration details.
+2. **Connect admin dashboard:** Manage execution environments in the Connect UI under **Admin > Execution environments**.
+3. **runtime.yaml:** A YAML configuration file that defines available execution environments.
 
 ## Image variants
 
-| Variant | Tag Suffix | Description |
-|---------|------------|-------------|
-| Base | (none) | Open-source R and Python |
-| Pro | `-pro` | Includes Posit Professional Drivers for database connectivity |
+Two variants are available:
+
+| Variant       | Description                                                                                                                  |
+|---------------|------------------------------------------------------------------------------------------------------------------------------|
+| Base (`base`) | Open-source R and Python with system dependencies for popular R packages.                                                    |
+| Pro (`-pro`)  | Builds on the Base variant and adds Posit Professional Drivers and the `odbc` R package for ODBC database connectivity.      |
+
+Each tagged image bundles a fixed set of dependencies. Both variants ship one R version, one Python version, and one Quarto version, locked to the latest available at build time. The Containerfiles in this repository under `connect-content/matrix/` document the exact versions in any tag.
+
+See [extending examples](https://github.com/posit-dev/images-examples/tree/main/extending) for how to build on these images.
 
 ## Image tags
 
@@ -30,39 +73,82 @@ Posit publishes images to:
 - Docker Hub: `docker.io/posit/connect-content`
 - GitHub Container Registry: `ghcr.io/posit-dev/connect-content`
 
+Ubuntu 24.04 is the default OS.
+
 The tag format is: `R{r_version}-python{python_version}-{os}[-pro]`
 
 Examples:
-- `R4.5.2-python3.14.3-ubuntu-24.04` — R 4.5.2, Python 3.14.3, Ubuntu 24.04
-- `R4.4.3-python3.12.12-ubuntu-24.04-pro` — Same versions with pro drivers
+- `R4.5.2-python3.14.3-ubuntu-24.04` — R 4.5.2, Python 3.14.3, Ubuntu 24.04, Base variant
+- `R4.4.3-python3.12.12-ubuntu-24.04-pro` — R 4.4.3, Python 3.12.12, Ubuntu 24.04, Pro variant
+- `R4.3.3-python3.11.14-ubuntu-22.04` — R 4.3.3, Python 3.11.14, Ubuntu 22.04, Base variant
 
-## Available versions
+## Architectures
 
-The standard set of content images covers a matrix of R and Python versions:
-
-| R Version | Python Versions |
-|-----------|----------------|
-| 4.5.2 | 3.14.3, 3.13.12, 3.12.12, 3.11.14 |
-| 4.4.3 | 3.14.3, 3.13.12, 3.12.12, 3.11.14 |
-| 4.3.3 | 3.14.3, 3.13.12, 3.12.12, 3.11.14 |
-
-## Usage
-
-Do not run these images directly. Configure them as execution environments in Connect, either through:
-
-1. **Helm chart values:** The `rstudio/rstudio-connect` Helm chart includes a default set of content images. See the [repository README](../README.md#deploying-on-kubernetes) for configuration details.
-2. **Connect admin dashboard:** Manage execution environments in the Connect UI under **Admin > Execution environments**.
-3. **runtime.yaml:** A YAML configuration file that defines available execution environments.
+Posit publishes Ubuntu 24.04 content images for both `linux/amd64` and `linux/arm64`. Pull the same tag from either platform; Docker selects the matching manifest automatically. Ubuntu 22.04 content images are published for `linux/amd64` only.
 
 ## Installed software
 
 Each image includes:
 
-| Component | Path |
-|-----------|------|
-| R | `/opt/R/{version}/bin/R` |
-| Python | `/opt/python/{version}/bin/python3` |
-| Quarto | `/opt/quarto/{version}/bin/quarto` |
+| Component | Path                                |
+|-----------|-------------------------------------|
+| R         | `/opt/R/{version}/bin/R`            |
+| Python    | `/opt/python/{version}/bin/python3` |
+| Quarto    | `/opt/quarto/{version}/bin/quarto`  |
+
+The Pro variant also installs Posit Professional Drivers under `/opt/rstudio-drivers/` and the `odbc` R package, with the bundled `odbcinst.ini` copied to `/etc/odbcinst.ini`.
+
+## User
+
+These images do not declare a `USER`. Containers start as `root`. Connect's Job Launcher manages the runtime user when scheduling content pods, dropping privileges as configured by the Connect administrator.
+
+## Examples
+
+### Extending an image with additional R packages
+
+Use any tag as a base for a derived image with additional dependencies. For example, a Pro-variant image with Tidyverse pre-installed:
+
+```dockerfile
+FROM ghcr.io/posit-dev/connect-content:R4.5.2-python3.14.3-ubuntu-24.04-pro
+
+RUN /opt/R/4.5.2/bin/R -e 'install.packages("tidyverse", repos = "https://p3m.dev/cran/__linux__/noble/latest")'
+```
+
+See [extending examples](https://github.com/posit-dev/images-examples/tree/main/extending) for additional patterns.
+
+## Migrating from rstudio/content-base and rstudio/content-pro
+
+These images replace the legacy [`rstudio/content-base`](https://hub.docker.com/r/rstudio/content-base) and [`rstudio/content-pro`](https://hub.docker.com/r/rstudio/content-pro) images. The runtime tools are unchanged — R, Python, and Quarto install at the same paths under `/opt`, and Connect schedules content into these images the same way. The differences are in how the image is published and tagged.
+
+### Image references
+
+The legacy images were published as `rstudio/content-base` and `rstudio/content-pro` on Docker Hub and `ghcr.io/rstudio/content-base` and `ghcr.io/rstudio/content-pro` on GHCR, tagged with patterns like `r{r_version}-py{python_version}-bionic` or `r{r_version}-py{python_version}-jammy` for `linux/amd64` only. Update your image references to one of the new locations and pick a tag that pins to your desired R, Python, OS, and variant. See [Image tags](#image-tags) and [Architectures](#architectures).
+
+### Variants
+
+The legacy images split content runtimes into two separate repositories — `rstudio/content-base` for the open-source build and `rstudio/content-pro` for the build with Posit Professional Drivers. The replacement images publish both as variants of a single `connect-content` repository: the Base variant matches `content-base` and the Pro (`-pro`) variant matches `content-pro`. See [Image variants](#image-variants).
+
+### Tag format
+
+Legacy tags followed `r{r_version}-py{python_version}-{codename}`, for example `r4.1.0-py3.9.2-jammy`. Replacement tags follow `R{r_version}-python{python_version}-{os}[-pro]`, for example `R4.5.2-python3.14.3-ubuntu-24.04`. Both forms encode the same information.
+
+### What did not change
+
+- R, Python, and Quarto installation paths under `/opt`
+- The role of these images as content execution environments managed by Connect
+- The system dependencies bundled to support popular R packages
+
+## Caveats
+
+### Security
+
+Review these images before using them in production. Organizations with specific Common Vulnerabilities and Exposures (CVE) or vulnerability requirements should rebuild these images to meet their security standards.
+
+Posit rebuilds published images weekly for Posit product editions under active support to pull in operating system patches.
+
+### Image dependency licenses
+
+These images contain third-party software (R, Python, Quarto, system libraries, and their transitive dependencies) under various licenses. Image users are responsible for ensuring that use of these images and any of their dependent layers complies with all relevant licenses for the contained software.
 
 ## Documentation
 
