@@ -3,7 +3,10 @@
 These container images provide the runtime environments for executing content deployed to [Posit Connect](https://docs.posit.co/connect/) in Kubernetes. Each image bundles a specific combination of R, Python, and Quarto so that content runs in an environment matching its language requirements.
 
 ![Docker Pulls](https://img.shields.io/docker/pulls/posit/connect-content)
-![Docker Image Size](https://img.shields.io/docker/image-size/posit/connect-content/latest)
+<!-- 
+TODO: uncomment after https://github.com/posit-dev/images-shared/pull/501 is merged
+![Docker Image Size](https://img.shields.io/docker/image-size/posit/connect-content/latest) 
+-->
 
 > [!NOTE]
 > These images are in preview as Posit migrates container images from [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products). The previous `rstudio/content-base` and `rstudio/content-pro` images remain supported.
