@@ -159,9 +159,3 @@ Posit rebuilds published images weekly for Posit product editions under active s
 ### Image dependency licenses
 
 These images contain third-party software (R, Python, Quarto, system libraries, and their transitive dependencies) under various licenses. Image users are responsible for ensuring that use of these images and any of their dependent layers complies with all relevant licenses for the contained software.
-
-## Documentation
-
-- [Posit Connect Content Images](https://docs.posit.co/connect/admin/runtimes/content-images/)
-- [Posit Connect Documentation](https://docs.posit.co/connect/)
-- [Posit Connect Helm Chart](https://docs.posit.co/helm/charts/rstudio-connect/README.html)
