@@ -13,15 +13,21 @@ These container images provide the runtime environments for executing content de
 
 ## Supported tags
 
-The standard set of content images covers a matrix of R and Python versions, paired by minor release:
+The standard set of content images covers a matrix of R and Python versions, paired by minor release. For example:
 
-| R version | Python versions                   |
-|-----------|-----------------------------------|
-| 4.5.2     | 3.14.3, 3.13.12, 3.12.12, 3.11.14 |
-| 4.4.3     | 3.14.3, 3.13.12, 3.12.12, 3.11.14 |
-| 4.3.3     | 3.14.3, 3.13.12, 3.12.12, 3.11.14 |
+| R version | Python versions | OS           | Variant | Tag                                                          |
+|-----------|-----------------|--------------|---------|--------------------------------------------------------------|
+| 4.6       | 3.14            | Ubuntu 24.04 | Base    | posit/connect-content:R4.6.0-python3.14.4-ubuntu-24.04-base  |
+| 4.6       | 3.14            | Ubuntu 22.04 | Base    | posit/connect-content:R4.6.0-python3.14.4-ubuntu-22.04-base  |
+| 4.6       | 3.14            | Ubuntu 24.04 | Pro     | posit/connect-content:R4.6.0-python3.14.4-ubuntu-24.04-pro   |
+| 4.3       | 3.14            | Ubuntu 22.04 | Pro     | posit/connect-content:R4.6.0-python3.14.4-ubuntu-22.04-pro   |
+| ...       | ...             | ...          | ...     | ...                                                          | 
+| 4.3       | 3.11            | Ubuntu 24.04 | Base    | posit/connect-content:R4.3.3-python3.11.15-ubuntu-24.04-base |
+| 4.3       | 3.11            | Ubuntu 22.04 | Base    | posit/connect-content:R4.3.3-python3.11.15-ubuntu-22.04-base |
+| 4.3       | 3.11            | Ubuntu 24.04 | Pro     | posit/connect-content:R4.3.3-python3.11.15-ubuntu-24.04-pro  |
+| 4.3       | 3.11            | Ubuntu 22.04 | Pro     | posit/connect-content:R4.3.3-python3.11.15-ubuntu-22.04-pro  |
 
-Each pair is built for both Ubuntu 24.04 (default) and Ubuntu 22.04, in both Base and Pro variants. Tags follow the format `R{r_version}-python{python_version}-{os}[-pro]`.
+Each combination is built for both Ubuntu 24.04 (default) and Ubuntu 22.04, in both Base and Pro variants. Tags follow the format `R{r_version}-python{python_version}-{os}[-pro]`. The latest patch version for each minor release is always use to ensure the latest security updates and bugfixes are always included. Previous patch versions are retained in the registry, but are not rebuilt.
 
 For a full list of available tags, see the [Tags tab](https://hub.docker.com/r/posit/connect-content/tags) on Docker Hub.
 
