@@ -121,7 +121,7 @@ Two variants are available:
 | Standard (`std`) | Opinionated image, runs out of the box. Bundles R, Python, Quarto, and Posit Professional Drivers alongside Connect.        |
 | Minimal (`min`)  | Small image you can extend with desired dependencies. Does not run as is — Connect requires R, Python, and Quarto to serve published content. |
 
-Each tagged image bundles a fixed set of dependencies. Both variants ship the `YYYY.MM` release of Connect at the latest patch release available when the image was built. The `std` variant additionally ships one R version, one Python version, and one Quarto version, locked to the latest available at build time. The Containerfiles in this repository under `connect/<version>/` document the exact versions in any tag.
+Each tagged image bundles a fixed set of dependencies. Both variants ship the `YYYY.MM` release of Connect at the latest patch release available when the image was built. The Standard variant additionally ships one R version, one Python version, and one Quarto version, locked to the latest available at release. The Containerfiles in this repository under `connect/<version>/` document the exact versions in any tag.
 
 See [extending examples](https://github.com/posit-dev/images-examples/tree/main/extending) for how to build on the Minimal image.
 
@@ -142,7 +142,7 @@ Tag formats where `YYYY.MM.P` is any supported Connect version:
 
 ## Architectures
 
-Posit publishes Connect images for `linux/amd64`. Pull a tag that matches your build host's architecture.
+Posit publishes Connect images for `linux/amd64` and `linux/arm64`.  Pull the same tag from either platform; Docker selects the matching manifest automatically.
 
 ## Environment variables
 
@@ -237,7 +237,7 @@ docker run --privileged -v /path/to/rstudio-connect.gcfg:/etc/rstudio-connect/rs
 Make sure the configuration file sets these fields:
 
 - `Server.Address` set to the exact URL that users will use to visit Connect
-- `Server.DataDir` set to `/data/`
+- `Server.DataDir` set to the same path as the data volume mount (default `/var/lib/rstudio-connect`)
 - `HTTP.Listen` (or equivalent `HTTP`, `HTTPS`, or `HTTPRedirect` settings, which change how to map the container ports)
 - `Python.Enabled` and `Python.Executable`
 
@@ -266,21 +266,9 @@ For Kubernetes liveness and readiness probes, or load balancer health checks, hi
 
 Connect runs with the `--privileged` flag. The container starts as `root` and Connect drops privileges to the `rstudio-connect` user (UID and GID `999`) for the server process and content sandboxing.
 
-## Examples
-
-### Verify license activation status
-
-To verify license activation, run the `license-manager status` command against a running container:
-
-```bash
-docker exec -it <container-id> /opt/rstudio-connect/bin/license-manager status
-```
-
-The output shows the current activation status, expiration, licensed users, and other license details. Use this command to confirm activation when troubleshooting.
-
 ## Migrating from rstudio/rstudio-connect
 
-This image replaces the legacy [`rstudio/rstudio-connect`](https://hub.docker.com/r/rstudio/rstudio-connect) image. Connect itself is unchanged — the application reads `rstudio-connect.gcfg`, listens on `3939`, persists data to `Server.DataDir`, requires `--privileged`, and uses the `rstudio-connect` user (UID/GID `999`) for content execution. Existing data and configuration volumes mount unchanged. The differences are in how the image is published and configured.
+This image replaces the legacy [`rstudio/rstudio-connect`](https://hub.docker.com/r/rstudio/rstudio-connect) image. Connect itself is unchanged — the application reads `rstudio-connect.gcfg`, listens on `3939`, writes data to `Server.DataDir`, requires `--privileged`, and uses the `rstudio-connect` user (UID/GID `999`) for content execution. Existing data and configuration volumes mount unchanged. The differences are in how the image is published and configured.
 
 ### Image references
 
