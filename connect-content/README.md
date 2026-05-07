@@ -126,7 +126,7 @@ RUN /opt/R/4.5.2/bin/R -e 'install.packages("tidyverse", repos = "https://p3m.de
 
 See [extending examples](https://github.com/posit-dev/images-examples/tree/main/extending) for additional patterns.
 
-## Migrating from rstudio/content-base and rstudio/content-pro
+## Migrating from legacy image
 
 These images replace the legacy [`rstudio/content-base`](https://hub.docker.com/r/rstudio/content-base) and [`rstudio/content-pro`](https://hub.docker.com/r/rstudio/content-pro) images. The runtime tools are unchanged — R, Python, and Quarto install at the same paths under `/opt`, and Connect schedules content into these images the same way. The differences are in how the image is published and tagged.
 
