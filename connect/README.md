@@ -266,7 +266,7 @@ For Kubernetes liveness and readiness probes, or load balancer health checks, hi
 
 Connect runs with the `--privileged` flag. The container starts as `root` and Connect drops privileges to the `rstudio-connect` user (UID and GID `999`) for the server process and content sandboxing.
 
-## Migrating from rstudio/rstudio-connect
+## Migrating from legacy image
 
 This image replaces the legacy [`rstudio/rstudio-connect`](https://hub.docker.com/r/rstudio/rstudio-connect) image. Connect itself is unchanged — the application reads `rstudio-connect.gcfg`, listens on `3939`, writes data to `Server.DataDir`, requires `--privileged`, and uses the `rstudio-connect` user (UID/GID `999`) for content execution. Existing data and configuration volumes mount unchanged. The differences are in how the image is published and configured.
 
