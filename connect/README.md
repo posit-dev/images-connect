@@ -2,6 +2,8 @@
 
 This container image provides [Posit Connect](https://docs.posit.co/connect/) (PCT), a publishing platform for the work your teams create in R and Python. Deploy Shiny applications, R Markdown documents, Plumber APIs, Python applications (Flask, Dash, FastAPI, Bokeh, Streamlit), Jupyter notebooks, Quarto documents, and more.
 
+![Connect Logo](https://rstudio-platform-public-artifacts.s3.us-east-1.amazonaws.com/platform/containers/logos/logo_connecttag-fullcolor.png)
+
 ![Docker Pulls](https://img.shields.io/docker/pulls/posit/connect)
 ![Docker Image Size](https://img.shields.io/docker/image-size/posit/connect/latest)
 
