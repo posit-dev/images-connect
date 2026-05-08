@@ -25,7 +25,7 @@ Container images for [Posit Connect](https://docs.posit.co/connect/).
 | [Docker](https://docs.docker.com/get-docker/) | Running containers locally | [Get Docker](https://docs.docker.com/get-docker/) |
 | [Helm](https://helm.sh/docs/intro/install/) | Deploying on Kubernetes | [Install Helm](https://helm.sh/docs/intro/install/) |
 | [kubectl](https://kubernetes.io/docs/tasks/tools/) | Deploying on Kubernetes | [Install kubectl](https://kubernetes.io/docs/tasks/tools/) |
-| Product license | Running Posit Connect | [Licensing FAQ](https://docs.posit.co/licensing/licensing-faq.html) |
+| Product license | Running Posit Connect | [Licensing FAQ](https://docs.posit.co/licensing/licensing-faq.html), [Request a trial license](https://posit.co/trial-license/) |
 
 ## Images
 
