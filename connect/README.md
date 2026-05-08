@@ -80,7 +80,6 @@ Access Connect at `http://localhost:3939`.
 
 > [!NOTE]
 > Connect requires the `--privileged` flag to manage sandboxed content execution environments.
-> This example does not mount a data volume. Application data does not persist when the container stops. See <a href="#volumes">Volumes</a> for persistent storage.
 
 > [!IMPORTANT]
 > To use Connect with more than one user, define `Server.Address` in the `rstudio-connect.gcfg` file. Set it to the URL that users will use to visit Connect, then start or restart the container.
@@ -192,7 +191,9 @@ The data path is set by the `Server.DataDir` option in `rstudio-connect.gcfg` (d
 
 ### License activation
 
-Connect requires a [product license](https://docs.posit.co/licensing/licensing-faq.html). Connect must also run with the `--privileged` flag. Posit recommends activating with a license file. License files work well in all environments including ephemeral, container-based, or air-gapped environments. Choose one method:
+Connect requires a [product license](https://docs.posit.co/licensing/licensing-faq.html). If you don't have a license yet, request a free 30-day trial at [posit.co/trial-license](https://posit.co/trial-license/).
+
+Posit recommends activating with a license file. License files work well in all environments including ephemeral, container-based, or air-gapped environments. Choose one method:
 
 #### Option 1: License file (recommended)
 
