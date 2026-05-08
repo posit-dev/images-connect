@@ -1,11 +1,22 @@
+<a href="https://posit.co/products/enterprise/connect">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://cdn.posit.co/platform/containers/logos/logo_connecttag-reverse.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://cdn.posit.co/platform/containers/logos/logo_connecttag-fullcolor.svg">
+  <img alt="Posit PConnect Logo" src="https://cdn.posit.co/platform/containers/logos/logo_connecttag-fullcolor.svg">
+</picture>
+</a>
+
 # Posit Connect Content container image
 
 These container images provide the runtime environments for executing content deployed to [Posit Connect](https://docs.posit.co/connect/) in Kubernetes. Each image bundles a specific combination of R, Python, and Quarto so that content runs in an environment matching its language requirements.
 
+[![GitHub Repository](https://img.shields.io/badge/github-repo?logo=github&color=grey)](https://github.com/posit-dev/images-connect)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/posit-dev/images-connect/content.yml?branch=main)](https://github.com/posit-dev/images-connect/actions/workflows/content.yml)
 ![Docker Pulls](https://img.shields.io/docker/pulls/posit/connect-content)
 <!-- 
 TODO: uncomment after https://github.com/posit-dev/images-shared/pull/501 is merged
 ![Docker Image Size](https://img.shields.io/docker/image-size/posit/connect-content/latest) 
+[![Latest Version](https://img.shields.io/docker/v/posit/connect-content?sort=semver&label=latest)](https://hub.docker.com/r/posit/connect-content/tags)
 -->
 
 > [!NOTE]

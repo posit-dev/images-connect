@@ -1,8 +1,19 @@
+<a href="https://posit.co/products/enterprise/connect">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://cdn.posit.co/platform/containers/logos/logo_connecttag-reverse.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://cdn.posit.co/platform/containers/logos/logo_connecttag-fullcolor.svg">
+  <img alt="Posit PConnect Logo" src="https://cdn.posit.co/platform/containers/logos/logo_connecttag-fullcolor.svg">
+</picture>
+</a>
+
 # Posit Connect Content Init container image
 
 This container image is an init container for Posit Connect that pulls runtime components into a shared volume. The Connect Launcher then uses those components to build and run published content in separate pods. This image is for Off-Host Execution (OHE) deployments on Kubernetes and is the default init container in the Connect Helm chart.
 
-![Docker Pulls](https://img.shields.io/docker/pulls/posit/connect-content-init)
+[![GitHub Repository](https://img.shields.io/badge/github-repo?logo=github&color=grey)](https://github.com/posit-dev/images-connect)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/posit-dev/images-connect/production.yml?branch=main)](https://github.com/posit-dev/images-connect/actions/workflows/production.yml)
+[![Latest Version](https://img.shields.io/docker/v/posit/connect-content-init?sort=semver&label=latest)](https://hub.docker.com/r/posit/connect-content-init/tags)
+![Docker Hub Pulls](https://img.shields.io/docker/pulls/posit/connect-content-init)
 ![Docker Image Size](https://img.shields.io/docker/image-size/posit/connect-content-init/latest)
 
 > [!NOTE]

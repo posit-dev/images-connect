@@ -1,6 +1,19 @@
+<a href="https://posit.co/products/enterprise/connect">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://cdn.posit.co/platform/containers/logos/logo_connecttag-reverse.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://cdn.posit.co/platform/containers/logos/logo_connecttag-fullcolor.svg">
+  <img alt="Posit PConnect Logo" src="https://cdn.posit.co/platform/containers/logos/logo_connecttag-fullcolor.svg">
+</picture>
+</a>
+
 # Posit Connect container images
 
 Container images for [Posit Connect](https://docs.posit.co/connect/).
+
+[![Production CI Build Status](https://github.com/posit-dev/images-connect/actions/workflows/production.yml/badge.svg?branch=main)](https://github.com/posit-dev/images-connect/actions/workflows/production.yml)
+[![Development CI Build Status](https://github.com/posit-dev/images-connect/actions/workflows/development.yml/badge.svg?branch=main)](https://github.com/posit-dev/images-connect/actions/workflows/development.yml)
+[![Content CI Build Status](https://github.com/posit-dev/images-connect/actions/workflows/content.yml/badge.svg?branch=main)](https://github.com/posit-dev/images-connect/actions/workflows/content.yml)
+[![Latest Version](https://img.shields.io/docker/v/posit/connect?sort=semver&label=latest)](https://hub.docker.com/r/posit/connect/tags)
 
 > [!NOTE]
 > These images are in preview as Posit migrates container images from [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products). The [rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products) images remain supported.

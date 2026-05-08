@@ -1,10 +1,19 @@
+<a href="https://posit.co/products/enterprise/connect">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://cdn.posit.co/platform/containers/logos/logo_connecttag-reverse.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://cdn.posit.co/platform/containers/logos/logo_connecttag-fullcolor.svg">
+  <img alt="Posit PConnect Logo" src="https://cdn.posit.co/platform/containers/logos/logo_connecttag-fullcolor.svg">
+</picture>
+</a>
+
 # Posit Connect container image
 
 This container image provides [Posit Connect](https://docs.posit.co/connect/) (PCT), a publishing platform for the work your teams create in R and Python. Deploy Shiny applications, R Markdown documents, Plumber APIs, Python applications (Flask, Dash, FastAPI, Bokeh, Streamlit), Jupyter notebooks, Quarto documents, and more.
 
-![Connect Logo](https://rstudio-platform-public-artifacts.s3.us-east-1.amazonaws.com/platform/containers/logos/logo_connecttag-fullcolor.png)
-
-![Docker Pulls](https://img.shields.io/docker/pulls/posit/connect)
+[![GitHub Repository](https://img.shields.io/badge/github-repo?logo=github&color=grey)](https://github.com/posit-dev/images-connect)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/posit-dev/images-connect/production.yml?branch=main)](https://github.com/posit-dev/images-connect/actions/workflows/production.yml)
+[![Latest Version](https://img.shields.io/docker/v/posit/connect?sort=semver&label=latest)](https://hub.docker.com/r/posit/connect/tags)
+![Docker Hub Pulls](https://img.shields.io/docker/pulls/posit/connect)
 ![Docker Image Size](https://img.shields.io/docker/image-size/posit/connect/latest)
 
 > [!NOTE]
