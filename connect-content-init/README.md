@@ -22,19 +22,6 @@ This container image is an init container for Posit Connect that pulls runtime c
 > [!TIP]
 > Deploying on Kubernetes? Try the <a href="https://docs.posit.co/helm/charts/rstudio-connect/README.html">Posit Connect Helm chart</a>, which uses this image by default.
 
-## Supported tags
-
-- [`2026.04.0`, `2026.04.0-ubuntu-24.04`, `latest`, `ubuntu-24.04`](https://github.com/posit-dev/images-connect/blob/main/connect-content-init/2026.04/Containerfile.ubuntu2404)
-- [`2026.04.0-ubuntu-22.04`, `ubuntu-22.04`](https://github.com/posit-dev/images-connect/blob/main/connect-content-init/2026.04/Containerfile.ubuntu2204)
-- [`2026.03.1`, `2026.03.1-ubuntu-24.04`](https://github.com/posit-dev/images-connect/blob/main/connect-content-init/2026.03/Containerfile.ubuntu2404)
-- [`2026.02.1`, `2026.02.1-ubuntu-24.04`](https://github.com/posit-dev/images-connect/blob/main/connect-content-init/2026.02/Containerfile.ubuntu2404)
-- [`2026.01.1`, `2026.01.1-ubuntu-24.04`](https://github.com/posit-dev/images-connect/blob/main/connect-content-init/2026.01/Containerfile.ubuntu2404)
-- [`2025.12.1`, `2025.12.1-ubuntu-24.04`](https://github.com/posit-dev/images-connect/blob/main/connect-content-init/2025.12/Containerfile.ubuntu2404)
-- [`2025.11.0`, `2025.11.0-ubuntu-22.04`](https://github.com/posit-dev/images-connect/blob/main/connect-content-init/2025.11/Containerfile.ubuntu2204)
-- [`2025.09.1`, `2025.09.1-ubuntu-22.04`](https://github.com/posit-dev/images-connect/blob/main/connect-content-init/2025.09/Containerfile.ubuntu2204)
-
-For a full list of available tags, see the [Tags tab](https://hub.docker.com/r/posit/connect-content-init/tags) on Docker Hub.
-
 ## Quick reference
 
 | | |

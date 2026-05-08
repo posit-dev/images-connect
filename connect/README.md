@@ -22,21 +22,6 @@ This container image provides [Posit Connect](https://docs.posit.co/connect/) (P
 > [!TIP]
 > Deploying on Kubernetes? Try the <a href="https://docs.posit.co/helm/charts/rstudio-connect/README.html">Posit Connect Helm chart</a>!
 
-## Supported tags
-
-- [`2026.04.0`, `2026.04.0-ubuntu-24.04`, `latest`, `std`, `ubuntu-24.04`](https://github.com/posit-dev/images-connect/blob/main/connect/2026.04/Containerfile.ubuntu2404.std)
-- [`2026.04.0-min`, `2026.04.0-ubuntu-24.04-min`, `min`, `ubuntu-24.04-min`](https://github.com/posit-dev/images-connect/blob/main/connect/2026.04/Containerfile.ubuntu2404.min)
-- [`2026.04.0-ubuntu-22.04`, `ubuntu-22.04`](https://github.com/posit-dev/images-connect/blob/main/connect/2026.04/Containerfile.ubuntu2204.std)
-- [`2026.04.0-ubuntu-22.04-min`, `ubuntu-22.04-min`](https://github.com/posit-dev/images-connect/blob/main/connect/2026.04/Containerfile.ubuntu2204.min)
-- [`2026.03.1`, `2026.03.1-ubuntu-24.04`](https://github.com/posit-dev/images-connect/blob/main/connect/2026.03/Containerfile.ubuntu2404.std)
-- [`2026.02.1`, `2026.02.1-ubuntu-24.04`](https://github.com/posit-dev/images-connect/blob/main/connect/2026.02/Containerfile.ubuntu2404.std)
-- [`2026.01.1`, `2026.01.1-ubuntu-24.04`](https://github.com/posit-dev/images-connect/blob/main/connect/2026.01/Containerfile.ubuntu2404.std)
-- [`2025.12.1`, `2025.12.1-ubuntu-24.04`](https://github.com/posit-dev/images-connect/blob/main/connect/2025.12/Containerfile.ubuntu2404.std)
-- [`2025.11.0`, `2025.11.0-ubuntu-22.04`](https://github.com/posit-dev/images-connect/blob/main/connect/2025.11/Containerfile.ubuntu2204.std)
-- [`2025.09.1`, `2025.09.1-ubuntu-22.04`](https://github.com/posit-dev/images-connect/blob/main/connect/2025.09/Containerfile.ubuntu2204.std)
-
-For a full list of available tags, see the [Tags tab](https://hub.docker.com/r/posit/connect/tags) on Docker Hub.
-
 ## Quick reference
 
 |                           | |
