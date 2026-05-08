@@ -1,13 +1,13 @@
-# Posit Connect Content Container Images
+# Posit Connect Content container image
 
 These container images provide the runtime environments for executing content deployed to [Posit Connect](https://docs.posit.co/connect/) in Kubernetes. Each image includes a specific combination of R, Python, and Quarto.
 
 > [!NOTE]
-> These images are in preview as Posit migrates container images from [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products). The existing images remain supported.
+> These images are in preview as Posit migrates container images from [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products). The [rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products) images remain supported.
 
 ## Overview
 
-When [Posit Connect](https://docs.posit.co/connect/) runs on Kubernetes with the Job Launcher, published content (Shiny apps, Plumber APIs, Quarto documents, Jupyter notebooks, etc.) executes inside content containers. Each `connect-content` image provides a specific R and Python version pair.
+When [Connect](https://docs.posit.co/connect/) runs on Kubernetes with the Job Launcher, published content (Shiny apps, Plumber APIs, Quarto documents, Jupyter notebooks, etc.) executes inside content containers. Each `connect-content` image provides a specific R and Python version pair.
 
 | Image | Description | Docker Hub | GHCR |
 |:------|:------------|:-----------|:-----|
@@ -17,26 +17,26 @@ When [Posit Connect](https://docs.posit.co/connect/) runs on Kubernetes with the
 
 See the [repository README](https://github.com/posit-dev/images-connect#deploying-on-kubernetes) for Helm configuration.
 
-## Image Variants
+## Image variants
 
 | Variant | Tag Suffix | Description |
 |---------|------------|-------------|
 | Base | (none) | Open-source R and Python |
 | Pro | `-pro` | Includes Posit Professional Drivers for database connectivity |
 
-## Image Tags
+## Image tags
 
-Images are published to:
+Posit publishes images to:
 - Docker Hub: `docker.io/posit/connect-content`
 - GitHub Container Registry: `ghcr.io/posit-dev/connect-content`
 
-Tag format: `R{r_version}-python{python_version}-{os}[-pro]`
+The tag format is: `R{r_version}-python{python_version}-{os}[-pro]`
 
 Examples:
 - `R4.5.2-python3.14.3-ubuntu-24.04` — R 4.5.2, Python 3.14.3, Ubuntu 24.04
 - `R4.4.3-python3.12.12-ubuntu-24.04-pro` — Same versions with pro drivers
 
-## Available Versions
+## Available versions
 
 The standard set of content images covers a matrix of R and Python versions:
 
@@ -48,13 +48,13 @@ The standard set of content images covers a matrix of R and Python versions:
 
 ## Usage
 
-These images are not run directly. They are configured as execution environments in Posit Connect, either through:
+Do not run these images directly. Configure them as execution environments in Connect, either through:
 
-1. **Helm chart values** — The `rstudio/rstudio-connect` Helm chart includes a default set of content images. See the [repository README](../README.md#deploying-on-kubernetes) for configuration details.
-2. **Connect admin dashboard** — Execution environments can be managed in the Connect UI under Admin > Execution Environments.
-3. **runtime.yaml** — A YAML configuration file defining available execution environments.
+1. **Helm chart values:** The `rstudio/rstudio-connect` Helm chart includes a default set of content images. See the [repository README](../README.md#deploying-on-kubernetes) for configuration details.
+2. **Connect admin dashboard:** Manage execution environments in the Connect UI under **Admin > Execution environments**.
+3. **runtime.yaml:** A YAML configuration file that defines available execution environments.
 
-## Installed Software
+## Installed software
 
 Each image includes:
 

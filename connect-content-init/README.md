@@ -1,13 +1,13 @@
-# Posit Connect Content Init Container Image
+# Posit Connect Content Init container image
 
-This container image is an "init container" used to pull runtime components into another container, which can then be used with Posit Connect and Launcher to build and run content. This image is primarily used in Kubernetes deployments and is leveraged by the Posit Connect Helm chart.
+This container image is an "init container" that pulls runtime components into another container, which Posit Connect and Launcher can then use to build and run content. Kubernetes deployments primarily use this image, and the Connect Helm chart uses it by default.
 
 > [!NOTE]
-> These images are in preview as Posit migrates container images from [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products). The existing images remain supported.
+> These images are in preview as Posit migrates container images from [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products). The [rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products) images remain supported.
 
 ## Overview
 
-The `connect-content-init` container provides runtime components that are copied into a shared volume during pod initialization. These components enable Posit Connect to execute content in isolated Kubernetes pods via the Launcher.
+The `connect-content-init` container provides runtime components that the init process copies into a shared volume during pod initialization. These components enable Connect to execute content in isolated Kubernetes pods via the Launcher.
 
 | Image | Description | Docker Hub | GHCR |
 |:------|:------------|:-----------|:-----|
@@ -17,24 +17,24 @@ The `connect-content-init` container provides runtime components that are copied
 
 See the [repository README](https://github.com/posit-dev/images-connect#deploying-on-kubernetes) for Helm configuration.
 
-This container [can be extended to include additional content](https://docs.posit.co/helm/examples/connect/container-images/custom-images.html) beyond what is provided by default.
+You can [extend this container to include additional content](https://docs.posit.co/helm/examples/connect/container-images/custom-images.html) beyond the default set.
 
-## Image Tags
+## Image tags
 
-Images are published to:
+Posit publishes images to:
 - Docker Hub: `docker.io/posit/connect-content-init`
 - GitHub Container Registry: `ghcr.io/posit-dev/connect-content-init`
 
-Tag formats:
+The tag formats are:
 - `2026.04.0` - Full version (Ubuntu 24.04)
 - `2026.04.0-ubuntu-24.04` - Explicit OS
 - `latest` - Latest stable release (Ubuntu 24.04)
 
 ## Usage
 
-This image is designed to be used as an init container in Kubernetes. It copies runtime components to a shared volume that is then mounted by the content execution container.
+Use this image as an init container in Kubernetes. It copies runtime components to a shared volume that the content execution container then mounts.
 
-### Kubernetes Init Container Example
+### Kubernetes init container example
 
 ```yaml
 initContainers:
@@ -45,9 +45,9 @@ initContainers:
         mountPath: /opt/rstudio-connect-runtime
 ```
 
-### Helm Chart
+### Helm chart
 
-This image is used automatically when deploying Posit Connect via the official Helm chart. For more information, see the [Posit Connect Helm Chart documentation](https://docs.posit.co/helm/charts/rstudio-connect/README.html).
+The official Helm chart uses this image automatically when deploying Connect. For more information, see the [Connect Helm chart documentation](https://docs.posit.co/helm/charts/rstudio-connect/README.html).
 
 ## Differences from rstudio/rstudio-connect-content-init
 
@@ -62,9 +62,9 @@ This image differs from the legacy [`rstudio/rstudio-connect-content-init`](http
 
 ### Security
 
-These images should be reviewed before production use. Organizations with specific CVE or vulnerability requirements should rebuild these images to meet their security standards.
+Review these images before production use. Organizations with specific Common Vulnerabilities and Exposures (CVE) or vulnerability requirements must rebuild these images to meet their security standards.
 
-Published images for Posit Product editions under active support are re-built on a weekly basis to pull in operating system patches.
+Posit rebuilds published images for Posit product editions under active support weekly to pull in operating system patches.
 
 ## Documentation
 

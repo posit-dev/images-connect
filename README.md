@@ -1,9 +1,9 @@
-# Posit Connect Container Images
+# Posit Connect container images
 
 Container images for [Posit Connect](https://docs.posit.co/connect/).
 
 > [!NOTE]
-> These images are in preview as Posit migrates container images from [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products). The existing images remain supported.
+> These images are in preview as Posit migrates container images from [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products). The [rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products) images remain supported.
 
 ## Prerequisites
 
@@ -22,21 +22,21 @@ Container images for [Posit Connect](https://docs.posit.co/connect/).
 | [connect-content](./connect-content/) | [`docker.io/posit/connect-content`](https://hub.docker.com/r/posit/connect-content) | [`ghcr.io/posit-dev/connect-content`](https://github.com/posit-dev/images-connect/pkgs/container/connect-content) |
 | [connect-content-init](./connect-content-init/) | [`docker.io/posit/connect-content-init`](https://hub.docker.com/r/posit/connect-content-init) | [`ghcr.io/posit-dev/connect-content-init`](https://github.com/posit-dev/images-connect/pkgs/container/connect-content-init) |
 
-Additional Posit container images are published to [Docker Hub](https://hub.docker.com/u/posit) and [GitHub Container Registry](https://github.com/orgs/posit-dev/packages).
+Posit publishes additional container images to [Docker Hub](https://hub.docker.com/u/posit) and [GitHub Container Registry](https://github.com/orgs/posit-dev/packages).
 
-## Running the Images
+## Running the images
 
 For local Docker, you only need the `connect` image. The `connect-content` and `connect-content-init` images are for Kubernetes deployments, where published content runs in separate pods from the Connect server.
 
-- [Posit Connect](./connect/) — The Connect server
-- [Connect Content](./connect-content/) — Runtime images for executing content (Kubernetes)
-- [Connect Content Init](./connect-content-init/) — Init container for Kubernetes deployments
+- [Connect](./connect/): the Connect server
+- [Connect Content](./connect-content/): runtime images for executing content (Kubernetes)
+- [Connect Content Init](./connect-content-init/): init container for Kubernetes deployments
 
 See the [Connect installation guide](https://docs.posit.co/connect/admin/getting-started/) for full setup instructions.
 
 ## Deploying on Kubernetes
 
-Use the [Posit Connect Helm chart](https://docs.posit.co/helm/charts/rstudio-connect/README.html) to deploy on Kubernetes.
+Use the [Connect Helm chart](https://docs.posit.co/helm/charts/rstudio-connect/README.html) to deploy on Kubernetes.
 
 ```bash
 helm repo add rstudio https://helm.rstudio.com
@@ -114,7 +114,7 @@ helm upgrade --install connect rstudio/rstudio-connect --values values.yaml
 
 See the [full chart documentation](https://docs.posit.co/helm/charts/rstudio-connect/README.html) for all available values.
 
-## Building from Source
+## Building from source
 
 You can interact with this repository in multiple ways:
 
@@ -124,12 +124,12 @@ You can interact with this repository in multiple ways:
 
 ## Build
 
-You can build OCI container images from the definitions in this repository using one of the following container build tools:
+You can build Open Container Initiative (OCI) container images from the definitions in this repository using one of the following container build tools:
 
 * [buildah](https://github.com/containers/buildah/blob/main/install.md)
 * [docker buildx](https://github.com/docker/buildx#installing)
 
-The root of the bakery project is used as the build context for each Containerfile.
+Each Containerfile uses the root of the repository as its build context.
 Here, the [`bakery.yaml`](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#bakery-configuration) file, or project, is in the root of this repository.
 
 ```shell
@@ -156,7 +156,7 @@ podman build \
 
 ## Using `bakery`
 
-The structure and contents of this repository were created following the steps in [bakery usage](https://github.com/posit-dev/images-shared/tree/main/posit-bakery#usage).
+The repository structure follows the steps in [bakery usage](https://github.com/posit-dev/images-shared/tree/main/posit-bakery#usage).
 
 Additional documentation:
 - [Configuration Reference](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md) — `bakery.yaml` schema and options
@@ -211,11 +211,11 @@ bakery run dgoss
 
 You can use CLI flags to limit the tests to run against a subset of images.
 
-## Related Repositories
+## Related repositories
 
 This repository is part of the [Posit Container Images](https://github.com/posit-dev/images) ecosystem. To extend the Minimal image with additional languages or system dependencies, see the [extending examples](https://github.com/posit-dev/images-examples/tree/main/extending). For shared build tooling and CI workflows, see [images-shared](https://github.com/posit-dev/images-shared).
 
-## Share your Feedback
+## Share your feedback
 
 We invite you to join us on [GitHub Discussions](https://github.com/posit-dev/images/discussions) to ask questions and share feedback.
 
@@ -229,4 +229,4 @@ We expect all contributors to adhere to the project's [Code of Conduct](CODE_OF_
 
 ## License
 
-Posit Container Images and associated tooling are licensed under the [MIT License](LICENSE.md)
+Posit licenses these container images and associated tooling under the [MIT License](LICENSE.md).
