@@ -17,10 +17,10 @@ This container image is an init container for Posit Connect that pulls runtime c
 ![Docker Image Size](https://img.shields.io/docker/image-size/posit/connect-content-init/latest)
 
 > [!NOTE]
-> These images are in preview as Posit migrates container images from [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products). The [rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products) images remain supported.
+> These images are in preview as Posit migrates container images from <a href="https://github.com/rstudio/rstudio-docker-products">rstudio/rstudio-docker-products</a>. The <a href="https://github.com/rstudio/rstudio-docker-products">rstudio-docker-products</a> images remain supported.
 
 > [!TIP]
-> Deploying on Kubernetes? Try the [Posit Connect Helm chart](https://docs.posit.co/helm/charts/rstudio-connect/README.html), which uses this image by default.
+> Deploying on Kubernetes? Try the <a href="https://docs.posit.co/helm/charts/rstudio-connect/README.html">Posit Connect Helm chart</a>, which uses this image by default.
 
 ## Supported tags
 

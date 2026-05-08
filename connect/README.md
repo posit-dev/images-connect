@@ -17,10 +17,10 @@ This container image provides [Posit Connect](https://docs.posit.co/connect/) (P
 ![Docker Image Size](https://img.shields.io/docker/image-size/posit/connect/latest)
 
 > [!NOTE]
-> These images are in preview as Posit migrates container images from [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products). The [rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products) images remain supported.
+> These images are in preview as Posit migrates container images from <a href="https://github.com/rstudio/rstudio-docker-products">rstudio/rstudio-docker-products</a>. The <a href="https://github.com/rstudio/rstudio-docker-products">rstudio-docker-products</a> images remain supported.
 
 > [!TIP]
-> Deploying on Kubernetes? Try the [Posit Connect Helm chart](https://docs.posit.co/helm/charts/rstudio-connect/README.html)!
+> Deploying on Kubernetes? Try the <a href="https://docs.posit.co/helm/charts/rstudio-connect/README.html">Posit Connect Helm chart</a>!
 
 ## Supported tags
 
@@ -80,7 +80,7 @@ Access Connect at `http://localhost:3939`.
 
 > [!NOTE]
 > Connect requires the `--privileged` flag to manage sandboxed content execution environments.
-> This example does not mount a data volume. Application data does not persist when the container stops. See [Volumes](#volumes) for persistent storage.
+> This example does not mount a data volume. Application data does not persist when the container stops. See <a href="#volumes">Volumes</a> for persistent storage.
 
 > [!IMPORTANT]
 > To use Connect with more than one user, define `Server.Address` in the `rstudio-connect.gcfg` file. Set it to the URL that users will use to visit Connect, then start or restart the container.
@@ -303,7 +303,7 @@ License and debug environment variables now use the `PCT_` prefix:
 The image accepts the legacy `RSC_` license names as a fallback during the deprecation window.
 
 > [!NOTE]
-> Posit supports legacy `RSC_` variables for backward compatibility but plans to deprecate them. For more details and updates, see the [Connect release notes](https://docs.posit.co/connect/news/). For new deployments, use the `PCT_` prefix to ensure forward compatibility.
+> Posit supports legacy `RSC_` variables for backward compatibility but plans to deprecate them. For more details and updates, see the <a href="https://docs.posit.co/connect/news/">Connect release notes</a>. For new deployments, use the `PCT_` prefix to ensure forward compatibility.
 
 ### What did not change
 
