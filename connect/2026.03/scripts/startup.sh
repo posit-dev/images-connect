@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+PCT_STARTUP_DEBUG=${PCT_STARTUP_DEBUG:-$STARTUP_DEBUG_MODE}
 if [[ "${PCT_STARTUP_DEBUG:-0}" -eq 1 ]]; then
   set -x
 fi
@@ -48,8 +49,10 @@ fi
 # ensure these cannot be inherited by child processes
 unset PCT_LICENSE
 unset PCT_LICENSE_SERVER
+unset PCT_LICENSE_FILE_PATH
 unset RSC_LICENSE
 unset RSC_LICENSE_SERVER
+unset RSC_LICENSE_FILE_PATH
 
 # Start RStudio Connect
 /opt/rstudio-connect/bin/connect --config /etc/rstudio-connect/rstudio-connect.gcfg
