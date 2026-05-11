@@ -291,11 +291,18 @@ The image accepts the legacy `RSC_` license names as a fallback during the depre
 > [!NOTE]
 > Posit supports legacy `RSC_` variables for backward compatibility but plans to deprecate them. For more details and updates, see the <a href="https://docs.posit.co/connect/news/">Connect release notes</a>. For new deployments, use the `PCT_` prefix to ensure forward compatibility.
 
+### Default data directory
+
+The legacy image set `Server.DataDir` to `/data` by default, while this image sets it to `/var/lib/rstudio-connect` to align with the defaults used by Connect and its Helm chart. If you use the default configuration file that comes with the image, update your data volume mount to match the new path:
+
+```bash
+-v /data/connect:/var/lib/rstudio-connect
+```
+
 ### What did not change
 
 - Application port (`3939`)
 - Configuration file path (`/etc/rstudio-connect/rstudio-connect.gcfg`)
-- Persistent data path (`Server.DataDir`, default `/data`)
 - Service user (`rstudio-connect`, UID/GID `999`)
 - `--privileged` flag requirement
 
