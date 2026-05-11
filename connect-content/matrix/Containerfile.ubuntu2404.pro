@@ -93,7 +93,8 @@ RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')" && \
 #
 # HOME="/opt" workaround: https://github.com/quarto-dev/quarto-cli/issues/11800
 ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
-RUN apt-get update -yqq && \
+RUN --mount=type=secret,id=github_token,required=false \
+    apt-get update -yqq && \
     apt-get install -yqq --no-install-recommends \
         xz-utils && \
     apt-get clean -yqq && \
