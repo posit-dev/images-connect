@@ -8,7 +8,7 @@
 
 # Posit Connect Content container image
 
-These container images provide the runtime environments for executing content deployed to [Posit Connect](https://docs.posit.co/connect/) in Kubernetes. Each image bundles a specific combination of R, Python, and Quarto so that content runs in an environment matching its language requirements.
+These container images provide the runtime environments for executing content deployed to [Connect](https://docs.posit.co/connect/) in Kubernetes. Each image bundles a specific combination of R, Python, and Quarto so that content runs in an environment matching its language requirements.
 
 [![GitHub Repository](https://img.shields.io/badge/github-repo?logo=github&color=grey)](https://github.com/posit-dev/images-connect)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/posit-dev/images-connect/content.yml?branch=main)](https://github.com/posit-dev/images-connect/actions/workflows/content.yml)
@@ -47,7 +47,7 @@ For Kubernetes deployments, Connect uses three images together. See the [reposit
 
 ## How to use this image
 
-Do not run these images directly. Connect's Job Launcher schedules them as content execution pods when published content runs on Kubernetes. Each pod executes Shiny applications, Plumber APIs, Quarto documents, Jupyter notebooks, and other Connect content using the R and Python versions baked into the image.
+Do not run these images directly. The Connect Job Launcher schedules them as content execution pods when published content runs on Kubernetes. Each pod executes Shiny applications, Plumber APIs, Quarto documents, Jupyter notebooks, and other Connect content using the R and Python versions baked into the image.
 
 Configure these images as execution environments in Connect through any of the following methods:
 
@@ -85,7 +85,7 @@ Examples:
 
 ## Architectures
 
-Posit publishes Ubuntu 24.04 content images for both `linux/amd64` and `linux/arm64`. Pull the same tag from either platform; Docker selects the matching manifest automatically. Ubuntu 22.04 content images are published for `linux/amd64` only.
+Posit publishes Ubuntu 24.04 content images for both `linux/amd64` and `linux/arm64`. Pull the same tag from either platform. Docker selects the matching manifest automatically. Posit publishes Ubuntu 22.04 content images for `linux/amd64` only.
 
 ## Installed software
 
@@ -101,7 +101,7 @@ The Pro variant also installs Posit Professional Drivers under `/opt/rstudio-dri
 
 ## User
 
-These images do not declare a `USER`. Containers start as `root`. Connect's Job Launcher manages the runtime user when scheduling content pods, dropping privileges as configured by the Connect administrator.
+These images do not declare a `USER`. Containers start as `root`. The Connect Job Launcher manages the runtime user when scheduling content pods, dropping privileges according to the configuration the Connect administrator sets.
 
 ## Examples
 
@@ -119,15 +119,15 @@ See [extending examples](https://github.com/posit-dev/images-examples/tree/main/
 
 ## Migrating from legacy image
 
-These images replace the legacy [`rstudio/content-base`](https://hub.docker.com/r/rstudio/content-base) and [`rstudio/content-pro`](https://hub.docker.com/r/rstudio/content-pro) images. The runtime tools are mostly unchanged. R and Python install at the same versioned paths under `/opt`, and Connect schedules content into these images the same way. Quarto moved from versioned to flat install under `/opt/quarto/bin/quarto`, but remains symlinked to `PATH` and is otherwise unchanged. The differences mostly lie in how Posit publishes and tags the image.
+These images replace the legacy [`rstudio/content-base`](https://hub.docker.com/r/rstudio/content-base) and [`rstudio/content-pro`](https://hub.docker.com/r/rstudio/content-pro) images. The runtime tools are mostly unchanged. R and Python install at the same versioned paths under `/opt`, and Connect schedules content into these images the same way. Quarto moved from versioned to flat installation under `/opt/quarto/bin/quarto`, but remains symlinked to the `PATH` and is otherwise unchanged. The differences mostly lie in how Posit publishes and tags the image.
 
 ### Image references
 
-The legacy images were published as `rstudio/content-base` and `rstudio/content-pro` on Docker Hub and `ghcr.io/rstudio/content-base` and `ghcr.io/rstudio/content-pro` on GHCR, tagged with patterns like `r{r_version}-py{python_version}-bionic` or `r{r_version}-py{python_version}-jammy` for `linux/amd64` only. Update your image references to one of the new locations and pick a tag that pins to your desired R, Python, OS, and variant. See [Image tags](#image-tags) and [Architectures](#architectures).
+Posit published the legacy images as `rstudio/content-base` and `rstudio/content-pro` on Docker Hub, and as `ghcr.io/rstudio/content-base` and `ghcr.io/rstudio/content-pro` on GHCR. Both shipped `linux/amd64` only, tagged like `r{r_version}-py{python_version}-bionic` or `r{r_version}-py{python_version}-jammy`. Update your image references to one of the new locations and pick a tag that pins to your desired R, Python, OS, and variant. See [Image tags](#image-tags) and [Architectures](#architectures).
 
 ### Variants
 
-The legacy images split content runtimes into two separate repositories — `rstudio/content-base` for the open-source build and `rstudio/content-pro` for the build with Posit Professional Drivers. The replacement images publish both as variants of a single `connect-content` repository: the Base variant matches `content-base` and the Pro (`-pro`) variant matches `content-pro`. See [Image variants](#image-variants).
+The legacy images split content runtimes into two separate repositories: `rstudio/content-base` for the open-source build and `rstudio/content-pro` for the build with Posit Professional Drivers. The replacement images publish both as variants of a single `connect-content` repository: the Base variant matches `content-base` and the Pro (`-pro`) variant matches `content-pro`. See [Image variants](#image-variants).
 
 ### Tag format
 
@@ -149,4 +149,4 @@ Posit rebuilds published images weekly for Posit product editions under active s
 
 ### Image dependency licenses
 
-These images contain third-party software (R, Python, Quarto, system libraries, and their transitive dependencies) under various licenses. Image users are responsible for ensuring that use of these images and any of their dependent layers complies with all relevant licenses for the contained software.
+These images contain third-party software (R, Python, Quarto, system libraries, and their transitive dependencies) under various licenses. You are responsible for using these images and any of their dependent layers in compliance with the licenses of the contained software.
