@@ -119,7 +119,7 @@ See [extending examples](https://github.com/posit-dev/images-examples/tree/main/
 
 ## Migrating from legacy image
 
-These images replace the legacy [`rstudio/content-base`](https://hub.docker.com/r/rstudio/content-base) and [`rstudio/content-pro`](https://hub.docker.com/r/rstudio/content-pro) images. The runtime tools are unchanged — R, Python, and Quarto install at the same paths under `/opt`, and Connect schedules content into these images the same way. The differences are in how the image is published and tagged.
+These images replace the legacy [`rstudio/content-base`](https://hub.docker.com/r/rstudio/content-base) and [`rstudio/content-pro`](https://hub.docker.com/r/rstudio/content-pro) images. The runtime tools are mostly unchanged. R and Python install at the same versioned paths under `/opt`, and Connect schedules content into these images the same way. Quarto moved from versioned to flat install under `/opt/quarto/bin/quarto`, but remains symlinked to `PATH` and is otherwise unchanged. The differences mostly lie in how Posit publishes and tags the image.
 
 ### Image references
 
