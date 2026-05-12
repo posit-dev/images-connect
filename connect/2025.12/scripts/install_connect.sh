@@ -8,7 +8,7 @@ apt-get update -yq
 
 echo "$d Installing Posit Connect 2025.12.1 $d"
 
-RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1 apt-get install -yf rstudio-connect=2025.12.1
+RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1 apt-get install -yf rstudio-connect=2025.12.1-1
 apt-mark hold rstudio-connect
 
 mv /tmp/rstudio-connect.gcfg /etc/rstudio-connect/rstudio-connect.gcfg
@@ -25,10 +25,6 @@ Executable = /opt/python/3.14.2/bin/python
 [Quarto]
 Enabled = true
 Executable = /opt/quarto/bin/quarto
-
-[TensorFlow]
-Enabled = true
-Executable = /usr/bin/tensorflow_model_server
 EOF
 else
 cat << EOF >> /etc/rstudio-connect/rstudio-connect.gcfg
