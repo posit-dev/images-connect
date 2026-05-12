@@ -48,10 +48,6 @@ Executable = {{ python.get_version_directory(python_version) }}/bin/python
 [Quarto]
 Enabled = true
 Executable = {{ quarto.get_directory() }}/bin/quarto
-
-[TensorFlow]
-Enabled = true
-Executable = /usr/bin/tensorflow_model_server
 EOF
 else
 cat << EOF >> /etc/rstudio-connect/rstudio-connect.gcfg

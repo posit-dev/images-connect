@@ -25,10 +25,6 @@ Executable = /opt/python/3.14.4/bin/python
 [Quarto]
 Enabled = true
 Executable = /opt/quarto/bin/quarto
-
-[TensorFlow]
-Enabled = true
-Executable = /usr/bin/tensorflow_model_server
 EOF
 else
 cat << EOF >> /etc/rstudio-connect/rstudio-connect.gcfg
