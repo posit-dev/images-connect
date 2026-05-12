@@ -8,7 +8,7 @@
 
 # Posit Connect Content Init container image
 
-This container image is an init container for Posit Connect that pulls runtime components into a shared volume. The Connect Launcher then uses those components to build and run published content in separate pods. This image is for Off-Host Execution (OHE) deployments on Kubernetes and is the default init container in the Connect Helm chart.
+This container image is an init container for Connect that pulls runtime components into a shared volume. The Connect Launcher then uses those components to build and run published content in separate pods. This image is for Off-Host Execution (OHE) deployments on Kubernetes and is the default init container in the Connect Helm chart.
 
 [![GitHub Repository](https://img.shields.io/badge/github-repo?logo=github&color=grey)](https://github.com/posit-dev/images-connect)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/posit-dev/images-connect/production.yml?branch=main)](https://github.com/posit-dev/images-connect/actions/workflows/production.yml)
@@ -88,7 +88,7 @@ Tag formats where `YYYY.MM.P` is any supported Connect version:
 
 ## Architectures
 
-Posit publishes multi-arch images for both `linux/amd64` and `linux/arm64`. Pull the same tag from either platform; Docker selects the matching manifest automatically.
+Posit publishes multi-arch images for both `linux/amd64` and `linux/arm64`. Pull the same tag from either platform. Docker selects the matching manifest automatically.
 
 ## Volumes
 
@@ -112,11 +112,11 @@ You can extend this image to include additional content beyond the default set. 
 
 ## Migrating from rstudio/rstudio-connect-content-init
 
-This image replaces the legacy [`rstudio/rstudio-connect-content-init`](https://hub.docker.com/r/rstudio/rstudio-connect-content-init) image. The init container behavior is unchanged — the entrypoint copies runtime components into a shared volume at `/mnt/rstudio-connect-runtime` for the Connect content container to consume. The differences are in how the image is published.
+This image replaces the legacy [`rstudio/rstudio-connect-content-init`](https://hub.docker.com/r/rstudio/rstudio-connect-content-init) image. The init container behavior is unchanged. The entrypoint copies runtime components into a shared volume at `/mnt/rstudio-connect-runtime` for the Connect content container to consume. The differences lie in how the image is published.
 
 ### Image references
 
-The legacy image was published as `rstudio/rstudio-connect-content-init` on Docker Hub and `ghcr.io/rstudio/rstudio-connect-content-init` on GHCR, tagged by OS (`jammy`, `ubuntu2204`, `jammy-<version>`, `ubuntu2204-<version>`) for `linux/amd64` only. Update your image reference to one of the new locations and pick a tag that pins to your desired Connect version and OS. See [Image tags](#image-tags) and [Architectures](#architectures).
+Posit published the legacy image as `rstudio/rstudio-connect-content-init` on Docker Hub and `ghcr.io/rstudio/rstudio-connect-content-init` on GHCR, tagged by OS (`jammy`, `ubuntu2204`, `jammy-<version>`, `ubuntu2204-<version>`) for `linux/amd64` only. Update your image reference to one of the new locations and pick a tag that pins to your desired Connect version and OS. See [Image tags](#image-tags) and [Architectures](#architectures).
 
 ### Base OS options
 
@@ -135,4 +135,4 @@ The legacy image shipped Ubuntu 22.04 only. This image adds Ubuntu 24.04 as the 
 
 Review these images before using them in production. Organizations with specific Common Vulnerabilities and Exposures (CVE) or vulnerability requirements should rebuild these images to meet their security standards.
 
-Posit rebuilds published images for Posit product editions under active support weekly to pull in operating system patches.
+Posit rebuilds published images weekly for Posit product editions under active support, pulling in operating system patches.
