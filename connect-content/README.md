@@ -51,9 +51,9 @@ Do not run these images directly. Connect's Job Launcher schedules them as conte
 
 Configure these images as execution environments in Connect through any of the following methods:
 
-1. **Helm chart values:** The `rstudio/rstudio-connect` Helm chart includes a default set of content images. See the [repository README](https://github.com/posit-dev/images-connect#deploying-on-kubernetes) for configuration details.
+1. **Helm chart values:** The `rstudio/rstudio-connect` Helm chart includes a default set of content images defined by `executionEnvironments`. See the [repository README](https://github.com/posit-dev/images-connect#deploying-on-kubernetes) for configuration details.
 2. **Connect admin dashboard:** Manage execution environments in the Connect UI under **Admin > Execution environments**.
-3. **runtime.yaml:** A YAML configuration file that defines available execution environments.
+3. **Connect API:** Manage execution environments programmatically through the [Connect Environments API endpoints](https://docs.posit.co/connect/api/#environments).
 
 ## Image variants
 
