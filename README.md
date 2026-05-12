@@ -148,16 +148,16 @@ docker buildx build \
     --file connect/${PCT_VERSION}/Containerfile.ubuntu2404.std \
     .
 
-# Build the minimal Connect image using buildah
+# Build the standard Connect image using buildah
 buildah build \
     --tag connect:${PCT_VERSION} \
-    --file connect/${PCT_VERSION}/Containerfile.ubuntu2404.min \
+    --file connect/${PCT_VERSION}/Containerfile.ubuntu2404.std \
     .
 
-# Build the minimal Connect image using podman
+# Build the standard Connect image using podman
 podman build \
     --tag connect:${PCT_VERSION} \
-    --file connect/${PCT_VERSION}/Containerfile.ubuntu2404.min \
+    --file connect/${PCT_VERSION}/Containerfile.ubuntu2404.std \
     .
 ```
 
