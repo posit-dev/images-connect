@@ -65,6 +65,8 @@ kubectl create secret generic posit-connect-license \
 
 The `executionEnvironments` list uses [declarative management](https://docs.posit.co/connect/admin/appendix/off-host/execution-environments/#declarative-management). Unlike the legacy `customRuntimeYaml`, changes take effect on every `helm upgrade` without requiring a pod restart or database reset. Setting `customRuntimeYaml` to an empty images list prevents the chart from bootstrapping its default set of content images on first start.
 
+The values below are illustrative of how to configure the Connect Helm chart. Newer versions of images may be available so be sure to check Docker Hub or GitHub Container Registry for the latest builds.
+
 ```yaml
 image:
   repository: ghcr.io/posit-dev/connect
