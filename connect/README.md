@@ -8,7 +8,7 @@
 
 # Posit Connect container image
 
-This container image provides [Posit Connect](https://docs.posit.co/connect/) (PCT), a publishing platform for the work your teams create in R and Python. Deploy Shiny applications, R Markdown documents, Plumber APIs, Python applications (Flask, Dash, FastAPI, Bokeh, Streamlit), Jupyter notebooks, Quarto documents, and more.
+This container image provides [Connect](https://docs.posit.co/connect/), a publishing platform for the work your teams create in R and Python. Deploy Shiny applications, R Markdown documents, Plumber APIs, Python applications (Flask, Dash, FastAPI, Bokeh, Streamlit), Jupyter notebooks, Quarto documents, and more.
 
 [![GitHub Repository](https://img.shields.io/badge/github-repo?logo=github&color=grey)](https://github.com/posit-dev/images-connect)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/posit-dev/images-connect/production.yml?branch=main)](https://github.com/posit-dev/images-connect/actions/workflows/production.yml)
@@ -83,7 +83,7 @@ docker run -d \
   --privileged \
   -p 3939:3939 \
   -v ${PCT_LICENSE_FILE_HOST_PATH}:${PCT_LICENSE_FILE_PATH} \
-  -v ${PCT_DATA_HOST_PATH}:/data \
+  -v ${PCT_DATA_HOST_PATH}:/var/lib/rstudio-connect \
   -v ${PCT_CONFIG_HOST_PATH}:/etc/rstudio-connect/rstudio-connect.gcfg:ro \
   ${PCT_IMAGE}:${PCT_VERSION}
 ```
@@ -111,12 +111,12 @@ volumes:
 
 Two variants are available:
 
-| Variant          | Description                                                                                                                 |
-|------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| Standard (`std`) | Opinionated image, runs out of the box. Bundles R, Python, Quarto, and Posit Professional Drivers alongside Connect.        |
-| Minimal (`min`)  | Small image you can extend with desired dependencies. Does not run as is — Connect requires R, Python, and Quarto to serve published content. |
+| Variant          | Description                                                                                                                                  |
+|------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| Standard (`std`) | Opinionated image, runs out of the box. Bundles R, Python, Quarto, and Posit Professional Drivers alongside Connect.                         |
+| Minimal (`min`)  | Small image you can extend with desired dependencies. Does not run as is. Connect requires R, Python, and Quarto to serve published content. |
 
-Each tagged image bundles a fixed set of dependencies. Both variants ship the `YYYY.MM` release of Connect at the latest patch release available when the image was built. The Standard variant additionally ships one R version, one Python version, and one Quarto version, locked to the latest available at release. The Containerfiles in this repository under `connect/<version>/` document the exact versions in any tag.
+Each tagged image bundles a fixed set of dependencies. Both variants ship the latest patch of the `YYYY.MM` Connect release available at image build time. The Standard variant additionally ships one R version, one Python version, and one Quarto version, locked to the latest available at release. The Containerfiles in this repository under `connect/<version>/` document the exact versions in any tag.
 
 See [extending examples](https://github.com/posit-dev/images-examples/tree/main/extending) for how to build on the Minimal image.
 
@@ -137,7 +137,7 @@ Tag formats where `YYYY.MM.P` is any supported Connect version:
 
 ## Architectures
 
-Posit publishes Connect images for `linux/amd64` and `linux/arm64`.  Pull the same tag from either platform; Docker selects the matching manifest automatically.
+Posit publishes Connect images for `linux/amd64` and `linux/arm64`.  Pull the same tag from either platform. Docker selects the matching manifest automatically.
 
 ## Environment variables
 
@@ -170,13 +170,13 @@ For persistent data, add these volume mounts to your `docker run` command:
 | `/var/lib/rstudio-connect` | Application data and database |
 | `/etc/rstudio-connect`     | Configuration files           |
 
-The data path is set by the `Server.DataDir` option in `rstudio-connect.gcfg` (default `/data`). If you change this option in a custom configuration, mount the persistent volume to the new path.
+The data path is set by the `Server.DataDir` option in `rstudio-connect.gcfg` (default `/var/lib/rstudio-connect`). If you change this option in a custom configuration, mount the persistent volume to the new path.
 
 ## Configuration
 
 ### License activation
 
-Connect requires a [product license](https://docs.posit.co/licensing/licensing-faq.html). If you don't have a license yet, request a free 30-day trial at [posit.co/trial-license](https://posit.co/trial-license/).
+Connect requires a [product license](https://docs.posit.co/licensing/licensing-faq.html). If you do not have a license yet, request a free 30-day trial at [posit.co/trial-license](https://posit.co/trial-license/).
 
 Posit recommends activating with a license file. License files work well in all environments including ephemeral, container-based, or air-gapped environments. Choose one method:
 
@@ -195,7 +195,7 @@ sudo chown root:root /path/to/license.lic
 sudo chmod 0600 /path/to/license.lic
 ```
 
-If the license file does not successfully activate, the container fails to start under most circumstances. See [Verify license activation status](#verify-license-activation-status) under Examples to confirm a successful activation in a running container.
+If the license file does not successfully activate, the container fails to start under most circumstances. See the [Licensing FAQ](https://docs.posit.co/licensing/licensing-faq.html) for usage and troubleshooting information.
 
 #### Option 2: License key
 
@@ -209,7 +209,7 @@ License key activations can leak when a container shuts down ungracefully, consu
 - `/var/lib/.prof`
 - `/var/lib/rstudio-connect`
 
-State files are hardware-locked and not transferable between hosts. Mounting these paths reduces the chance of a leak but does not eliminate it. To avoid the leak risk entirely, use a license file (Option 1). See the [License keys](#license-keys) caveat for more detail.
+The license manager hardware-locks these state files to a single host; they do not transfer between machines. Mounting these paths reduces the chance of a leak but does not eliminate it. To avoid the leak risk entirely, use a license file (Option 1). See the [License keys](#license-keys) caveat for more detail.
 
 #### Option 3: Floating license server
 
@@ -248,14 +248,14 @@ Connect exposes an unauthenticated health endpoint at `/__ping__` on port `3939`
 curl http://localhost:3939/__ping__
 ```
 
-The image declares a Docker `HEALTHCHECK` against this endpoint:
+The image declares a `HEALTHCHECK` against this endpoint:
 
 ```dockerfile
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
     CMD curl --fail --silent --output /dev/null http://localhost:3939/__ping__
 ```
 
-Both variants inherit the same directive. The `min` variant will report unhealthy until extended with R, Python, and Quarto, since Connect does not serve content without them. To disable the directive in a derived image, add `HEALTHCHECK NONE`.
+Both variants inherit the same directive. The `min` variant reports unhealthy until extended with R, Python, and Quarto, since Connect does not serve content without them. To disable the directive in a derived image, add `HEALTHCHECK NONE`.
 
 For Kubernetes liveness and readiness probes, or load balancer health checks, hit the same endpoint directly rather than relying on the Docker healthcheck.
 
@@ -265,11 +265,11 @@ Connect runs with the `--privileged` flag. The container starts as `root` and Co
 
 ## Migrating from legacy image
 
-This image replaces the legacy [`rstudio/rstudio-connect`](https://hub.docker.com/r/rstudio/rstudio-connect) image. Connect itself is unchanged — the application reads `rstudio-connect.gcfg`, listens on `3939`, writes data to `Server.DataDir`, requires `--privileged`, and uses the `rstudio-connect` user (UID/GID `999`) for content execution. Existing data and configuration volumes mount unchanged. The differences are in how the image is published and configured.
+This image replaces the legacy [`rstudio/rstudio-connect`](https://hub.docker.com/r/rstudio/rstudio-connect) image. Connect itself is unchanged. The application reads `rstudio-connect.gcfg`, listens on `3939`, writes data to `Server.DataDir`, requires `--privileged`, and uses the `rstudio-connect` user (UID/GID `999`) for content execution. Existing data and configuration volumes mount unchanged. The differences are in how the image is published and configured.
 
 ### Image references
 
-The legacy image was published as `rstudio/rstudio-connect` on Docker Hub and `ghcr.io/rstudio/rstudio-connect` on GHCR, tagged by OS (`jammy`, `ubuntu2204`, `jammy-<version>`, `ubuntu2204-<version>`) for `linux/amd64` only. Update your image reference to one of the new locations and pick a tag that pins to your desired Connect version, OS, and variant. See [Image tags](#image-tags) and [Architectures](#architectures).
+Posit published the legacy image as `rstudio/rstudio-connect` on Docker Hub and `ghcr.io/rstudio/rstudio-connect` on GHCR, tagged by OS (`jammy`, `ubuntu2204`, `jammy-<version>`, `ubuntu2204-<version>`) for `linux/amd64` only. Update your image reference to one of the new locations and pick a tag that pins to your desired Connect version, OS, and variant. See [Image tags](#image-tags) and [Architectures](#architectures).
 
 ### Variants
 
@@ -293,7 +293,7 @@ The image accepts the legacy `RSC_` license names as a fallback during the depre
 
 ### Default data directory
 
-The legacy image set `Server.DataDir` to `/data` by default, while this image sets it to `/var/lib/rstudio-connect` to align with the defaults used by Connect and its Helm chart. If you use the default configuration file that comes with the image, update your data volume mount to match the new path:
+The legacy image set `Server.DataDir` to `/data` by default, while this image sets it to `/var/lib/rstudio-connect` to align with the defaults used by Connect and the Connect Helm chart. If you use the default configuration file that comes with the image, update your data volume mount to match the new path:
 
 ```bash
 -v /data/connect:/var/lib/rstudio-connect
@@ -310,9 +310,9 @@ The legacy image set `Server.DataDir` to `/data` by default, while this image se
 
 ### Security
 
-Review these images before using them in production. Organizations with specific Common Vulnerabilities and Exposures (CVE) or vulnerability requirements should rebuild these images to meet their security standards.
+Review these images before using them in production. Organizations with specific Common Vulnerabilities and Exposures (CVE) or vulnerability requirements can rebuild these images to meet their security standards.
 
-Posit rebuilds published images for Posit product editions under active support weekly to pull in operating system patches.
+Posit rebuilds published images weekly for Posit product editions under active support, pulling in operating system patches.
 
 ### Privileged mode
 
@@ -320,7 +320,7 @@ Connect requires the `--privileged` flag to run containers. The flag is necessar
 
 ### License keys
 
-License keys used in containers risk activation slot loss if containers are not gracefully stopped. The license deactivates on container exit, but ungraceful shutdowns (crashes, `docker kill`) can leave the activation slot consumed on the Posit license server.
+License keys used in containers risk activation slot loss if the container does not shut down gracefully. The license deactivates on container exit, but ungraceful shutdowns (crashes, `docker kill`) can leave the activation slot consumed on the Posit license server.
 
 To ensure proper license deactivation, use a sufficient stop timeout for both `docker run` and `docker stop`:
 
@@ -344,7 +344,7 @@ To preserve license state across container restarts, mount these directories to 
 * Floating license
   * `/var/lib/.TurboFloat`
 
-Files in these directories are hardware-locked and not transferable between hosts. Posit advises gracefully shutting down containers and allowing license deactivation before changing any hardware or firmware on the host (for example, upgrading a network card or updating BIOS) or the container (for example, changing the network driver or allocated number of CPU cores).
+Files in these directories are hardware-locked and not transferable between hosts. Gracefully shut down containers and allow license deactivation before changing host hardware or firmware (for example, upgrading a network card or updating BIOS). Apply the same caution before changing container resources (for example, the network driver or allocated CPU cores).
 
 ## Documentation
 
