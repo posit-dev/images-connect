@@ -31,7 +31,7 @@ ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
 ENV PCT_LICENSE=""
 ENV PCT_LICENSE_SERVER=""
 ENV PCT_LICENSE_FILE_PATH=""
-ENV STARTUP_DEBUG_MODE=0
+ENV PCT_STARTUP_DEBUG=0
 
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
@@ -86,4 +86,6 @@ VOLUME ["/data"]
 
 ### Finalize image ###
 EXPOSE 3939/tcp
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+    CMD curl --fail --silent --output /dev/null http://localhost:3939/__ping__
 CMD ["/usr/local/bin/startup.sh"]

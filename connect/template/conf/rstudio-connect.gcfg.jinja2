@@ -2,10 +2,8 @@
 Below are imports for Bakery's macros. If any are unneeded, they can be removed.
 Bakery handles bootstrapping the files into template rendering.
 -#}
-{%- import "r.j2" as r -%}
 ; RStudio Connect configuration file
 
-; TODO: Add support for floating license server
 [Server]
 ; SenderEmail is an email address used by RStudio Connect to send outbound
 ; email. The system will not be able to send administrative email until this
@@ -14,7 +12,7 @@ Bakery handles bootstrapping the files into template rendering.
 ; SenderEmail = account@company.com
 
 ; The persistent data directory mounted into our container.
-DataDir = /data
+; DataDir = /var/lib/rstudio-connect
 
 ; Address is a public URL for this RStudio Connect server. Must be configured
 ; to enable features like including links to your content in emails. If
@@ -34,7 +32,6 @@ Listen = :3939
 ; Specifies the type of user authentication.
 Provider = password
 
-; TODO: Allow the Package Manager OS to be specified
 [RPackageRepository "CRAN"]
 URL = <CRAN_URL>
 

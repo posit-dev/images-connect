@@ -158,6 +158,19 @@ bakery update files
 bakery update files --image-name connect --image-version 2026.02.0
 ```
 
+## Documentation
+
+Each image directory (e.g., `connect/`) has a `README.md` with usage instructions, build guidance, and other details specific to that image. The root `README.md` provides an overview of the repository structure, CI workflows, and Helm integration.
+
+Each image specific `README.md` is published as the description on Docker Hub and GitHub Container Registry, so it should be written with that audience in mind. These platforms have limitations for certain Markdown behaviors:
+
+| Avoid                                                                                                      | Alternative                                                                                                                                           |
+|------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Relative links to files in the repo (e.g., `./connect-content/matrix/Containerfile.ubuntu2404.pro`)        | Absolute links to the GitHub repo (e.g., `https://github.com/posit-dev/images-connect/blob/main/connect-content/matrix/Containerfile.ubuntu2404.pro`) |
+| Markdown links in callouts (e.g., `[Get started with Bakery](https://posit-dev.github.io/images-shared/)`) | HTML anchors in callouts (e.g., `<a href="https://posit-dev.github.io/images-shared/">Get started with Bakery</a>                                     |
+
+When making changes to the repository, consider whether updates are required for the image-specific `README.md` files in addition to the root `README.md`. For example, if you add a new environment variable to the `connect` image, you should update the `connect/README.md` to document it.
+
 ## CI Workflows
 
 All workflows call shared reusable workflows from `images-shared`:
