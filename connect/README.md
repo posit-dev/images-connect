@@ -37,7 +37,7 @@ This container image provides [Connect](https://docs.posit.co/connect/), a publi
 
 For Kubernetes deployments, Connect uses three images together. See the [repository README](https://github.com/posit-dev/images-connect#deploying-on-kubernetes) for Helm configuration.
 
-| Image | Description | Docker Hub | GHCR |
+| Image | Description | Docker Hub | GitHub Container Registry |
 |:------|:------------|:-----------|:-----|
 | `connect-content` | Runtime images for executing published content | [posit/connect-content](https://hub.docker.com/r/posit/connect-content) | [posit-dev/connect-content](https://github.com/posit-dev/images-connect/pkgs/container/connect-content) |
 | `connect-content-init` | Init container for Kubernetes deployments | [posit/connect-content-init](https://hub.docker.com/r/posit/connect-content-init) | [posit-dev/connect-content-init](https://github.com/posit-dev/images-connect/pkgs/container/connect-content-init) |

@@ -37,7 +37,7 @@ These container images provide the runtime environments for executing content de
 
 For Kubernetes deployments, Connect uses three images together. See the [repository README](https://github.com/posit-dev/images-connect#deploying-on-kubernetes) for Helm configuration.
 
-| Image | Description | Docker Hub | GHCR |
+| Image | Description | Docker Hub | GitHub Container Registry |
 |:------|:------------|:-----------|:-----|
 | `connect` | The Posit Connect server | [posit/connect](https://hub.docker.com/r/posit/connect) | [posit-dev/connect](https://github.com/posit-dev/images-connect/pkgs/container/connect) |
 | `connect-content-init` | Init container for Kubernetes deployments | [posit/connect-content-init](https://hub.docker.com/r/posit/connect-content-init) | [posit-dev/connect-content-init](https://github.com/posit-dev/images-connect/pkgs/container/connect-content-init) |
