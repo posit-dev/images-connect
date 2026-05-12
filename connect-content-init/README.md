@@ -102,7 +102,7 @@ The content execution container mounts the same volume to consume the runtime fi
 
 ## User
 
-The container starts as `root` so the entrypoint can write files into the shared volume with the permissions Connect expects. The init container exits after the copy completes.
+The container starts as `root` so the entrypoint can write files into the shared volume with the permissions Connect expects. The init container exits after the copy completes. If your cluster requires non-root init containers, you can override the user, but ensure the override has write access to the shared volume mount path.
 
 ## Examples
 
