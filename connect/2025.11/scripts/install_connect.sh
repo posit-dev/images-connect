@@ -8,7 +8,7 @@ apt-get update -yq
 
 echo "$d Installing Posit Connect 2025.11.0 $d"
 
-RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1 apt-get install -yf rstudio-connect=2025.11.0-1
+RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1 apt-get install -yf rstudio-connect=2025.11.0
 apt-mark hold rstudio-connect
 
 mv /tmp/rstudio-connect.gcfg /etc/rstudio-connect/rstudio-connect.gcfg
