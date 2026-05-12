@@ -2,7 +2,7 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://cdn.posit.co/platform/containers/logos/logo_connecttag-reverse.svg">
   <source media="(prefers-color-scheme: light)" srcset="https://cdn.posit.co/platform/containers/logos/logo_connecttag-fullcolor.svg">
-  <img alt="Posit PConnect Logo" src="https://cdn.posit.co/platform/containers/logos/logo_connecttag-fullcolor.svg">
+  <img alt="Posit Connect Logo" src="https://cdn.posit.co/platform/containers/logos/logo_connecttag-fullcolor.svg">
 </picture>
 </a>
 
@@ -62,7 +62,7 @@ Two variants are available:
 | Variant       | Description                                                                                                                  |
 |---------------|------------------------------------------------------------------------------------------------------------------------------|
 | Base (`base`) | Open-source R and Python with system dependencies for popular R packages.                                                    |
-| Pro (`-pro`)  | Builds on the Base variant and adds Posit Professional Drivers and the `odbc` R package for ODBC database connectivity.      |
+| Pro (`pro`)  | Builds on the Base variant and adds Posit Professional Drivers and the `odbc` R package for ODBC database connectivity.      |
 
 Each tagged image bundles a fixed set of dependencies. Both variants ship one R version, one Python version, and one Quarto version, locked to the latest available at build time. The Containerfiles in this repository under `connect-content/matrix/` document the exact versions in any tag.
 
@@ -95,7 +95,7 @@ Each image includes:
 |-----------|-------------------------------------|
 | R         | `/opt/R/{version}/bin/R`            |
 | Python    | `/opt/python/{version}/bin/python3` |
-| Quarto    | `/opt/quarto/{version}/bin/quarto`  |
+| Quarto    | `/opt/quarto/bin/quarto`  |
 
 The Pro variant also installs Posit Professional Drivers under `/opt/rstudio-drivers/` and the `odbc` R package, with the bundled `odbcinst.ini` copied to `/etc/odbcinst.ini`.
 
