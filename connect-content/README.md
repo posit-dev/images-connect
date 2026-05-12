@@ -64,7 +64,7 @@ Two variants are available:
 | Base (`base`) | Open-source R and Python with system dependencies for popular R packages.                                                    |
 | Pro (`pro`)  | Builds on the Base variant and adds Posit Professional Drivers and the `odbc` R package for ODBC database connectivity.      |
 
-Each tagged image bundles a fixed set of dependencies. Both variants ship one R version, one Python version, and one Quarto version, locked to the latest available at build time. The Containerfiles in this repository under `connect-content/matrix/` document the exact versions in any tag.
+Each tagged image bundles a fixed set of dependencies. Both variants ship one R version, one Python version, and one Quarto version, for a collection of minor versions at their latest patch version available at build time. The Containerfiles in this repository under `connect-content/matrix/` document the exact versions in any tag.
 
 See [extending examples](https://github.com/posit-dev/images-examples/tree/main/extending) for how to build on these images.
 
