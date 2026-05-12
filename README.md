@@ -99,7 +99,7 @@ executionEnvironments:
     quarto:
       installations:
         - version: "1.8.27"
-          path: /opt/quarto/1.8.27/bin/quarto
+          path: /opt/quarto/bin/quarto
   - name: ghcr.io/posit-dev/connect-content:R4.4.3-python3.12.12-ubuntu-24.04
     title: "R 4.4.3 / Python 3.12.12"
     matching: any
@@ -114,7 +114,7 @@ executionEnvironments:
     quarto:
       installations:
         - version: "1.8.27"
-          path: /opt/quarto/1.8.27/bin/quarto
+          path: /opt/quarto/bin/quarto
 ```
 
 Content image tags follow the pattern `R{r_version}-python{python_version}-{os}`. Append `-pro` for images with Posit Professional Drivers.
