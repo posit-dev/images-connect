@@ -12,12 +12,9 @@ These container images provide the runtime environments for executing content de
 
 [![GitHub Repository](https://img.shields.io/badge/github-repo?logo=github&color=grey)](https://github.com/posit-dev/images-connect)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/posit-dev/images-connect/content.yml?branch=main)](https://github.com/posit-dev/images-connect/actions/workflows/content.yml)
+[![Latest Version](https://img.shields.io/docker/v/posit/connect-content/latest?sort=semver&label=latest)](https://hub.docker.com/r/posit/connect-content/tags)
 ![Docker Pulls](https://img.shields.io/docker/pulls/posit/connect-content)
 ![Docker Image Size](https://img.shields.io/docker/image-size/posit/connect-content/latest)
-<!--
-TODO: Try this again after the [deterministic push order PR is merged](https://github.com/posit-dev/images-shared/pull/505)
-[![Latest Version](https://img.shields.io/docker/v/posit/connect-content?sort=date&label=latest)](https://hub.docker.com/r/posit/connect-content/tags)
--->
 
 > [!NOTE]
 > These images are in preview as Posit migrates container images from <a href="https://github.com/rstudio/rstudio-docker-products">rstudio/rstudio-docker-products</a>. The previous `rstudio/content-base` and `rstudio/content-pro` images remain supported.
@@ -40,7 +37,7 @@ TODO: Try this again after the [deterministic push order PR is merged](https://g
 
 For Kubernetes deployments, Connect uses three images together. See the [repository README](https://github.com/posit-dev/images-connect#deploying-on-kubernetes) for Helm configuration.
 
-| Image | Description | Docker Hub | GHCR |
+| Image | Description | Docker Hub | GitHub Container Registry |
 |:------|:------------|:-----------|:-----|
 | `connect` | The Posit Connect server | [posit/connect](https://hub.docker.com/r/posit/connect) | [posit-dev/connect](https://github.com/posit-dev/images-connect/pkgs/container/connect) |
 | `connect-content-init` | Init container for Kubernetes deployments | [posit/connect-content-init](https://hub.docker.com/r/posit/connect-content-init) | [posit-dev/connect-content-init](https://github.com/posit-dev/images-connect/pkgs/container/connect-content-init) |
