@@ -51,7 +51,7 @@ The [Connect Helm chart](https://docs.posit.co/helm/charts/rstudio-connect/READM
 launcher:
   defaultInitContainer:
     repository: ghcr.io/posit-dev/connect-content-init
-    tag: "2026.04.0"
+    tag: "2026.04.1"
 ```
 
 See the [repository README](https://github.com/posit-dev/images-connect#deploying-on-kubernetes) for a full chart example.
@@ -63,7 +63,7 @@ To wire the image up directly in a pod spec, mount a shared volume at `/mnt/rstu
 ```yaml
 initContainers:
   - name: connect-content-init
-    image: ghcr.io/posit-dev/connect-content-init:2026.04.0
+    image: ghcr.io/posit-dev/connect-content-init:2026.04.1
     volumeMounts:
       - name: connect-runtime
         mountPath: /mnt/rstudio-connect-runtime

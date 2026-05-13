@@ -70,7 +70,7 @@ The values below are illustrative of how to configure the Connect Helm chart. Ne
 ```yaml
 image:
   repository: ghcr.io/posit-dev/connect
-  tag: "2026.04.0"
+  tag: "2026.04.1"
 
 license:
   file:
@@ -84,7 +84,7 @@ launcher:
     images: []
   defaultInitContainer:
     repository: ghcr.io/posit-dev/connect-content-init
-    tag: "2026.04.0"
+    tag: "2026.04.1"
 
 executionEnvironments:
   - name: ghcr.io/posit-dev/connect-content:R4.5.2-python3.14.3-ubuntu-24.04
