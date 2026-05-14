@@ -16,9 +16,6 @@ These container images provide the runtime environments for executing content de
 ![Docker Pulls](https://img.shields.io/docker/pulls/posit/connect-content)
 ![Docker Image Size](https://img.shields.io/docker/image-size/posit/connect-content/latest)
 
-> [!NOTE]
-> These images are in preview as Posit migrates container images from <a href="https://github.com/rstudio/rstudio-docker-products">rstudio/rstudio-docker-products</a>. The previous `rstudio/content-base` and `rstudio/content-pro` images remain supported.
-
 > [!TIP]
 > Deploying on Kubernetes? Try the <a href="https://docs.posit.co/helm/charts/rstudio-connect/README.html">Posit Connect Helm chart</a>!
 
