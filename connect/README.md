@@ -24,7 +24,7 @@ This container image provides [Connect](https://docs.posit.co/connect/), a publi
 |                           | |
 |---------------------------|---|
 | **Maintained by**         | [the Posit Docker team](https://github.com/posit-dev/images) |
-| **Where to get help**     | [GitHub Issues](https://github.com/posit-dev/images-connect/issues), [Images Discussion Board](https://github.com/posit-dev/images/discussions), [the Posit Community Forum](https://forum.posit.co/c/posit-professional-hosted/posit-connect/27), [Posit Support](https://support.posit.co/hc/en-us) |
+| **Where to get help**     | [GitHub Issues](https://github.com/posit-dev/images-connect/issues), [Images Discussion Board](https://github.com/posit-dev/images/discussions), [the Posit Community Forum](https://forum.posit.co/c/posit-professional-hosted), [Posit Support](https://support.posit.co/hc/en-us) |
 | **Where to file issues**  | [https://github.com/posit-dev/images-connect/issues](https://github.com/posit-dev/images-connect/issues) |
 | **Source**                | [https://github.com/posit-dev/images-connect](https://github.com/posit-dev/images-connect) |
 | **License**               | [MIT](https://github.com/posit-dev/images-connect/blob/main/LICENSE.md) |
