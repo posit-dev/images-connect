@@ -97,14 +97,14 @@ command:
     stdout:
       - "2026.04.1"
 
-  
+
   "Ensure R version is correct":
     exec: /opt/R/4.6.0/bin/R --version
     exit-status: 0
     stdout:
       - "4.6.0"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
-  
+
 
   "Ensure Python 3.14.4 version is correct":
     exec: /opt/python/3.14.4/bin/python --version

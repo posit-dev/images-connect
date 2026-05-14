@@ -16,9 +16,6 @@ This container image provides [Connect](https://docs.posit.co/connect/), a publi
 ![Docker Hub Pulls](https://img.shields.io/docker/pulls/posit/connect)
 ![Docker Image Size](https://img.shields.io/docker/image-size/posit/connect/latest)
 
-> [!NOTE]
-> These images are in preview as Posit migrates container images from <a href="https://github.com/rstudio/rstudio-docker-products">rstudio/rstudio-docker-products</a>. The <a href="https://github.com/rstudio/rstudio-docker-products">rstudio-docker-products</a> images remain supported.
-
 > [!TIP]
 > Deploying on Kubernetes? Try the <a href="https://docs.posit.co/helm/charts/rstudio-connect/README.html">Posit Connect Helm chart</a>!
 
@@ -27,7 +24,7 @@ This container image provides [Connect](https://docs.posit.co/connect/), a publi
 |                           | |
 |---------------------------|---|
 | **Maintained by**         | [the Posit Docker team](https://github.com/posit-dev/images) |
-| **Where to get help**     | [GitHub Issues](https://github.com/posit-dev/images-connect/issues), [Images Discussion Board](https://github.com/posit-dev/images/discussions), [the Posit Community Forum](https://forum.posit.co/c/posit-professional-hosted/posit-connect/27), [Posit Support](https://support.posit.co/hc/en-us) |
+| **Where to get help**     | [GitHub Issues](https://github.com/posit-dev/images-connect/issues), [Images Discussion Board](https://github.com/posit-dev/images/discussions), [the Posit Community Forum](https://forum.posit.co/c/posit-professional-hosted), [Posit Support](https://support.posit.co/hc/en-us) |
 | **Where to file issues**  | [https://github.com/posit-dev/images-connect/issues](https://github.com/posit-dev/images-connect/issues) |
 | **Source**                | [https://github.com/posit-dev/images-connect](https://github.com/posit-dev/images-connect) |
 | **License**               | [MIT](https://github.com/posit-dev/images-connect/blob/main/LICENSE.md) |
