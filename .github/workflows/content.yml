@@ -4,7 +4,9 @@ on:
 
   schedule:
     # Weekly rebuild of all images, to pick up any upstream changes.
-    - cron: "15 4 * * 0" # At 04:15 on Sunday
+    # Runs in the same hour as Connect production (02:15 Sun) but at
+    # minute 45 so the content matrix follows the main Connect rebuild.
+    - cron: "45 2 * * 0" # At 02:45 on Sunday
 
   push:
     branches:
