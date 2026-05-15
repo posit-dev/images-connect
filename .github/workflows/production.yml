@@ -4,7 +4,11 @@ on:
 
   schedule:
     # Weekly rebuild of all images, to pick up any upstream changes.
-    - cron: "15 3 * * 0" # At 03:15 on Sunday
+    # Staggered with images-package-manager production (01:15 Sun) and
+    # images-workbench production (03:15 Sun) so the three products
+    # don't all build in the same hour. Connect content shares this hour
+    # at minute 45.
+    - cron: "15 2 * * 0" # At 02:15 on Sunday
 
   push:
     branches:
