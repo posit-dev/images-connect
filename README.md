@@ -46,85 +46,9 @@ See the [Connect installation guide](https://docs.posit.co/connect/admin/getting
 
 ## Deploying on Kubernetes
 
-Use the [Connect Helm chart](https://docs.posit.co/helm/charts/rstudio-connect/README.html) to deploy on Kubernetes.
+Use the [Posit Connect Helm chart](https://docs.posit.co/helm/charts/rstudio-connect/README.html) to deploy on Kubernetes. These images are the default in chart versions `>= 0.20.0`; see the [image migration guide](https://docs.posit.co/helm/docs/migrating-to-posit-images.html) if you are upgrading from an earlier chart version.
 
-```bash
-helm repo add rstudio https://helm.rstudio.com
-helm repo update
-```
-
-Create a Kubernetes secret from your license file, then configure the chart in your `values.yaml`:
-
-```bash
-kubectl create secret generic posit-connect-license \
-  --from-file=license.lic=/path/to/license.lic
-```
-
-The `executionEnvironments` list uses [declarative management](https://docs.posit.co/connect/admin/appendix/off-host/execution-environments/#declarative-management). Unlike the legacy `customRuntimeYaml`, changes take effect on every `helm upgrade` without requiring a pod restart or database reset. Setting `customRuntimeYaml` to an empty images list prevents the chart from bootstrapping its default set of content images on first start.
-
-The values below are illustrative of how to configure the Connect Helm chart. Newer versions of images may be available so be sure to check Docker Hub or GitHub Container Registry for the latest builds.
-
-```yaml
-image:
-  repository: ghcr.io/posit-dev/connect
-  tag: "2026.04.1"
-
-license:
-  file:
-    secret: posit-connect-license
-
-launcher:
-  # Suppress the default runtime.yaml bootstrap so only
-  # executionEnvironments images are registered.
-  customRuntimeYaml: |
-    name: Kubernetes
-    images: []
-  defaultInitContainer:
-    repository: ghcr.io/posit-dev/connect-content-init
-    tag: "2026.04.1"
-
-executionEnvironments:
-  - name: ghcr.io/posit-dev/connect-content:R4.5.2-python3.14.3-ubuntu-24.04
-    title: "R 4.5.2 / Python 3.14.3"
-    matching: any
-    r:
-      installations:
-        - version: "4.5.2"
-          path: /opt/R/4.5.2/bin/R
-    python:
-      installations:
-        - version: "3.14.3"
-          path: /opt/python/3.14.3/bin/python3
-    quarto:
-      installations:
-        - version: "1.8.27"
-          path: /opt/quarto/bin/quarto
-  - name: ghcr.io/posit-dev/connect-content:R4.4.3-python3.12.12-ubuntu-24.04
-    title: "R 4.4.3 / Python 3.12.12"
-    matching: any
-    r:
-      installations:
-        - version: "4.4.3"
-          path: /opt/R/4.4.3/bin/R
-    python:
-      installations:
-        - version: "3.12.12"
-          path: /opt/python/3.12.12/bin/python3
-    quarto:
-      installations:
-        - version: "1.8.27"
-          path: /opt/quarto/bin/quarto
-```
-
-Content image tags follow the pattern `R{r_version}-python{python_version}-{os}`. Append `-pro` for images with Posit Professional Drivers.
-
-Install the chart:
-
-```bash
-helm upgrade --install connect rstudio/rstudio-connect --values values.yaml
-```
-
-See the [full chart documentation](https://docs.posit.co/helm/charts/rstudio-connect/README.html) for all available values.
+Content image tags follow the pattern `R{r_version}-python{python_version}-{os}`. Append `-pro` for images with Posit Professional Drivers. See the chart's [`executionEnvironments`](https://docs.posit.co/helm/charts/rstudio-connect/README.html) value for how to register content images for off-host execution.
 
 ## Build
 

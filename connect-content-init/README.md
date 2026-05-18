@@ -42,16 +42,7 @@ For Kubernetes deployments, Connect uses three images together. See the [reposit
 
 ### With the Connect Helm chart
 
-The [Connect Helm chart](https://docs.posit.co/helm/charts/rstudio-connect/README.html) uses this image by default for OHE deployments. Pin the image with the `launcher.defaultInitContainer` value:
-
-```yaml
-launcher:
-  defaultInitContainer:
-    repository: ghcr.io/posit-dev/connect-content-init
-    tag: "2026.04.1"
-```
-
-See the [repository README](https://github.com/posit-dev/images-connect#deploying-on-kubernetes) for a full chart example.
+The [Connect Helm chart](https://docs.posit.co/helm/charts/rstudio-connect/README.html) uses this image as the default for OHE deployments in chart versions `>= 0.20.0`. See the [image migration guide](https://docs.posit.co/helm/docs/migrating-to-posit-images.html) for upgrading from earlier versions.
 
 ### As a Kubernetes init container
 
