@@ -75,7 +75,6 @@ RUN {{ quarto.install(quarto_version) | indent(4) }}
 # HOME="/opt" workaround: https://github.com/quarto-dev/quarto-cli/issues/11800
 ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
 RUN {{ quarto.github_token_secret_mount() }} \
-    {{ apt.install(packages="xz-utils") | indent(4) }} && \
     {{ quarto.install_tinytex_command(quarto.get_directory() ~ "/bin/quarto", update_path=True, home_path="/opt") | indent(4) }} && \
     rm -f /tmp/tinytex-release.json
 

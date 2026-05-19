@@ -134,12 +134,10 @@ command:
     exit-status: 0
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
   "Ensure TinyTeX is installed":
-    exec: quarto list tools
+    exec: "HOME='/opt' quarto list tools"
     exit-status: 0
     stderr:
-      # "External Installation" because Quarto doesn't recognize TinyTeX installed under HOME="/opt".
-      # TODO: Switch to "Up to date" once https://github.com/quarto-dev/quarto-cli/issues/11800 lands.
-      - "/tinytex\\s+External Installation/"
+      - "/tinytex\\s+Up to date/"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
   "Verify ODBC drivers are configured":
     exec: cat /etc/odbcinst.ini
