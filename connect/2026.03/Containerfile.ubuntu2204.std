@@ -47,8 +47,10 @@ RUN echo 'Acquire::Retries "3"; Acquire::http::Timeout "30"; Acquire::https::Tim
 
 ### Update apt packages ###
 COPY connect/2026.03/deps/ubuntu-22.04_packages.txt /tmp/ubuntu-22.04_packages.txt
+COPY connect/2026.03/deps/ubuntu-22.04_optional_packages.txt /tmp/ubuntu-22.04_optional_packages.txt
 RUN apt-get update -yqq && \
     xargs -a /tmp/ubuntu-22.04_packages.txt apt-get install -yqq --no-install-recommends && \
+    xargs -a /tmp/ubuntu-22.04_optional_packages.txt apt-get install -yqq --no-install-recommends && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
@@ -93,11 +95,6 @@ RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')" && \
 # HOME="/opt" workaround: https://github.com/quarto-dev/quarto-cli/issues/11800
 ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
 RUN --mount=type=secret,id=github_token,required=false \
-    apt-get update -yqq && \
-    apt-get install -yqq --no-install-recommends \
-        xz-utils && \
-    apt-get clean -yqq && \
-    rm -rf /var/lib/apt/lists/* && \
     GH_TOKEN="$([ -s /run/secrets/github_token ] && cat /run/secrets/github_token)" HOME="/opt" /opt/quarto/bin/quarto install tinytex --no-prompt --update-path && \
     rm -f /tmp/tinytex-release.json
 

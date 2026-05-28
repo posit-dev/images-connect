@@ -47,8 +47,10 @@ RUN echo 'Acquire::Retries "3"; Acquire::http::Timeout "30"; Acquire::https::Tim
 
 ### Update apt packages ###
 COPY connect/2025.07/deps/ubuntu-22.04_packages.txt /tmp/ubuntu-22.04_packages.txt
+COPY connect/2025.07/deps/ubuntu-22.04_optional_packages.txt /tmp/ubuntu-22.04_optional_packages.txt
 RUN apt-get update -yqq && \
     xargs -a /tmp/ubuntu-22.04_packages.txt apt-get install -yqq --no-install-recommends && \
+    xargs -a /tmp/ubuntu-22.04_optional_packages.txt apt-get install -yqq --no-install-recommends && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 

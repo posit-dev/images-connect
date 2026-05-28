@@ -1,0 +1,2 @@
+libuv1-dev
+xz-utils
