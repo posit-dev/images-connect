@@ -75,9 +75,25 @@ images:
             namespace: "posit-dev"
             repository: "connect-preview"
     versions:
+      - name: 2026.05.0
+        subpath: '2026.05'
+        latest: true
+        os:
+          - name: Ubuntu 22.04
+          - name: Ubuntu 24.04
+            primary: true
+            platforms:
+              - linux/amd64
+              - linux/arm64
+        dependencies:
+          - dependency: R
+            version: 4.6.0
+          - dependency: python
+            version: 3.14.5
+          - dependency: quarto
+            version: 1.9.38
       - name: 2026.04.1
         subpath: '2026.04'
-        latest: true
         os:
           - name: Ubuntu 22.04
           - name: Ubuntu 24.04
@@ -275,9 +291,18 @@ images:
             namespace: "posit-dev"
             repository: "connect-content-init-preview"
     versions:
+      - name: 2026.05.0
+        subpath: '2026.05'
+        latest: true
+        os:
+          - name: Ubuntu 22.04
+          - name: Ubuntu 24.04
+            primary: true
+            platforms:
+              - linux/amd64
+              - linux/arm64
       - name: 2026.04.1
         subpath: '2026.04'
-        latest: true
         os:
           - name: Ubuntu 22.04
           - name: Ubuntu 24.04
