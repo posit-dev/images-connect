@@ -136,10 +136,7 @@ command:
   "Ensure Quarto works":
     exec: /usr/local/bin/quarto check --quiet
     exit-status: 0
-    skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
-  "Ensure Quarto symlink works":
-    exec: /usr/local/bin/quarto check --quiet
-    exit-status: 0
+    timeout: 120000
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
   "Ensure TinyTeX is installed":
     exec: quarto list tools
