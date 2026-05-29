@@ -18,6 +18,14 @@ package:
   {{ . }}:
     installed: true
   {{ end }}
+  {{ if eq .Env.IMAGE_VARIANT "Standard" }}
+  {{ $apt_optional_package_list_path := printf "/tmp/version/deps/%s-%s_optional_packages.txt" .Env.IMAGE_OS_NAME .Env.IMAGE_OS_VERSION }}
+  {{ $apt_optional_package_list := readFile $apt_optional_package_list_path | splitList "\n" }}
+  {{- range $apt_optional_package_list }}
+  {{ . }}:
+    installed: true
+  {{ end }}
+  {{ end }}
   rstudio-drivers:
     installed: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
 
@@ -134,12 +142,10 @@ command:
     exit-status: 0
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
   "Ensure TinyTeX is installed":
-    exec: quarto list tools
+    exec: "HOME='/opt' quarto list tools"
     exit-status: 0
     stderr:
-      # "External Installation" because Quarto doesn't recognize TinyTeX installed under HOME="/opt".
-      # TODO: Switch to "Up to date" once https://github.com/quarto-dev/quarto-cli/issues/11800 lands.
-      - "/tinytex\\s+External Installation/"
+      - "/tinytex\\s+Up to date/"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
   "Verify ODBC drivers are configured":
     exec: cat /etc/odbcinst.ini

@@ -39,8 +39,14 @@ SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 {{ apt.run_setup() }}
 
 ### Update apt packages ###
+{% if Image.Variant != "Minimal" -%}
+COPY {{ Path.Version }}/deps/ubuntu-22.04_packages.txt /tmp/ubuntu-22.04_packages.txt
+COPY {{ Path.Version }}/deps/ubuntu-22.04_optional_packages.txt /tmp/ubuntu-22.04_optional_packages.txt
+{{ apt.run_install(files=["/tmp/ubuntu-22.04_packages.txt", "/tmp/ubuntu-22.04_optional_packages.txt"]) }}
+{% else -%}
 COPY {{ Path.Version }}/deps/ubuntu-22.04_packages.txt /tmp/ubuntu-22.04_packages.txt
 {{ apt.run_install(files="/tmp/ubuntu-22.04_packages.txt") }}
+{%- endif %}
 
 {% if Image.Variant != "Minimal" -%}
 ### Install Pro Drivers ###

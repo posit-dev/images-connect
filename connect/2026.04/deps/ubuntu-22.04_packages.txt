@@ -11,4 +11,3 @@ libglib2.0-0
 mime-support
 rrdtool
 tzdata
-xz-utils
