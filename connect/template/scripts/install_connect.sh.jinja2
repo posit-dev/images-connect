@@ -60,4 +60,7 @@ EOF
 fi
 
 # clean up
+{% if Image.IsDevelopmentVersion -%}
+rm -f /tmp/rstudio-connect.deb
+{% endif -%}
 {{ apt.clean_command() }}
