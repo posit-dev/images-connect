@@ -19,7 +19,7 @@ ARG TARGETARCH=${BUILDARCH}
 ### Release ARG declarations ###
 ARG BUILDARCH
 ARG TARGETARCH=${BUILDARCH}
-ARG CONNECT_VERSION="2026.05.0"
+ARG CONNECT_VERSION="2026.05.1"
 ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
 
 ### ENV declarations ###
@@ -53,6 +53,7 @@ RUN apt-get update -yqq && \
     xargs -a /tmp/ubuntu-22.04_optional_packages.txt apt-get install -yqq --no-install-recommends && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
+
 
 ### Install Pro Drivers ###
 RUN apt-get update -yqq && \
