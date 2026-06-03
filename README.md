@@ -88,9 +88,24 @@ For builds using the `bakery` CLI, see the [contributing guide](CONTRIBUTING.md)
 
 To build images with `bakery` or run the test suite, see the [contributing guide](CONTRIBUTING.md).
 
+## Customizing images
+
+Each image serves a different role. The right image to customize depends on what you want to change.
+
+| I want to… | Customize | Example |
+|:-----------|:----------|:--------|
+| Add R or Python packages available to deployed content (Kubernetes) | `connect-content` | [content/r-python-packages](https://github.com/posit-dev/images-examples/tree/main/extending/connect/content/r-python-packages) |
+| Add system libraries that content packages need (Kubernetes) | `connect-content` | [content/system-dependencies](https://github.com/posit-dev/images-examples/tree/main/extending/connect/content/system-dependencies) |
+| Install R on the Connect server (local Docker) | `connect` (Minimal) | [server/R](https://github.com/posit-dev/images-examples/tree/main/extending/connect/server/R) |
+| Install Quarto on the Connect server | `connect` (Minimal) | [server/quarto](https://github.com/posit-dev/images-examples/tree/main/extending/connect/server/quarto) |
+| Upgrade the Connect server version | `connect` + `connect-content-init` (keep in sync) | — |
+| Add custom runtime components for off-host execution | `connect-content-init` | [Custom container images](https://docs.posit.co/helm/examples/connect/container-images/custom-images.html) |
+
+For detailed guidance and full example code, see the [Connect extending examples](https://github.com/posit-dev/images-examples/tree/main/extending/connect).
+
 ## Related repositories
 
-This repository is part of the [Posit Container Images](https://github.com/posit-dev/images) ecosystem. To extend the Minimal image with additional languages or system dependencies, see the [extending examples](https://github.com/posit-dev/images-examples/tree/main/extending). For shared build tooling and CI workflows, see [images-shared](https://github.com/posit-dev/images-shared).
+This repository is part of the [Posit Container Images](https://github.com/posit-dev/images) ecosystem. For shared build tooling and CI workflows, see [images-shared](https://github.com/posit-dev/images-shared).
 
 ## Share your feedback
 

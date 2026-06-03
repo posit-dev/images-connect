@@ -60,7 +60,7 @@ Two variants are available:
 
 Each tagged image bundles a fixed set of dependencies. Both variants ship one R version, one Python version, and one Quarto version, for a collection of minor versions at their latest patch version available at build time. The Containerfiles in this repository under `connect-content/matrix/` document the exact versions in any tag.
 
-See [extending examples](https://github.com/posit-dev/images-examples/tree/main/extending) for how to build on these images.
+See [content extending examples](https://github.com/posit-dev/images-examples/tree/main/extending/connect/content) for how to build on these images, including pre-installing R packages, Python packages, and system dependencies.
 
 ## Image tags
 
@@ -109,7 +109,7 @@ FROM ghcr.io/posit-dev/connect-content:R4.5.2-python3.14.3-ubuntu-24.04-pro
 RUN /opt/R/4.5.2/bin/R -e 'install.packages("tidyverse", repos = "https://p3m.dev/cran/__linux__/noble/latest")'
 ```
 
-See [extending examples](https://github.com/posit-dev/images-examples/tree/main/extending) for additional patterns.
+See [content extending examples](https://github.com/posit-dev/images-examples/tree/main/extending/connect/content) for additional patterns.
 
 ## Migrating from legacy image
 
