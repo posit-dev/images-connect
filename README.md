@@ -98,6 +98,7 @@ Each image serves a different role. The right image to customize depends on what
 | Add system libraries that content packages need (Kubernetes) | `connect-content` | [content/system-dependencies](https://github.com/posit-dev/images-examples/tree/main/extending/connect/content/system-dependencies) |
 | Install R on the Connect server (local Docker) | `connect` (Minimal) | [server/R](https://github.com/posit-dev/images-examples/tree/main/extending/connect/server/R) |
 | Install Quarto on the Connect server | `connect` (Minimal) | [server/quarto](https://github.com/posit-dev/images-examples/tree/main/extending/connect/server/quarto) |
+| Point pip at a custom package index | `connect` (Minimal) | [server/pip-conf](https://github.com/posit-dev/images-examples/tree/main/extending/connect/server/pip-conf) |
 | Upgrade the Connect server version | `connect` + `connect-content-init` (keep in sync) | — |
 | Add custom runtime components for off-host execution | `connect-content-init` | [Custom container images](https://docs.posit.co/helm/examples/connect/container-images/custom-images.html) |
 
