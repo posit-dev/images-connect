@@ -1,0 +1,81 @@
+{#-
+Below are imports for Bakery's macros. If any are unneeded, they can be removed.
+Bakery handles bootstrapping the files into template rendering.
+-#}
+{%- import "apt.j2" as apt -%}
+{%- import "python.j2" as python -%}
+{%- import "quarto.j2" as quarto -%}
+{%- import "r.j2" as r -%}
+
+# Build Python using uv in a separate stage
+{{ python.build_stage(python.build_arg(), prerun=python.declare_build_arg()) }}
+
+FROM docker.io/library/ubuntu:26.04
+LABEL maintainer="Posit Docker <docker@posit.co>"
+LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:26.04"
+
+### ARG declarations ###
+ARG DEBIAN_FRONTEND=noninteractive
+ARG BUILDARCH
+ARG TARGETARCH=${BUILDARCH}
+{{ r.declare_build_arg() }}
+{{ python.declare_build_arg() }}
+{{ quarto.declare_build_arg() }}
+
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+
+### Locale configuration ###
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends locales && \
+    localedef -i en_US -f UTF-8 en_US.UTF-8 && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+ENV TZ=UTC
+
+### Install Apt Packages ###
+{{ apt.run_setup() }}
+
+COPY {{ Path.Version }}/deps/ubuntu-26.04_packages.txt /tmp/ubuntu-26.04_packages.txt
+{{ apt.run_install(files = '/tmp/ubuntu-26.04_packages.txt') }}
+
+{% if Image.Variant == "pro" -%}
+### Install Pro Drivers and ODBC ###
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+        {{ apt.install(packages="rstudio-drivers") | indent(8) }} && \
+        cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini; \
+    else \
+        echo "Pro Drivers will not be installed for architecture: $TARGETARCH"; \
+    fi
+
+{% endif -%}
+
+### Install R ###
+RUN apt-get update -yqq && \
+    {{ r.install(r.build_arg()) | indent(4) }} && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
+
+{% if Image.Variant == "pro" -%}
+### Install odbc R package ###
+RUN {{ r.get_version_directory(r.build_arg()) }}/bin/R -e 'install.packages("odbc", repos="{{ r.get_p3m_cran_repo(Image.OS) }}")'
+
+{% endif -%}
+### Install Python from build stage ###
+{{ python.copy_from_build_stage() }}
+
+### Upgrade setuptools ###
+RUN {{ python.get_version_directory(python.build_arg()) }}/bin/python -m pip install --no-cache-dir --break-system-packages --upgrade setuptools
+
+### Install Quarto ###
+RUN {{ quarto.install(quarto.build_arg()) | indent(4) }} && \
+    {{ quarto.symlink_binary(quarto.build_arg(), "quarto", "/usr/local/bin/quarto") | indent(4) }}
+
+### Install TinyTeX ###
+# Caches won't invalidate correctly on new releases for TinyTeX installs.
+# This ADD instruction is a workaround to bust the cache on new releases.
+ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
+RUN {{ quarto.install_tinytex_command(quarto.get_version_directory(quarto.build_arg() | trim) + "/bin/quarto", True) | indent(4) }} && \
+    rm -f /tmp/tinytex-release.json
