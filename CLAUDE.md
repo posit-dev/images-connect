@@ -175,11 +175,11 @@ When making changes to the repository, consider whether updates are required for
 
 All workflows call shared reusable workflows from `images-shared`:
 
-| Workflow | Schedule | What it builds | Shared workflow |
-|---|---|---|---|
-| `production.yml` | Weekly (Sun 03:15 UTC), PR, push to main | `connect` + `connect-content-init` (excludes dev/matrix) | `bakery-build-native.yml` |
-| `development.yml` | Daily (04:45 UTC), PR, push to main | Dev versions only (daily stream previews) | `bakery-build-native.yml` |
-| `content.yml` | Weekly (Sun 04:15 UTC), PR, push to main | `connect-content` matrix images only | `bakery-build.yml` |
+| Workflow | What it builds | Shared workflow |
+|---|---|---|
+| `production.yml` | `connect` + `connect-content-init` (excludes dev/matrix) | `bakery-build-native.yml` |
+| `development.yml` | Dev versions only (daily stream previews) | `bakery-build-native.yml` |
+| `content.yml` | `connect-content` matrix images only | `bakery-build.yml` |
 
 Images push to `docker.io/posit` and `ghcr.io/posit-dev` on main merges and scheduled runs.
 Dev preview images push to `ghcr.io/posit-dev/connect-preview`.
