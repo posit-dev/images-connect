@@ -74,8 +74,8 @@ bakery update files --image-name connect --image-version 2026.05
 bakery update files --image-name connect-content-init --image-version 2026.05
 ```
 
-`connect-content` is a matrix image. Its versions are managed via `matrixVersions` in
-`bakery.yaml`, not with `bakery create version`.
+`connect-content` is a matrix image. Its versions are managed via
+`matrix.dependencyConstraints` in `bakery.yaml`, not with `bakery create version`.
 
 → [Shared procedure](https://github.com/posit-dev/images-shared/blob/main/CONTRIBUTING.md#add-a-version)
 
@@ -94,12 +94,14 @@ bakery create image <new-image-name>
 
 ### Update dependencies
 
-`connect` and `connect-content-init` use `dependencyConstraints: latest: true` for R,
-Python, and Quarto — bakery resolves the current latest at build time.
+`connect` uses `dependencyConstraints: latest: true` for R, Python, and Quarto — bakery
+resolves the current latest at build time. `connect-content-init` has no dependency
+constraints.
 
 `connect-content` is a matrix image. Its R×Python combinations are defined in
-`bakery.yaml` under `matrixVersions`. To add a new R or Python version to the matrix,
-add it to `matrixVersions` and re-render:
+`bakery.yaml` under `matrix.dependencyConstraints`. To add a new R or Python version to
+the matrix, update the image's `matrix.dependencyConstraints` block in `bakery.yaml` and
+re-render:
 
 ```bash
 bakery update files --image-name connect-content
