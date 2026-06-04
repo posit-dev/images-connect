@@ -94,11 +94,11 @@ Each image serves a different role. The right image to customize depends on what
 
 | I want to… | Customize | Example |
 |:-----------|:----------|:--------|
-| Add R or Python packages available to deployed content (Kubernetes) | `connect-content` | [content/r-python-packages](https://github.com/posit-dev/images-examples/tree/main/extending/connect/content/r-python-packages) |
-| Add system libraries that content packages need (Kubernetes) | `connect-content` | [content/system-dependencies](https://github.com/posit-dev/images-examples/tree/main/extending/connect/content/system-dependencies) |
-| Install R on the Connect server (local Docker) | `connect` (Minimal) | [server/R](https://github.com/posit-dev/images-examples/tree/main/extending/connect/server/R) |
+| Install specific versions of R, Python, or Quarto (Kubernetes) | `connect-content` | [common/R](https://github.com/posit-dev/images-examples/tree/main/extending/common/R) · [common/python](https://github.com/posit-dev/images-examples/tree/main/extending/common/python) |
+| Add system libraries that content packages need (Kubernetes) | `connect-content` | [common/system-dependencies](https://github.com/posit-dev/images-examples/tree/main/extending/common/system-dependencies) |
+| Install R on the Connect server (local Docker) | `connect` (Minimal) | [common/R](https://github.com/posit-dev/images-examples/tree/main/extending/common/R) |
 | Install Quarto on the Connect server | `connect` (Minimal) | [server/quarto](https://github.com/posit-dev/images-examples/tree/main/extending/connect/server/quarto) |
-| Configure pip settings (any product) | any | [common/pip-conf](https://github.com/posit-dev/images-examples/tree/main/extending/common/pip-conf) |
+| Configure a Python package index | any | [Admin docs](https://docs.posit.co/connect/admin/python/package-management/#python-package-repositories) |
 | Upgrade the Connect server version | `connect` + `connect-content-init` (keep in sync) | — |
 | Add custom runtime components for off-host execution | `connect-content-init` | [Custom container images](https://docs.posit.co/helm/examples/connect/container-images/custom-images.html) |
 
