@@ -65,10 +65,10 @@ covers the full workflow.
 
 Connect versions are dispatched automatically from `posit-dev/connect` via the
 `posit-connect-projects` GitHub App, which triggers this repo's `release.yml` workflow.
-Manual steps are only needed for hotfixes or if the automated dispatch fails.
+Use manual steps only for hotfixes or if the automated dispatch fails.
 
 ```bash
-# Create a new version manually (e.g. a hotfix to 2026.05)
+# Create a new version manually (e.g., a hotfix to 2026.05)
 bakery create version 2026.05.2 --image-name connect --image-name connect-content-init
 bakery update files --image-name connect --image-version 2026.05
 bakery update files --image-name connect-content-init --image-version 2026.05
@@ -125,13 +125,9 @@ bakery run dgoss --image-name connect --image-version 2026.04
 
 ### Footguns
 
-**Connect Standard goss needs `wait: 20`.** The Connect server takes ~20 seconds to
-start. The Standard variant's `options` block in `bakery.yaml` sets `wait: 20`. Lowering
-or removing it causes flaky goss failures on slower runners.
+- **Connect Standard goss needs `wait: 20`.** The Connect server takes ~20 seconds to start. The Standard variant's `options` block in `bakery.yaml` sets `wait: 20`. Lowering or removing it causes flaky goss failures on slower runners.
 
-**`connect-content` has no version directories.** It renders into
-`connect-content/matrix/`. Do not create `connect-content/<edition>/` directories
-manually.
+- **`connect-content` has no version directories.** It renders into `connect-content/matrix/`. Do not create `connect-content/<edition>/` directories manually.
 
 → [Shared footguns](https://github.com/posit-dev/images-shared/blob/main/CONTRIBUTING.md#footguns)
 
@@ -145,7 +141,7 @@ manually.
 
 All workflows use `bakery-build-native.yml` (native amd64 + arm64 runners).
 
-**Connect-specific failure:** goss timeout on the Standard variant. The Connect server
+Connect-specific failure: goss timeout on the Standard variant. The Connect server
 takes ~20s to start. If goss probes fail immediately, check that `options.wait: 20` is
 still set in `bakery.yaml`.
 
