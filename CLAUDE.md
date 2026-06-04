@@ -179,7 +179,7 @@ All workflows call shared reusable workflows from `images-shared`:
 |---|---|---|
 | `production.yml` | `connect` + `connect-content-init` (excludes dev/matrix) | `bakery-build-native.yml` |
 | `development.yml` | Dev versions only (daily stream previews) | `bakery-build-native.yml` |
-| `content.yml` | `connect-content` matrix images only | `bakery-build.yml` |
+| `content.yml` | `connect-content` matrix images only | `bakery-build-native.yml` |
 
 Images push to `docker.io/posit` and `ghcr.io/posit-dev` on main merges and scheduled runs.
 Dev preview images push to `ghcr.io/posit-dev/connect-preview`.
