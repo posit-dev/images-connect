@@ -279,13 +279,13 @@ images:
       - sourceType: stream
         product: connect
         stream: daily
+        # Runtime binary is arch-specific, not OS-specific; Ubuntu 24.04 only.
         os:
           - name: Ubuntu 24.04
             primary: true
             platforms:
               - "linux/amd64"
               - "linux/arm64"
-          - name: Ubuntu 22.04
         overrideRegistries:
           - host: "ghcr.io"
             namespace: "posit-dev"
@@ -295,7 +295,6 @@ images:
         subpath: '2026.05'
         latest: true
         os:
-          - name: Ubuntu 22.04
           - name: Ubuntu 24.04
             primary: true
             platforms:
@@ -304,7 +303,6 @@ images:
       - name: 2026.04.1
         subpath: '2026.04'
         os:
-          - name: Ubuntu 22.04
           - name: Ubuntu 24.04
             primary: true
             platforms:
@@ -313,7 +311,6 @@ images:
       - name: 2026.03.1
         subpath: '2026.03'
         os:
-          - name: Ubuntu 22.04
           - name: Ubuntu 24.04
             primary: true
             platforms:
@@ -327,11 +324,9 @@ images:
             platforms:
               - "linux/amd64"
               - "linux/arm64"
-          - name: Ubuntu 22.04
       - name: 2026.01.1
         subpath: '2026.01'
         os:
-          - name: Ubuntu 22.04
           - name: Ubuntu 24.04
             primary: true
       - name: 2025.12.1
@@ -339,7 +334,6 @@ images:
         os:
           - name: Ubuntu 24.04
             primary: true
-          - name: Ubuntu 22.04
       - name: 2025.11.0
         subpath: '2025.11'
         os:
