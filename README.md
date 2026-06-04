@@ -87,6 +87,8 @@ For builds using the `bakery` CLI, see the [contributing guide](CONTRIBUTING.md)
 ## Contributing
 
 To build images with `bakery` or run the test suite, see the [contributing guide](CONTRIBUTING.md).
+For image maintainers, the contributing guide also covers adding versions, updating
+dependencies, backporting to older versions, known footguns, and CI failure diagnosis.
 
 ## Related repositories
 
