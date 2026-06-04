@@ -184,15 +184,7 @@ All workflows call shared reusable workflows from `images-shared`:
 Images push to `docker.io/posit` and `ghcr.io/posit-dev` on main merges and scheduled runs.
 Dev preview images push to `ghcr.io/posit-dev/connect-preview`.
 
-### CI failure checklist
-
-1. **Check which workflow failed** — production vs development vs content have different scopes
-2. **Read the failing step** — usually Build or Test
-3. **Common failures:**
-   - Python version not available in UV — a new Python minor version may not be in UV's release metadata yet
-   - Goss test timeout — Connect Standard variant needs `wait: 20` for server startup
-   - Registry auth — Docker Hub push requires `DOCKER_HUB_ACCESS_TOKEN` secret
-4. **Cache issues** — builds use `--cache-registry ghcr.io/posit-dev` for layer caching; stale caches can cause unexpected behavior
+For CI failure diagnosis, see [CONTRIBUTING.md](CONTRIBUTING.md#diagnose-a-build-failure).
 
 ## Helm Integration
 
