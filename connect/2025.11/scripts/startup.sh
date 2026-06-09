@@ -44,8 +44,10 @@ elif ! [ -z "$PCT_LICENSE_SERVER" ]; then
     /opt/rstudio-connect/bin/license-manager license-server "$PCT_LICENSE_SERVER"
     trap deactivate EXIT
 elif test -f "$PCT_LICENSE_FILE_PATH"; then
+    _tmp_lic=$(mktemp)
+    cp "${PCT_LICENSE_FILE_PATH}" "${_tmp_lic}"
     rm -f /var/lib/rstudio-connect/*.lic
-    cp "${PCT_LICENSE_FILE_PATH}" /var/lib/rstudio-connect/license.lic
+    mv "${_tmp_lic}" /var/lib/rstudio-connect/license.lic
     chmod 0600 /var/lib/rstudio-connect/license.lic
 fi
 
