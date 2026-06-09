@@ -37,19 +37,25 @@ PCT_LICENSE_FILE_PATH=${PCT_LICENSE_FILE_PATH:-$RSC_LICENSE_FILE_PATH}
 
 # Activate License
 PCT_LICENSE_FILE_PATH=${PCT_LICENSE_FILE_PATH:-/etc/rstudio-connect/license.lic}
+_license_dir=/var/lib/rstudio-connect
 if ! [ -z "$PCT_LICENSE" ]; then
+    echo "Activating license key."
     /opt/rstudio-connect/bin/license-manager activate "$PCT_LICENSE"
     trap deactivate EXIT
 elif ! [ -z "$PCT_LICENSE_SERVER" ]; then
+    echo "Activating floating license server."
     /opt/rstudio-connect/bin/license-manager license-server "$PCT_LICENSE_SERVER"
     trap deactivate EXIT
 elif test -f "$PCT_LICENSE_FILE_PATH"; then
     # Direct copy avoids activate-file's root requirement and activation-slot lease risk.
     # https://docs.posit.co/connect/admin/licensing/#license-file-activation
-    if [ "${PCT_LICENSE_FILE_PATH}" != "/var/lib/rstudio-connect/license.lic" ]; then
-        cp "${PCT_LICENSE_FILE_PATH}" /var/lib/rstudio-connect/license.lic
-        chmod 0600 /var/lib/rstudio-connect/license.lic
+    if [ "$(dirname "${PCT_LICENSE_FILE_PATH}")" != "${_license_dir}" ]; then
+        cp "${PCT_LICENSE_FILE_PATH}" "${_license_dir}/license.lic"
+        chmod 0600 "${_license_dir}/license.lic"
     fi
+    echo "Using license file at ${PCT_LICENSE_FILE_PATH}."
+elif ls "${_license_dir}"/*.lic >/dev/null 2>&1; then
+    echo "Detected a license file in ${_license_dir}/."
 fi
 
 # ensure these cannot be inherited by child processes
