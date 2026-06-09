@@ -6,7 +6,7 @@ if [[ "${PCT_STARTUP_DEBUG:-0}" -eq 1 ]]; then
   set -x
 fi
 
-# Deactivate license when it exists
+# Deactivate license when it exists (only used for key/server license modes)
 deactivate() {
     echo "Deactivating license ..."
     is_deactivated=0
@@ -29,7 +29,6 @@ deactivate() {
       done
     done
 }
-trap deactivate EXIT
 
 # Backward compatibility for RSC_ prefixed environment variables
 PCT_LICENSE=${PCT_LICENSE:-$RSC_LICENSE}
@@ -40,10 +39,14 @@ PCT_LICENSE_FILE_PATH=${PCT_LICENSE_FILE_PATH:-$RSC_LICENSE_FILE_PATH}
 PCT_LICENSE_FILE_PATH=${PCT_LICENSE_FILE_PATH:-/etc/rstudio-connect/license.lic}
 if ! [ -z "$PCT_LICENSE" ]; then
     /opt/rstudio-connect/bin/license-manager activate "$PCT_LICENSE"
+    trap deactivate EXIT
 elif ! [ -z "$PCT_LICENSE_SERVER" ]; then
     /opt/rstudio-connect/bin/license-manager license-server "$PCT_LICENSE_SERVER"
+    trap deactivate EXIT
 elif test -f "$PCT_LICENSE_FILE_PATH"; then
-    /opt/rstudio-connect/bin/license-manager activate-file "$PCT_LICENSE_FILE_PATH"
+    rm -f /var/lib/rstudio-connect/*.lic
+    cp "${PCT_LICENSE_FILE_PATH}" /var/lib/rstudio-connect/license.lic
+    chmod 0600 /var/lib/rstudio-connect/license.lic
 fi
 
 # ensure these cannot be inherited by child processes
