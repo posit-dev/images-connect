@@ -39,11 +39,9 @@ PCT_LICENSE_FILE_PATH=${PCT_LICENSE_FILE_PATH:-$RSC_LICENSE_FILE_PATH}
 PCT_LICENSE_FILE_PATH=${PCT_LICENSE_FILE_PATH:-/etc/rstudio-connect/license.lic}
 _license_dir=/var/lib/rstudio-connect
 if ! [ -z "$PCT_LICENSE" ]; then
-    echo "Activating license key."
     /opt/rstudio-connect/bin/license-manager activate "$PCT_LICENSE"
     trap deactivate EXIT
 elif ! [ -z "$PCT_LICENSE_SERVER" ]; then
-    echo "Activating floating license server."
     /opt/rstudio-connect/bin/license-manager license-server "$PCT_LICENSE_SERVER"
     trap deactivate EXIT
 elif test -f "$PCT_LICENSE_FILE_PATH"; then
@@ -51,15 +49,15 @@ elif test -f "$PCT_LICENSE_FILE_PATH"; then
     # https://docs.posit.co/connect/admin/licensing/#license-file-activation
     if [ "$(dirname "${PCT_LICENSE_FILE_PATH}")" != "${_license_dir}" ]; then
         if mountpoint -q "${_license_dir}"; then
-            echo "ERROR: ${_license_dir} is a volume mount. Mount the license file directly into ${_license_dir}/ instead of using PCT_LICENSE_FILE_PATH."
+            echo "ERROR: ${_license_dir} is a volume mount. Mount the license file directly into ${_license_dir}/ instead of using PCT_LICENSE_FILE_PATH." >&2
             exit 1
         fi
         cp "${PCT_LICENSE_FILE_PATH}" "${_license_dir}/license.lic"
         chmod 0600 "${_license_dir}/license.lic"
     fi
-    echo "Using license file at ${PCT_LICENSE_FILE_PATH}."
+    echo "Using license file at ${PCT_LICENSE_FILE_PATH}." >&2
 elif ls "${_license_dir}"/*.lic >/dev/null 2>&1; then
-    echo "Detected a license file in ${_license_dir}/."
+    echo "Detected a license file in ${_license_dir}/." >&2
 fi
 
 # ensure these cannot be inherited by child processes
