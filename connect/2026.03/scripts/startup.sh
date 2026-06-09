@@ -46,11 +46,10 @@ elif ! [ -z "$PCT_LICENSE_SERVER" ]; then
 elif test -f "$PCT_LICENSE_FILE_PATH"; then
     # Direct copy avoids activate-file's root requirement and activation-slot lease risk.
     # https://docs.posit.co/connect/admin/licensing/#license-file-activation
-    _tmp_lic=$(mktemp)
-    cp "${PCT_LICENSE_FILE_PATH}" "${_tmp_lic}"
-    rm -f /var/lib/rstudio-connect/*.lic
-    mv "${_tmp_lic}" /var/lib/rstudio-connect/license.lic
-    chmod 0600 /var/lib/rstudio-connect/license.lic
+    if [ "${PCT_LICENSE_FILE_PATH}" != "/var/lib/rstudio-connect/license.lic" ]; then
+        cp "${PCT_LICENSE_FILE_PATH}" /var/lib/rstudio-connect/license.lic
+        chmod 0600 /var/lib/rstudio-connect/license.lic
+    fi
 fi
 
 # ensure these cannot be inherited by child processes
