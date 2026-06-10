@@ -47,14 +47,9 @@ elif ! [ -z "$PCT_LICENSE_SERVER" ]; then
 elif test -f "$PCT_LICENSE_FILE_PATH"; then
     # Direct copy avoids activate-file's root requirement and activation-slot lease risk.
     # https://docs.posit.co/connect/admin/licensing/#license-file-activation
-    if [ "$(dirname "${PCT_LICENSE_FILE_PATH}")" != "${_license_dir}" ]; then
-        if mountpoint -q "${_license_dir}"; then
-            echo "ERROR: ${_license_dir} is a volume mount. Mount the license file directly into ${_license_dir}/ instead of using PCT_LICENSE_FILE_PATH." >&2
-            exit 1
-        fi
-        cp "${PCT_LICENSE_FILE_PATH}" "${_license_dir}/license.lic"
-        chmod 0600 "${_license_dir}/license.lic"
-    fi
+    rm -f "${_license_dir}"/*.lic
+    cp "${PCT_LICENSE_FILE_PATH}" "${_license_dir}/license.lic"
+    chmod 0600 "${_license_dir}/license.lic"
     echo "Using license file at ${PCT_LICENSE_FILE_PATH}." >&2
 elif ls "${_license_dir}"/*.lic >/dev/null 2>&1; then
     echo "Detected a license file in ${_license_dir}/." >&2
