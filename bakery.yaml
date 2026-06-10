@@ -33,6 +33,9 @@ images:
     buildSecrets:
       - id: github_token
         envVar: GITHUB_TOKEN
+    options:
+      - tool: soci
+        enabled: true
     dependencyConstraints:
       - dependency: R
         constraint:
@@ -242,6 +245,9 @@ images:
     buildSecrets:
       - id: github_token
         envVar: GITHUB_TOKEN
+    options:
+      - tool: soci
+        enabled: true
     variants:
       - name: base
         extension: base
@@ -275,6 +281,9 @@ images:
     displayName: "Posit Connect Content Init"
     description: "A containerized image for initializing Posit Connect content."
     documentationUrl: https://docs.posit.co/connect/
+    options:
+      - tool: soci
+        enabled: true
     devVersions:
       - sourceType: stream
         product: connect
