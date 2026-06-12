@@ -150,8 +150,8 @@ bakery build
 bakery build --image-name connect --image-version 2026.02.0 --image-variant Standard
 
 # Run goss tests
-bakery run dgoss
-bakery run dgoss --image-name connect
+bakery dgoss run
+bakery dgoss run --image-name connect
 
 # Re-render templates after changes
 bakery update files
