@@ -53,9 +53,9 @@ elif test -f "$PCT_LICENSE_FILE_PATH"; then
         *)
             rm -f "${_license_dir}"/*.lic
             cp "${PCT_LICENSE_FILE_PATH}" "${_license_dir}/license.lic"
-            chmod 0600 "${_license_dir}/license.lic"
             ;;
     esac
+    chmod 0600 "${_license_dir}/license.lic"
     echo "Using license file at ${PCT_LICENSE_FILE_PATH}." >&2
 elif ls "${_license_dir}"/*.lic >/dev/null 2>&1; then
     echo "Detected a license file in ${_license_dir}/." >&2
