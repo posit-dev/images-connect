@@ -47,9 +47,15 @@ elif ! [ -z "$PCT_LICENSE_SERVER" ]; then
 elif test -f "$PCT_LICENSE_FILE_PATH"; then
     # Direct copy avoids activate-file's root requirement and activation-slot lease risk.
     # https://docs.posit.co/connect/admin/licensing/#license-file-activation
-    rm -f "${_license_dir}"/*.lic
-    cp "${PCT_LICENSE_FILE_PATH}" "${_license_dir}/license.lic"
-    chmod 0600 "${_license_dir}/license.lic"
+    case "$(realpath "$PCT_LICENSE_FILE_PATH")" in
+        "${_license_dir}/"*)
+            ;;
+        *)
+            rm -f "${_license_dir}"/*.lic
+            cp "${PCT_LICENSE_FILE_PATH}" "${_license_dir}/license.lic"
+            chmod 0600 "${_license_dir}/license.lic"
+            ;;
+    esac
     echo "Using license file at ${PCT_LICENSE_FILE_PATH}." >&2
 elif ls "${_license_dir}"/*.lic >/dev/null 2>&1; then
     echo "Detected a license file in ${_license_dir}/." >&2
