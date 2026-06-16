@@ -40,10 +40,10 @@ bakery build --image-name connect --image-version 2026.05 --image-variant Standa
 
 ```shell
 # Run goss tests for all images
-bakery run dgoss
+bakery dgoss run
 
 # Run goss tests for a specific image
-bakery run dgoss --image-name connect
+bakery dgoss run --image-name connect
 ```
 
 ### Re-render templates
@@ -119,7 +119,7 @@ bakery update files --image-name connect-content-init --image-version 2026.04
 
 # Build and test before opening a PR
 bakery build --image-name connect --image-version 2026.04
-bakery run dgoss --image-name connect --image-version 2026.04
+bakery dgoss run --image-name connect --image-version 2026.04
 ```
 
 → [Shared procedure](https://github.com/posit-dev/images-shared/blob/main/CONTRIBUTING.md#update-older-versions)
