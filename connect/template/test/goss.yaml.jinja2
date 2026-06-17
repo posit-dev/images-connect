@@ -154,13 +154,14 @@ command:
       - "{{ Dependencies.quarto.0 }}"
     skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
   "Ensure Quarto works":
-    exec: /usr/local/bin/quarto check --quiet
+    exec: /usr/local/bin/quarto check
     exit-status: 0
     timeout: 120000
     skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
   "Ensure TinyTeX is installed":
     exec: "HOME='/opt' quarto list tools"
     exit-status: 0
+    timeout: 120000
     stderr:
       - "/tinytex\\s+Up to date/"
     skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}

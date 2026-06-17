@@ -134,13 +134,14 @@ command:
       - "1.8.26"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
   "Ensure Quarto works":
-    exec: /usr/local/bin/quarto check --quiet
+    exec: /usr/local/bin/quarto check
     exit-status: 0
     timeout: 120000
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
   "Ensure TinyTeX is installed":
     exec: quarto list tools
     exit-status: 0
+    timeout: 120000
     stderr:
       # "External Installation" because Quarto doesn't recognize TinyTeX installed under HOME="/opt".
       # TODO: Switch to "Up to date" once https://github.com/quarto-dev/quarto-cli/issues/11800 lands.
