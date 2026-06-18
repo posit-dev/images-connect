@@ -100,7 +100,7 @@ RUN --mount=type=secret,id=github_token,required=false \
         xz-utils && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/* && \
-    GH_TOKEN="$([ -s /run/secrets/github_token ] && cat /run/secrets/github_token)" HOME="/opt" /opt/quarto/bin/quarto install tinytex --no-prompt --update-path && \
+    GH_TOKEN="$([ -s /run/secrets/github_token ] && cat /run/secrets/github_token)" HOME="/opt" CI=true /opt/quarto/bin/quarto install tinytex --no-prompt --update-path && \
     rm -f /tmp/tinytex-release.json
 
 ### Create data volume ###
