@@ -44,7 +44,7 @@ For Kubernetes deployments, Connect uses three images together. See the [reposit
 ### Quick start
 
 ```bash
-PCT_VERSION="2026.05.1"
+PCT_VERSION="2026.06.0"
 PCT_IMAGE="ghcr.io/posit-dev/connect"  # or docker.io/posit/connect
 PCT_LICENSE_FILE_HOST_PATH="/path/to/license.lic"
 PCT_LICENSE_FILE_PATH="/etc/rstudio-connect/license.lic"
@@ -69,7 +69,7 @@ Access Connect at `http://localhost:3939`.
 ### With a custom configuration file
 
 ```bash
-PCT_VERSION="2026.05.1"
+PCT_VERSION="2026.06.0"
 PCT_IMAGE="ghcr.io/posit-dev/connect"  # or docker.io/posit/connect
 PCT_LICENSE_FILE_HOST_PATH="/path/to/license.lic"
 PCT_LICENSE_FILE_PATH="/etc/rstudio-connect/license.lic"
