@@ -91,14 +91,15 @@ jobs:
 
       - name: Extract Python version
         id: python
-        env:
-          APP_VERSION: ${{ steps.version.outputs.app-version }}
         run: |
-          EDITION="${APP_VERSION%.*}"
-          VERSION=$(grep "uv python install" "connect/${EDITION}/Containerfile.ubuntu2404.std" \
-                      | awk '{print $4}')
+          VERSION=$(yq '
+            .images[] | select(.name == "connect") |
+            .versions[] | select(.latest == true) |
+            .dependencies[] | select(.dependency == "python") |
+            .version
+          ' bakery.yaml)
           if [ -z "$VERSION" ]; then
-            echo "::error::Could not read Python version for edition ${EDITION}"
+            echo "::error::Could not read Python version from bakery.yaml"
             exit 1
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
