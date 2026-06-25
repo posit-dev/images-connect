@@ -89,20 +89,17 @@ jobs:
           APP_VERSION="${APP_VERSION%%[+-]*}"
           echo "app-version=$APP_VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Extract Python version
-        id: python
-        run: |
-          VERSION=$(yq '
+          PYTHON_VERSION=$(yq '
             .images[] | select(.name == "connect") |
             .versions[] | select(.latest == true) |
             .dependencies[] | select(.dependency == "python") |
             .version
           ' bakery.yaml)
-          if [ -z "$VERSION" ]; then
+          if [ -z "$PYTHON_VERSION" ]; then
             echo "::error::Could not read Python version from bakery.yaml"
             exit 1
           fi
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "python-version=$PYTHON_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Generate GitHub App Token
         id: app-token
@@ -117,7 +114,7 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           APP_VERSION: ${{ steps.version.outputs.app-version }}
-          PYTHON_VERSION: ${{ steps.python.outputs.version }}
+          PYTHON_VERSION: ${{ steps.version.outputs.python-version }}
         run: |
           gh workflow run product-release.yml \
             --repo rstudio/helm \
