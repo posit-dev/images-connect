@@ -89,6 +89,20 @@ jobs:
           APP_VERSION="${APP_VERSION%%[+-]*}"
           echo "app-version=$APP_VERSION" >> "$GITHUB_OUTPUT"
 
+      - name: Extract Python version
+        id: python
+        env:
+          APP_VERSION: ${{ steps.version.outputs.app-version }}
+        run: |
+          EDITION="${APP_VERSION%.*}"
+          VERSION=$(grep "uv python install" "connect/${EDITION}/Containerfile.ubuntu2404.std" \
+                      | awk '{print $4}')
+          if [ -z "$VERSION" ]; then
+            echo "::error::Could not read Python version for edition ${EDITION}"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
       - name: Generate GitHub App Token
         id: app-token
         uses: actions/create-github-app-token@v3
@@ -102,11 +116,13 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           APP_VERSION: ${{ steps.version.outputs.app-version }}
+          PYTHON_VERSION: ${{ steps.python.outputs.version }}
         run: |
           gh workflow run product-release.yml \
             --repo rstudio/helm \
             --field product=connect \
-            --field version="$APP_VERSION"
+            --field version="$APP_VERSION" \
+            --field python_version="$PYTHON_VERSION"
 
   clean:
     name: Clean
