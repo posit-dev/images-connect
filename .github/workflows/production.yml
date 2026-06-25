@@ -113,6 +113,7 @@ jobs:
           private-key: ${{ secrets.POSIT_CONNECT_PROJECTS_PEM }}
           owner: rstudio
           repositories: helm
+          permission-actions: write
 
       - name: Dispatch Helm update
         env:
