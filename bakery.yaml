@@ -78,7 +78,7 @@ images:
             namespace: "posit-dev"
             repository: "connect-preview"
     versions:
-      - name: 2026.06.0
+      - name: 2026.06.1
         subpath: '2026.06'
         latest: true
         os:
@@ -316,7 +316,7 @@ images:
             namespace: "posit-dev"
             repository: "connect-content-init-preview"
     versions:
-      - name: 2026.06.0
+      - name: 2026.06.1
         subpath: '2026.06'
         latest: true
         os:

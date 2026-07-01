@@ -103,7 +103,7 @@ command:
     exec: /opt/rstudio-connect/bin/connect --version
     exit-status: 0
     stdout:
-      - "2026.06.0"
+      - "2026.06.1"
 
 
   "Ensure R version is correct":
