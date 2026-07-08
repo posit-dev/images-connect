@@ -78,9 +78,11 @@ RUN {% for quarto_version in Dependencies.quarto -%}
     {%- endfor %}
 
 ### Install TinyTex ###
+# HOME="/opt" workaround: https://github.com/quarto-dev/quarto-cli/issues/11800
 ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
-RUN {% for quarto_version in Dependencies.quarto -%}
-    {{ quarto.install_tinytex_command(quarto.get_version_directory(quarto_version | trim) + "/bin/quarto", loop.first) | indent(4) }} && \
+RUN {{ quarto.github_token_secret_mount() }} \
+    {% for quarto_version in Dependencies.quarto -%}
+    {{ quarto.install_tinytex_command(quarto.get_version_directory(quarto_version | trim) + "/bin/quarto", loop.first, home_path="/opt") | indent(4) }} && \
     {%- endfor %}
     rm -f /tmp/tinytex-release.json
 
