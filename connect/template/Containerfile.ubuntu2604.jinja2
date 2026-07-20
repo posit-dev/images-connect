@@ -24,7 +24,6 @@ ARG TARGETARCH=${BUILDARCH}
 ### Release ARG declarations ###
 ARG BUILDARCH
 ARG TARGETARCH=${BUILDARCH}
-ARG CONNECT_VERSION="{{ Image.Version }}"
 ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
 
 ### ENV declarations ###
@@ -39,17 +38,19 @@ SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 {{ apt.run_setup() }}
 
 ### Update apt packages ###
+{% if Image.Variant != "Minimal" -%}
+COPY {{ Path.Version }}/deps/ubuntu-26.04_packages.txt /tmp/ubuntu-26.04_packages.txt
+COPY {{ Path.Version }}/deps/ubuntu-26.04_optional_packages.txt /tmp/ubuntu-26.04_optional_packages.txt
+{{ apt.run_install(files=["/tmp/ubuntu-26.04_packages.txt", "/tmp/ubuntu-26.04_optional_packages.txt"]) }}
+{% else -%}
 COPY {{ Path.Version }}/deps/ubuntu-26.04_packages.txt /tmp/ubuntu-26.04_packages.txt
 {{ apt.run_install(files="/tmp/ubuntu-26.04_packages.txt") }}
+{%- endif %}
 
 {% if Image.Variant != "Minimal" -%}
 ### Install Pro Drivers ###
-RUN if [ "$TARGETARCH" = "amd64" ]; then \
-        {{ apt.install(packages="rstudio-drivers") | indent(8) }} && \
-        cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini; \
-    else \
-        echo "Pro Drivers will not be installed for architecture: $TARGETARCH"; \
-    fi
+{{ apt.run_install(packages="rstudio-drivers") }}
+RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
 
 ### Install R ###
 {{ r.run_install(Dependencies.R) }}
@@ -58,19 +59,6 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
 {{ python.copy_from_build_stage() }}
 {{ python.run_install_packages(Dependencies.python, packages=["pip", "setuptools", "virtualenv"]) }}
 
-{% endif -%}
-
-COPY {{ Path.Version }}/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
-COPY --chmod=0775 {{ Path.Version }}/scripts/install_connect.sh /tmp/install_connect.sh
-RUN IMAGE_VARIANT="{{ Image.Variant }}" {% if Image.DownloadURL is defined %}DOWNLOAD_URL="{{ Image.DownloadURL }}" {% endif %}\
-        /tmp/install_connect.sh && \
-    sed -i 's/<CRAN_URL>/{{ r.get_p3m_cran_repo(Image.OS) | replace("/", "\/") }}/g' /etc/rstudio-connect/rstudio-connect.gcfg && \
-    rm -f /tmp/install_connect.sh /tmp/rstudio-connect.gcfg
-
-### Copy scripts ###
-COPY --chmod=0775 {{ Path.Version }}/scripts/startup.sh /usr/local/bin/startup.sh
-
-{% if Image.Variant != "Minimal" -%}
 {% set quarto_version = Dependencies.quarto[0] -%}
 ### Install Quarto ###
 RUN {{ quarto.install(quarto_version) | indent(4) }}
@@ -83,6 +71,18 @@ RUN {{ quarto.github_token_secret_mount() }} \
     rm -f /tmp/tinytex-release.json
 
 {% endif -%}
+
+### Install Connect ###
+ARG CONNECT_VERSION="{{ Image.Version }}"
+COPY {{ Path.Version }}/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
+COPY --chmod=0775 {{ Path.Version }}/scripts/install_connect.sh /tmp/install_connect.sh
+RUN IMAGE_VARIANT="{{ Image.Variant }}" {% if Image.DownloadURL is defined %}DOWNLOAD_URL="{{ Image.DownloadURL }}" {% endif %}\
+        /tmp/install_connect.sh && \
+    sed -i 's/<CRAN_URL>/{{ r.get_p3m_cran_repo(Image.OS) | replace("/", "\/") }}/g' /etc/rstudio-connect/rstudio-connect.gcfg && \
+    rm -f /tmp/install_connect.sh /tmp/rstudio-connect.gcfg
+
+### Copy scripts ###
+COPY --chmod=0775 {{ Path.Version }}/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Create data volume ###
 VOLUME ["/data"]

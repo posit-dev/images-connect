@@ -42,13 +42,9 @@ COPY {{ Path.Version }}/deps/ubuntu-26.04_packages.txt /tmp/ubuntu-26.04_package
 {{ apt.run_install(files = '/tmp/ubuntu-26.04_packages.txt') }}
 
 {% if Image.Variant == "pro" -%}
-### Install Pro Drivers and ODBC ###
-RUN if [ "$TARGETARCH" = "amd64" ]; then \
-        {{ apt.install(packages="rstudio-drivers") | indent(8) }} && \
-        cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini; \
-    else \
-        echo "Pro Drivers will not be installed for architecture: $TARGETARCH"; \
-    fi
+### Install Pro Drivers ###
+{{ apt.run_install(packages="rstudio-drivers") }}
+RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
 
 {% endif -%}
 
