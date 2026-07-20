@@ -98,6 +98,8 @@ The container starts as `root` so the entrypoint can write files into the shared
 
 You can extend this image to include additional content beyond the default set. For example, you can add custom R packages, Python packages, or system dependencies that your published content requires. See [Custom Container Images for Connect](https://docs.posit.co/helm/examples/connect/container-images/custom-images.html).
 
+For a full guide to which Connect image to customize for different goals, see the [Connect extending examples](https://github.com/posit-dev/images-examples/tree/main/extending/connect).
+
 ## Migrating from rstudio/rstudio-connect-content-init
 
 This image replaces the legacy [`rstudio/rstudio-connect-content-init`](https://hub.docker.com/r/rstudio/rstudio-connect-content-init) image. The init container behavior is unchanged. The entrypoint copies runtime components into a shared volume at `/mnt/rstudio-connect-runtime` for the Connect content container to consume. The differences lie in how the image is published.
