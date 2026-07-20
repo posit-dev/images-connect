@@ -26,11 +26,11 @@ Container images for [Posit Connect](https://docs.posit.co/connect/).
 
 ## Images
 
-| Image | Docker Hub | GitHub Container Registry |
-|:------|:-----------|:--------------------------|
-| [connect](./connect/) | [`docker.io/posit/connect`](https://hub.docker.com/r/posit/connect) | [`ghcr.io/posit-dev/connect`](https://github.com/posit-dev/images-connect/pkgs/container/connect) |
-| [connect-content](./connect-content/) | [`docker.io/posit/connect-content`](https://hub.docker.com/r/posit/connect-content) | [`ghcr.io/posit-dev/connect-content`](https://github.com/posit-dev/images-connect/pkgs/container/connect-content) |
-| [connect-content-init](./connect-content-init/) | [`docker.io/posit/connect-content-init`](https://hub.docker.com/r/posit/connect-content-init) | [`ghcr.io/posit-dev/connect-content-init`](https://github.com/posit-dev/images-connect/pkgs/container/connect-content-init) |
+| Image | Description | Docker Hub | GitHub Container Registry |
+|:------|:------------|:-----------|:--------------------------|
+| [connect](./connect/) | Provides the Connect application.<br>This image is for all containerized deployments of Connect. | [`docker.io/posit/connect`](https://hub.docker.com/r/posit/connect) | [`ghcr.io/posit-dev/connect`](https://github.com/posit-dev/images-connect/pkgs/container/connect) |
+| [connect-content](./connect-content/) | Provides the runtime environments for executing content deployed to Connect.<br>This image is for Off-Host Execution (OHE) deployments on Kubernetes. | [`docker.io/posit/connect-content`](https://hub.docker.com/r/posit/connect-content) | [`ghcr.io/posit-dev/connect-content`](https://github.com/posit-dev/images-connect/pkgs/container/connect-content) |
+| [connect-content-init](./connect-content-init/) | An init container for Connect that pulls runtime components into a shared volume.<br>This image is for Off-Host Execution (OHE) deployments on Kubernetes. | [`docker.io/posit/connect-content-init`](https://hub.docker.com/r/posit/connect-content-init) | [`ghcr.io/posit-dev/connect-content-init`](https://github.com/posit-dev/images-connect/pkgs/container/connect-content-init) |
 
 Posit publishes additional container images to [Docker Hub](https://hub.docker.com/u/posit) and [GitHub Container Registry](https://github.com/orgs/posit-dev/packages).
 
