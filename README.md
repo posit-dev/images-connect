@@ -36,11 +36,7 @@ Posit publishes additional container images to [Docker Hub](https://hub.docker.c
 
 ## Running the images
 
-or local Docker, you only need the `connect` image. The `connect-content` and `connect-content-init` images are for [Off-Host Execution (OHE) deployments](https://docs.posit.co/connect/admin/appendix/off-host/arch-overview/#off-host-execution) on Kubernetes, where published content runs in separate pods from the Connect server.
-
-- [Connect](./connect/): the Connect server
-- [Connect Content](./connect-content/): runtime images for executing content (Kubernetes)
-- [Connect Content Init](./connect-content-init/): init container for Kubernetes deployments
+For local Docker, you only need the `connect` image. The `connect-content` and `connect-content-init` images are for [Off-Host Execution (OHE) deployments](https://docs.posit.co/connect/admin/appendix/off-host/arch-overview/#off-host-execution) on Kubernetes, where published content runs in separate pods from the Connect server.
 
 See the [Connect installation guide](https://docs.posit.co/connect/admin/getting-started/) for full setup instructions.
 
