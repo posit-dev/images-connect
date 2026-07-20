@@ -31,7 +31,7 @@ ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
 ENV PCT_LICENSE=""
 ENV PCT_LICENSE_SERVER=""
 ENV PCT_LICENSE_FILE_PATH=""
-ENV STARTUP_DEBUG_MODE=0
+ENV PCT_STARTUP_DEBUG=0
 
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
@@ -73,8 +73,8 @@ COPY --chmod=0775 {{ Path.Version }}/scripts/startup.sh /usr/local/bin/startup.s
 {% if Image.Variant != "Minimal" -%}
 ### Install Quarto ###
 RUN {% for quarto_version in Dependencies.quarto -%}
-    {{ quarto.install(quarto_version) | indent(4) }} && \
-    {% if loop.first -%}{{ quarto.symlink_binary(quarto_version, "quarto", "/usr/local/bin/quarto") }}{% endif %} {% if not loop.last %}&& \{% endif %}
+    {{ quarto.install(quarto_version) | indent(4) }}{% if not loop.last %} && \
+    {% endif -%}
     {%- endfor %}
 
 ### Install TinyTex ###
@@ -93,4 +93,6 @@ VOLUME ["/data"]
 
 ### Finalize image ###
 EXPOSE 3939/tcp
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+    CMD curl --fail --silent --output /dev/null http://localhost:3939/__ping__
 CMD ["/usr/local/bin/startup.sh"]

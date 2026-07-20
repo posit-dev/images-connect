@@ -75,8 +75,7 @@ RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')" && \
         quarto=$QUARTO_VERSION && \
     apt-mark hold quarto && \
     apt-get clean -yqq && \
-    rm -rf /var/lib/apt/lists/* && \
-    ln -s /opt/quarto/bin/quarto /usr/local/bin/quarto
+    rm -rf /var/lib/apt/lists/*
 
 ### Install TinyTeX ###
 # Caches won't invalidate correctly on new releases for TinyTeX installs.
