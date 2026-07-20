@@ -71,19 +71,15 @@ RUN IMAGE_VARIANT="{{ Image.Variant }}" {% if Image.DownloadURL is defined %}DOW
 COPY --chmod=0775 {{ Path.Version }}/scripts/startup.sh /usr/local/bin/startup.sh
 
 {% if Image.Variant != "Minimal" -%}
+{% set quarto_version = Dependencies.quarto[0] -%}
 ### Install Quarto ###
-RUN {% for quarto_version in Dependencies.quarto -%}
-    {{ quarto.install(quarto_version) | indent(4) }}{% if not loop.last %} && \
-    {% endif -%}
-    {%- endfor %}
+RUN {{ quarto.install(quarto_version) | indent(4) }}
 
 ### Install TinyTex ###
 # HOME="/opt" workaround: https://github.com/quarto-dev/quarto-cli/issues/11800
 ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
 RUN {{ quarto.github_token_secret_mount() }} \
-    {% for quarto_version in Dependencies.quarto -%}
-    {{ quarto.install_tinytex_command(quarto.get_version_directory(quarto_version | trim) + "/bin/quarto", loop.first, home_path="/opt") | indent(4) }} && \
-    {%- endfor %}
+    {{ quarto.install_tinytex_command(quarto.get_directory() ~ "/bin/quarto", update_path=True, home_path="/opt") | indent(4) }} && \
     rm -f /tmp/tinytex-release.json
 
 {% endif -%}
