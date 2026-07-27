@@ -9,7 +9,6 @@ ARG TARGETARCH=${BUILDARCH}
 ### Release ARG declarations ###
 ARG BUILDARCH
 ARG TARGETARCH=${BUILDARCH}
-ARG CONNECT_VERSION="2026.06.0"
 ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
 
 ### ENV declarations ###
@@ -42,6 +41,8 @@ RUN apt-get update -yqq && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
+### Install Connect ###
+ARG CONNECT_VERSION="2026.06.1"
 COPY connect/2026.06/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
 COPY --chmod=0775 connect/2026.06/scripts/install_connect.sh /tmp/install_connect.sh
 RUN IMAGE_VARIANT="Minimal" \

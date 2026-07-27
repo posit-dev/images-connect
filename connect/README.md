@@ -44,7 +44,7 @@ For Kubernetes deployments, Connect uses three images together. See the [reposit
 ### Quick start
 
 ```bash
-PCT_VERSION="2026.06.0"
+PCT_VERSION="2026.06.1"
 PCT_IMAGE="ghcr.io/posit-dev/connect"  # or docker.io/posit/connect
 PCT_LICENSE_FILE_HOST_PATH="/path/to/license.lic"
 PCT_LICENSE_FILE_PATH="/etc/rstudio-connect/license.lic"
@@ -69,7 +69,7 @@ Access Connect at `http://localhost:3939`.
 ### With a custom configuration file
 
 ```bash
-PCT_VERSION="2026.06.0"
+PCT_VERSION="2026.06.1"
 PCT_IMAGE="ghcr.io/posit-dev/connect"  # or docker.io/posit/connect
 PCT_LICENSE_FILE_HOST_PATH="/path/to/license.lic"
 PCT_LICENSE_FILE_PATH="/etc/rstudio-connect/license.lic"
@@ -115,7 +115,7 @@ Two variants are available:
 
 Each tagged image bundles a fixed set of dependencies. Both variants ship the latest patch of the `YYYY.MM` Connect release available at image build time. The Standard variant additionally ships one R version, one Python version, and one Quarto version, locked to the latest available at release. The Containerfiles in this repository under `connect/<version>/` document the exact versions in any tag.
 
-See [extending examples](https://github.com/posit-dev/images-examples/tree/main/extending) for how to build on the Minimal image.
+See [server extending examples](https://github.com/posit-dev/images-examples/tree/main/extending/connect/server) for how to build on the Minimal image.
 
 ## Image tags
 

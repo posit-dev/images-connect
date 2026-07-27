@@ -6,9 +6,6 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG BUILDARCH
 ARG TARGETARCH=${BUILDARCH}
 
-### Release ARG declarations ###
-ARG CONNECT_VERSION="2026.06.0"
-
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 ### Setup environment ###
@@ -26,9 +23,11 @@ RUN echo 'Acquire::Retries "3"; Acquire::http::Timeout "30"; Acquire::https::Tim
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
+### Download Connect runtime ###
+ARG CONNECT_VERSION="2026.06.1"
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN mkdir -p /rsc-staging && \
-    curl -fsSL "https://cdn.posit.co/connect/2026.06/rstudio-connect-runtime-2026.06.0-${TARGETARCH}.tar.gz" -o /rsc-staging/rstudio-connect-runtime.tar.gz && \
+    curl -fsSL "https://cdn.posit.co/connect/2026.06/rstudio-connect-runtime-2026.06.1-${TARGETARCH}.tar.gz" -o /rsc-staging/rstudio-connect-runtime.tar.gz && \
     mkdir -p /opt/rstudio-connect-runtime && \
     tar -C /opt/rstudio-connect-runtime -xf /rsc-staging/rstudio-connect-runtime.tar.gz && \
     chmod -R 755 /opt/rstudio-connect-runtime && \

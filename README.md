@@ -26,21 +26,17 @@ Container images for [Posit Connect](https://docs.posit.co/connect/).
 
 ## Images
 
-| Image | Docker Hub | GitHub Container Registry |
-|:------|:-----------|:--------------------------|
-| [connect](./connect/) | [`docker.io/posit/connect`](https://hub.docker.com/r/posit/connect) | [`ghcr.io/posit-dev/connect`](https://github.com/posit-dev/images-connect/pkgs/container/connect) |
-| [connect-content](./connect-content/) | [`docker.io/posit/connect-content`](https://hub.docker.com/r/posit/connect-content) | [`ghcr.io/posit-dev/connect-content`](https://github.com/posit-dev/images-connect/pkgs/container/connect-content) |
-| [connect-content-init](./connect-content-init/) | [`docker.io/posit/connect-content-init`](https://hub.docker.com/r/posit/connect-content-init) | [`ghcr.io/posit-dev/connect-content-init`](https://github.com/posit-dev/images-connect/pkgs/container/connect-content-init) |
+| Image | Description | Docker Hub | GitHub Container Registry |
+|:------|:------------|:-----------|:--------------------------|
+| [connect](./connect/) | Provides the Connect application.<br>This image is for all containerized deployments of Connect. | [`docker.io/posit/connect`](https://hub.docker.com/r/posit/connect) | [`ghcr.io/posit-dev/connect`](https://github.com/posit-dev/images-connect/pkgs/container/connect) |
+| [connect-content](./connect-content/) | Provides the runtime environments for executing content deployed to Connect.<br>This image is for Off-Host Execution (OHE) deployments on Kubernetes. | [`docker.io/posit/connect-content`](https://hub.docker.com/r/posit/connect-content) | [`ghcr.io/posit-dev/connect-content`](https://github.com/posit-dev/images-connect/pkgs/container/connect-content) |
+| [connect-content-init](./connect-content-init/) | An init container for Connect that pulls runtime components into a shared volume.<br>This image is for Off-Host Execution (OHE) deployments on Kubernetes. | [`docker.io/posit/connect-content-init`](https://hub.docker.com/r/posit/connect-content-init) | [`ghcr.io/posit-dev/connect-content-init`](https://github.com/posit-dev/images-connect/pkgs/container/connect-content-init) |
 
 Posit publishes additional container images to [Docker Hub](https://hub.docker.com/u/posit) and [GitHub Container Registry](https://github.com/orgs/posit-dev/packages).
 
 ## Running the images
 
-For local Docker, you only need the `connect` image. The `connect-content` and `connect-content-init` images are for Kubernetes deployments, where published content runs in separate pods from the Connect server.
-
-- [Connect](./connect/): the Connect server
-- [Connect Content](./connect-content/): runtime images for executing content (Kubernetes)
-- [Connect Content Init](./connect-content-init/): init container for Kubernetes deployments
+For local Docker, you only need the `connect` image. The `connect-content` and `connect-content-init` images are for [Off-Host Execution (OHE) deployments](https://docs.posit.co/connect/admin/appendix/off-host/arch-overview/#off-host-execution) on Kubernetes, where published content runs in separate pods from the Connect server.
 
 See the [Connect installation guide](https://docs.posit.co/connect/admin/getting-started/) for full setup instructions.
 
@@ -90,9 +86,25 @@ To build images with `bakery` or run the test suite, see the [contributing guide
 For image maintainers, the contributing guide also covers adding versions, updating
 dependencies, backporting to older versions, known footguns, and CI failure diagnosis.
 
+## Customizing images
+
+Each image serves a different role. The right image to customize depends on what you want to change.
+
+| I want to… | Customize | Example |
+|:-----------|:----------|:--------|
+| Install specific versions of R or Python (Kubernetes) | `connect-content` | [common/R](https://github.com/posit-dev/images-examples/tree/main/extending/common/R) · [common/python](https://github.com/posit-dev/images-examples/tree/main/extending/common/python) |
+| Add system libraries that content packages need (Kubernetes) | `connect-content` | [common/system-dependencies](https://github.com/posit-dev/images-examples/tree/main/extending/common/system-dependencies) |
+| Install R on the Connect server (local Docker) | `connect` (Minimal) | [common/R](https://github.com/posit-dev/images-examples/tree/main/extending/common/R) |
+| Install Quarto on the Connect server (local Docker) | `connect` (Minimal) | [server/quarto](https://github.com/posit-dev/images-examples/tree/main/extending/connect/server/quarto) |
+| Configure a Python package index | any | [Admin docs](https://docs.posit.co/connect/admin/python/package-management/#python-package-repositories) |
+| Upgrade the Connect server version | `connect` + `connect-content-init` (keep in sync) | — |
+| Add custom runtime components for off-host execution | `connect-content-init` | [Custom container images](https://docs.posit.co/helm/examples/connect/container-images/custom-images.html) |
+
+For detailed guidance and full example code, see the [Connect extending examples](https://github.com/posit-dev/images-examples/tree/main/extending/connect).
+
 ## Related repositories
 
-This repository is part of the [Posit Container Images](https://github.com/posit-dev/images) ecosystem. To extend the Minimal image with additional languages or system dependencies, see the [extending examples](https://github.com/posit-dev/images-examples/tree/main/extending). For shared build tooling and CI workflows, see [images-shared](https://github.com/posit-dev/images-shared).
+This repository is part of the [Posit Container Images](https://github.com/posit-dev/images) ecosystem. For shared build tooling and CI workflows, see [images-shared](https://github.com/posit-dev/images-shared).
 
 ## Share your feedback
 

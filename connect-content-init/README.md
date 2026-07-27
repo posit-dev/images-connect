@@ -51,7 +51,7 @@ To wire the image up directly in a pod spec, mount a shared volume at `/mnt/rstu
 ```yaml
 initContainers:
   - name: connect-content-init
-    image: ghcr.io/posit-dev/connect-content-init:2026.06.0
+    image: ghcr.io/posit-dev/connect-content-init:2026.06.1
     volumeMounts:
       - name: connect-runtime
         mountPath: /mnt/rstudio-connect-runtime
@@ -97,6 +97,8 @@ The container starts as `root` so the entrypoint can write files into the shared
 ### Extending with custom content
 
 You can extend this image to include additional content beyond the default set. For example, you can add custom R packages, Python packages, or system dependencies that your published content requires. See [Custom Container Images for Connect](https://docs.posit.co/helm/examples/connect/container-images/custom-images.html).
+
+For a full guide to which Connect image to customize for different goals, see the [Connect extending examples](https://github.com/posit-dev/images-examples/tree/main/extending/connect).
 
 ## Migrating from rstudio/rstudio-connect-content-init
 

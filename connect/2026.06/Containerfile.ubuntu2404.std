@@ -19,7 +19,6 @@ ARG TARGETARCH=${BUILDARCH}
 ### Release ARG declarations ###
 ARG BUILDARCH
 ARG TARGETARCH=${BUILDARCH}
-ARG CONNECT_VERSION="2026.06.0"
 ARG RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1
 
 ### ENV declarations ###
@@ -74,16 +73,6 @@ RUN /opt/python/3.14.6/bin/pip install --no-cache-dir --upgrade --break-system-p
         setuptools \
         virtualenv
 
-COPY connect/2026.06/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
-COPY --chmod=0775 connect/2026.06/scripts/install_connect.sh /tmp/install_connect.sh
-RUN IMAGE_VARIANT="Standard" \
-        /tmp/install_connect.sh && \
-    sed -i 's/<CRAN_URL>/https:\/\/p3m.dev\/cran\/__linux__\/noble\/latest/g' /etc/rstudio-connect/rstudio-connect.gcfg && \
-    rm -f /tmp/install_connect.sh /tmp/rstudio-connect.gcfg
-
-### Copy scripts ###
-COPY --chmod=0775 connect/2026.06/scripts/startup.sh /usr/local/bin/startup.sh
-
 ### Install Quarto ###
 RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')" && \
     apt-get install -yqq --no-install-recommends \
@@ -98,6 +87,18 @@ ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-rel
 RUN --mount=type=secret,id=github_token,required=false \
     GH_TOKEN="$([ -s /run/secrets/github_token ] && cat /run/secrets/github_token)" HOME="/opt" CI=true /opt/quarto/bin/quarto install tinytex --no-prompt --update-path && \
     rm -f /tmp/tinytex-release.json
+
+### Install Connect ###
+ARG CONNECT_VERSION="2026.06.1"
+COPY connect/2026.06/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
+COPY --chmod=0775 connect/2026.06/scripts/install_connect.sh /tmp/install_connect.sh
+RUN IMAGE_VARIANT="Standard" \
+        /tmp/install_connect.sh && \
+    sed -i 's/<CRAN_URL>/https:\/\/p3m.dev\/cran\/__linux__\/noble\/latest/g' /etc/rstudio-connect/rstudio-connect.gcfg && \
+    rm -f /tmp/install_connect.sh /tmp/rstudio-connect.gcfg
+
+### Copy scripts ###
+COPY --chmod=0775 connect/2026.06/scripts/startup.sh /usr/local/bin/startup.sh
 
 ### Create data volume ###
 VOLUME ["/data"]
