@@ -51,7 +51,7 @@ To wire the image up directly in a pod spec, mount a shared volume at `/mnt/rstu
 ```yaml
 initContainers:
   - name: connect-content-init
-    image: ghcr.io/posit-dev/connect-content-init:2026.06.1
+    image: ghcr.io/posit-dev/connect-content-init:2026.07.0
     volumeMounts:
       - name: connect-runtime
         mountPath: /mnt/rstudio-connect-runtime
