@@ -25,6 +25,11 @@ on:
         description: "Deprecated: use channel instead."
         required: false
         type: string
+      cache:
+        description: "Use the bakery registry cache. Set false to force a fresh build (e.g. when the upstream CDN .deb was replaced after a previous cached build, so the layer cache key hits the stale binary)."
+        required: false
+        type: boolean
+        default: true
 
 
 concurrency:
@@ -72,6 +77,10 @@ jobs:
       matrix-versions: "exclude"
       dev-version: ${{ inputs.version }}
       dev-channel: ${{ inputs.channel || inputs.stream }}
+      # Forward the cache input. For non-workflow_dispatch events (schedule / push),
+      # `inputs.cache` is unset, so default to true (preserves prior behavior). Only
+      # an explicit workflow_dispatch with `cache: false` disables the registry cache.
+      cache: ${{ github.event_name != 'workflow_dispatch' || inputs.cache }}
       # Push on merges to main, scheduled rebuilds, and dispatches targeting main.
       push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
 
