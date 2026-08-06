@@ -64,12 +64,16 @@ jobs:
     permissions:
       contents: read
       packages: write
+      id-token: write
 
     uses: "posit-dev/images-shared/.github/workflows/bakery-build-native.yml@main"
+    secrets:
+      AWS_ROLE: ${{ secrets.AWS_ROLE }}
     with:
       dev-versions: "only"
       matrix-versions: "exclude"
       dev-version: ${{ inputs.version }}
       dev-channel: ${{ inputs.channel || inputs.stream }}
+      temp-registry: "565037064999.dkr.ecr.us-east-2.amazonaws.com/images"
       # Push on merges to main, scheduled rebuilds, and dispatches targeting main.
       push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
