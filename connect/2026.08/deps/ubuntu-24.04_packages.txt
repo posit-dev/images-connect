@@ -1,0 +1,7 @@
+cracklib-runtime
+curl
+git
+libssl3t64
+media-types
+rrdtool
+tzdata
