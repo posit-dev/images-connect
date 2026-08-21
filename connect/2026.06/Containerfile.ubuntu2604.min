@@ -40,8 +40,11 @@ RUN echo 'Acquire::Retries "3"; Acquire::http::Timeout "30"; Acquire::https::Tim
 # coreutils early so both the build and runtime use them. Revert once the
 # runtime is compatible with uutils upstream.
 # https://github.com/posit-dev/images-connect/issues/151
+# coreutils-from-uutils is Priority: required and already installed; apt will not
+# drop it on its own, so remove it explicitly in the same transaction (pkg-).
 RUN apt-get update -yqq && \
-    apt-get install -yqq coreutils-from-gnu --allow-remove-essential && \
+    apt-get install -yqq --allow-remove-essential \
+        coreutils-from-gnu coreutils-from-uutils- && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
