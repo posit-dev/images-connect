@@ -35,6 +35,17 @@ ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 ENV TZ=UTC
 
+### Pin GNU coreutils (temporary workaround) ###
+# Ubuntu 26.04 defaults to the Rust-based coreutils (uutils), which are not yet
+# fully GNU-compatible and cause a defect in the Connect runtime. Pin GNU
+# coreutils early so both the build and runtime use them. Revert once the
+# runtime is compatible with uutils upstream.
+# https://github.com/posit-dev/images-connect/issues/151
+RUN apt-get update -yqq && \
+    apt-get install -yqq coreutils-from-gnu --allow-remove-essential && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
+
 ### Install Apt Packages ###
 RUN echo 'Acquire::Retries "3"; Acquire::http::Timeout "30"; Acquire::https::Timeout "30";' > /etc/apt/apt.conf.d/99-retries && \
     apt-get update -yqq --fix-missing && \
