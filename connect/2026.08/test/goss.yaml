@@ -28,6 +28,10 @@ package:
   {{ end }}
   rstudio-drivers:
     installed: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
+  {{ if eq .Env.IMAGE_OS_VERSION "26.04" }}
+  coreutils-from-gnu:
+    installed: true
+  {{ end }}
 
 process:
   connect:
@@ -165,3 +169,12 @@ command:
     stdout:
       - "/^quarto$/"
     skip: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}
+  "Ensure GNU coreutils are pinned on Ubuntu 26.04":
+    # Ubuntu 26.04 ships Rust-based coreutils (uutils) by default; we pin GNU
+    # coreutils as a workaround for a Connect runtime incompatibility.
+    # https://github.com/posit-dev/images-connect/issues/151
+    exec: ls --version
+    exit-status: 0
+    stdout:
+      - "GNU coreutils"
+    skip: {{ if ne .Env.IMAGE_OS_VERSION "26.04" }}true{{ else }}false{{ end }}
