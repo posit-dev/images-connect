@@ -94,7 +94,7 @@ RUN --mount=type=secret,id=github_token,required=false \
     rm -f /tmp/tinytex-release.json
 
 ### Install Connect ###
-ARG CONNECT_VERSION="2026.08.0"
+ARG CONNECT_VERSION="2026.08.1"
 COPY connect/2026.08/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
 COPY --chmod=0775 connect/2026.08/scripts/install_connect.sh /tmp/install_connect.sh
 RUN IMAGE_VARIANT="Standard" \
