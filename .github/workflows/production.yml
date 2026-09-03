@@ -41,7 +41,10 @@ jobs:
         with:
           jobs: ${{ toJSON(needs) }}
           allowed-skips: update-helm
-      - if: always() && github.ref == 'refs/heads/main'
+      # Cancelled builds fire an alert that never clears — slack-build-notify
+      # skips cancelled runs when scanning for recovery. The next run carries
+      # the real verdict; silence here is correct.
+      - if: always() && github.ref == 'refs/heads/main' && needs.build.result != 'cancelled'
         continue-on-error: true
         uses: posit-dev/images-shared/.github/actions/slack-build-notify@main
         with:
