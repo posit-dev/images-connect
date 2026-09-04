@@ -50,7 +50,7 @@ RUN apt-get update -yqq && \
     rm -rf /var/lib/apt/lists/*
 
 ### Install Apt Packages ###
-{{ apt.run_setup() }}
+{{ apt.run_setup(open_repo=True) }}
 
 COPY {{ Path.Version }}/deps/ubuntu-26.04_packages.txt /tmp/ubuntu-26.04_packages.txt
 {{ apt.run_install(files = '/tmp/ubuntu-26.04_packages.txt') }}
@@ -63,10 +63,7 @@ RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
 {% endif -%}
 
 ### Install R ###
-RUN apt-get update -yqq && \
-    {{ r.install(r.build_arg()) | indent(4) }} && \
-    apt-get clean -yqq && \
-    rm -rf /var/lib/apt/lists/*
+RUN {{ r.install(r.build_arg()) | indent(4) }}
 
 {% if Image.Variant == "pro" -%}
 ### Install odbc R package ###
