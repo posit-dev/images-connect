@@ -50,7 +50,7 @@ RUN apt-get update -yqq && \
     rm -rf /var/lib/apt/lists/*
 
 ### Install Apt Packages ###
-{{ apt.run_setup(open_repo=True) }}
+{{ apt.run_setup(open_repo=True, pro_repo=True) }}
 
 COPY {{ Path.Version }}/deps/ubuntu-26.04_packages.txt /tmp/ubuntu-26.04_packages.txt
 {{ apt.run_install(files = '/tmp/ubuntu-26.04_packages.txt') }}

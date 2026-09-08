@@ -35,7 +35,7 @@ ENV PCT_STARTUP_DEBUG=0
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 ### Run setup ###
-{{ apt.run_setup(open_repo=True) }}
+{{ apt.run_setup(open_repo=True, pro_repo=True) }}
 
 ### Update apt packages ###
 {% if Image.Variant != "Minimal" -%}

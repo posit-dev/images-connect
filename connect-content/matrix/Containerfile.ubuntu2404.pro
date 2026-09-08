@@ -74,7 +74,6 @@ RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
 RUN apt-get update -yqq && \
     apt-get install -yqq --no-install-recommends \
         r-$R_VERSION && \
-    apt-mark hold r-$R_VERSION && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
