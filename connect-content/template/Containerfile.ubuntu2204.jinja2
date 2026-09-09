@@ -36,7 +36,7 @@ ENV LC_ALL=en_US.UTF-8
 ENV TZ=UTC
 
 ### Install Apt Packages ###
-{{ apt.run_setup() }}
+{{ apt.run_setup(open_repo=True, pro_repo=True) }}
 
 COPY {{ Path.Version }}/deps/ubuntu-22.04_packages.txt /tmp/ubuntu-22.04_packages.txt
 {{ apt.run_install(files = '/tmp/ubuntu-22.04_packages.txt') }}
@@ -49,10 +49,7 @@ RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
 {% endif -%}
 
 ### Install R ###
-RUN apt-get update -yqq && \
-    {{ r.install(r.build_arg()) | indent(4) }} && \
-    apt-get clean -yqq && \
-    rm -rf /var/lib/apt/lists/*
+RUN {{ r.install(r.build_arg()) | indent(4) }}
 
 {% if Image.Variant == "pro" -%}
 ### Install odbc R package ###
