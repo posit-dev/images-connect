@@ -37,6 +37,13 @@ file:
     exists: true
     filetype: symlink
 
+  {{ if eq .Env.IMAGE_OS_VERSION "26.04" }}
+  /usr/bin/pebble:
+    exists: false
+  /var/lib/pebble:
+    exists: false
+  {{ end }}
+
 command:
   "Verify R installation is version {{ .Env.BUILD_ARG_R_VERSION }}":
     exec: /opt/R/{{ .Env.BUILD_ARG_R_VERSION }}/bin/R --version

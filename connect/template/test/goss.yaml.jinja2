@@ -120,6 +120,15 @@ file:
     exists: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
     filetype: symlink
 
+  {% raw -%}
+  {{ if eq .Env.IMAGE_OS_VERSION "26.04" }}
+  /usr/bin/pebble:
+    exists: false
+  /var/lib/pebble:
+    exists: false
+  {{ end }}
+  {%- endraw %}
+
 command:
   "Ensure Connect version is correct":
     exec: /opt/rstudio-connect/bin/connect --version
