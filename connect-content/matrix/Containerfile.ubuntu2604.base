@@ -24,6 +24,8 @@ ARG QUARTO_VERSION
 
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
+RUN rm -f /usr/bin/pebble && rm -rf /var/lib/pebble
+
 ### Locale configuration ###
 RUN apt-get update && \
     apt-get install -y --no-install-recommends locales && \

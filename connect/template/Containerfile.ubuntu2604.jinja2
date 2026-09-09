@@ -34,6 +34,8 @@ ENV PCT_STARTUP_DEBUG=0
 
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
+RUN rm -f /usr/bin/pebble && rm -rf /var/lib/pebble
+
 ### Run setup ###
 {{ apt.run_setup() }}
 
