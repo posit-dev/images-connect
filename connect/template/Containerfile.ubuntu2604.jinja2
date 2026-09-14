@@ -37,7 +37,7 @@ SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 RUN rm -f /usr/bin/pebble && rm -rf /var/lib/pebble
 
 ### Run setup ###
-{{ apt.run_setup() }}
+{{ apt.run_setup(open_repo=True, pro_repo=True) }}
 
 ### Pin GNU coreutils (temporary workaround) ###
 # Ubuntu 26.04 defaults to the Rust-based coreutils (uutils), which are not yet
