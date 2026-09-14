@@ -18,10 +18,6 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
 ARG DEBIAN_FRONTEND=noninteractive
 ARG BUILDARCH
 ARG TARGETARCH=${BUILDARCH}
-{{ r.declare_build_arg() }}
-{{ python.declare_build_arg() }}
-{{ quarto.declare_build_arg() }}
-
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 ### Locale configuration ###
@@ -36,7 +32,7 @@ ENV LC_ALL=en_US.UTF-8
 ENV TZ=UTC
 
 ### Install Apt Packages ###
-{{ apt.run_setup() }}
+{{ apt.run_setup(open_repo=True, pro_repo=True) }}
 
 COPY {{ Path.Version }}/deps/ubuntu-24.04_packages.txt /tmp/ubuntu-24.04_packages.txt
 {{ apt.run_install(files = '/tmp/ubuntu-24.04_packages.txt') }}
@@ -49,10 +45,8 @@ RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
 {% endif -%}
 
 ### Install R ###
-RUN apt-get update -yqq && \
-    {{ r.install(r.build_arg()) | indent(4) }} && \
-    apt-get clean -yqq && \
-    rm -rf /var/lib/apt/lists/*
+{{ r.declare_build_arg() }}
+RUN {{ r.install(r.build_arg()) | indent(4) }}
 
 {% if Image.Variant == "pro" -%}
 ### Install odbc R package ###
@@ -63,9 +57,11 @@ RUN {{ r.get_version_directory(r.build_arg()) }}/bin/R -e 'install.packages("odb
 {{ python.copy_from_build_stage() }}
 
 ### Upgrade setuptools ###
+{{ python.declare_build_arg() }}
 RUN {{ python.get_version_directory(python.build_arg()) }}/bin/python -m pip install --no-cache-dir --break-system-packages --upgrade setuptools
 
 ### Install Quarto ###
+{{ quarto.declare_build_arg() }}
 RUN {{ quarto.install(quarto.build_arg()) | indent(4) }}
 
 ### Install TinyTeX ###
