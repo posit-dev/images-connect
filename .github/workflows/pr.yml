@@ -59,6 +59,7 @@ jobs:
     with:
       dev-versions: "exclude"
       matrix-versions: "exclude"
+      recent: 3
 
   development:
     name: Development
