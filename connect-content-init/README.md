@@ -100,7 +100,7 @@ You can extend this image to include additional content beyond the default set. 
 
 For a full guide to which Connect image to customize for different goals, see the [Connect extending examples](https://github.com/posit-dev/images-examples/tree/main/extending/connect).
 
-## Migrating from rstudio/rstudio-connect-content-init
+## Migrating from legacy image
 
 This image replaces the legacy [`rstudio/rstudio-connect-content-init`](https://hub.docker.com/r/rstudio/rstudio-connect-content-init) image. The init container behavior is unchanged. The entrypoint copies runtime components into a shared volume at `/mnt/rstudio-connect-runtime` for the Connect content container to consume. The differences lie in how the image is published.
 
