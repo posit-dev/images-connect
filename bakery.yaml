@@ -349,11 +349,11 @@ images:
       dependencyConstraints:
         - dependency: R
           constraint:
-            count: 2
+            count: 3
             latest: true
         - dependency: python
           constraint:
-            count: 2
+            count: 3
             latest: true
         - dependency: quarto
           constraint:
