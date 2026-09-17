@@ -4,11 +4,26 @@ set -eou pipefail
 # Output delimiter
 d="===="
 
+# Pre-create rstudio-connect so the deb postinst preserves UID/GID 999.
+if ! getent group rstudio-connect >/dev/null; then
+    groupadd --system --gid 999 rstudio-connect
+fi
+if ! getent passwd rstudio-connect >/dev/null; then
+    useradd --system --uid 999 --gid rstudio-connect \
+        --no-create-home --home-dir /var/lib/rstudio-connect \
+        --shell /usr/sbin/nologin \
+        rstudio-connect
+fi
+if [ "$(id -u rstudio-connect)" != 999 ] || [ "$(id -g rstudio-connect)" != 999 ]; then
+    echo "ERROR: rstudio-connect must be uid/gid 999, got uid=$(id -u rstudio-connect) gid=$(id -g rstudio-connect)" >&2
+    exit 1
+fi
+
 apt-get update -yq
 
 echo "$d Installing Posit Connect 2025.11.0 $d"
 
-RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1 apt-get install -yf rstudio-connect=2025.11.0
+RSTUDIO_INSTALL_NO_LICENSE_INITIALIZATION=1 apt-get install -yf rstudio-connect=2025.11.0-1
 apt-mark hold rstudio-connect
 
 mv /tmp/rstudio-connect.gcfg /etc/rstudio-connect/rstudio-connect.gcfg
