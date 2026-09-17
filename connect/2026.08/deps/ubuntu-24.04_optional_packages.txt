@@ -28,7 +28,6 @@ default-libmysqlclient-dev
 libpq-dev
 libsqlite3-dev
 unixodbc-dev
-git
 libgit2-dev
 openssh-client
 wget
