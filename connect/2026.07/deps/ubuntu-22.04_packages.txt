@@ -4,9 +4,9 @@ curl
 git
 gnupg
 gnupg-agent
-libev-dev
 libnss-sss
 libpam-sss
+libsodium23
 libglib2.0-0
 mime-support
 rrdtool
