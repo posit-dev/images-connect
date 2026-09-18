@@ -53,10 +53,13 @@ ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 
 COPY connect-content/matrix/deps/ubuntu-22.04_packages.txt /tmp/ubuntu-22.04_packages.txt
+COPY connect-content/matrix/deps/ubuntu-22.04_optional_packages.txt /tmp/ubuntu-22.04_optional_packages.txt
 RUN apt-get update -yqq && \
     xargs -a /tmp/ubuntu-22.04_packages.txt apt-get install -yqq --no-install-recommends && \
+    xargs -a /tmp/ubuntu-22.04_optional_packages.txt apt-get install -yqq --no-install-recommends && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
+
 
 ### Install Pro Drivers ###
 RUN apt-get update -yqq && \
