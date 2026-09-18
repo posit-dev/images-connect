@@ -37,7 +37,7 @@ ENV TZ=UTC
 COPY {{ Path.Version }}/deps/ubuntu-24.04_packages.txt /tmp/ubuntu-24.04_packages.txt
 {{ apt.run_install(files = '/tmp/ubuntu-24.04_packages.txt') }}
 
-{% if Image.Variant == "pro" -%}
+{% if Image.Variant == "Standard" -%}
 ### Install Pro Drivers ###
 {{ apt.run_install(packages="rstudio-drivers") }}
 RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
@@ -48,7 +48,7 @@ RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
 {{ r.declare_build_arg() }}
 RUN {{ r.install(r.build_arg()) | indent(4) }}
 
-{% if Image.Variant == "pro" -%}
+{% if Image.Variant == "Standard" -%}
 ### Install odbc R package ###
 RUN {{ r.get_version_directory(r.build_arg()) }}/bin/R -e 'install.packages("odbc", repos="{{ r.get_p3m_cran_repo(Image.OS) }}")'
 
