@@ -337,13 +337,17 @@ images:
       - tool: soci
         enabled: true
     variants:
-      - name: base
-        extension: base
-        tagDisplayName: base
+      - name: Minimal
+        extension: min
+        tagDisplayName: min
         primary: true
-      - name: pro
-        extension: pro
-        tagDisplayName: pro
+        tagAliases:
+          - base
+      - name: Standard
+        extension: std
+        tagDisplayName: std
+        tagAliases:
+          - pro
     matrix:
       namePattern: "R{{ Dependencies.R }}-python{{ Dependencies.python }}"
       dependencyConstraints:
