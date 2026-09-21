@@ -58,6 +58,8 @@ RUN apt-get update -yqq && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
+RUN install -d -o nobody -g nogroup /opt/rstudio-connect
+
 ### Install R ###
 ARG R_VERSION
 RUN apt-get update -yqq && \

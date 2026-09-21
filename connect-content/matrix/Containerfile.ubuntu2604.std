@@ -77,6 +77,8 @@ RUN apt-get update -yqq && \
     rm -rf /var/lib/apt/lists/*
 
 
+RUN install -d -o nobody -g nogroup /opt/rstudio-connect
+
 ### Install Pro Drivers ###
 RUN apt-get update -yqq && \
     apt-get install -yqq --no-install-recommends \
