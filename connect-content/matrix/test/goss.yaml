@@ -5,6 +5,14 @@ package:
   {{.}}:
     installed: true
   {{end}}
+  {{- if eq .Env.IMAGE_VARIANT "Standard" }}
+  {{ $apt_optional_package_list_path := printf "/tmp/version/deps/%s-%s_optional_packages.txt" .Env.IMAGE_OS_NAME .Env.IMAGE_OS_VERSION }}
+  {{ $apt_optional_package_list := readFile $apt_optional_package_list_path | splitList "\n" }}
+  {{- range $apt_optional_package_list }}
+  {{.}}:
+    installed: true
+  {{end}}
+  {{- end }}
   rstudio-drivers:
     installed: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
   {{ if eq .Env.IMAGE_OS_VERSION "26.04" }}
@@ -36,6 +44,9 @@ file:
   /usr/local/bin/pdflatex:
     exists: true
     filetype: symlink
+  /opt/rstudio-connect:
+    exists: true
+    filetype: directory
 
   {{ if eq .Env.IMAGE_OS_VERSION "26.04" }}
   /usr/bin/pebble:
@@ -55,6 +66,17 @@ command:
     exit-status: 0
     stdout:
       - "{{ .Env.BUILD_ARG_PYTHON_VERSION }}"
+  "Verify Python virtual environment creation":
+    exec: 'rm -rf /tmp/uv-venv && /opt/python/{{ .Env.BUILD_ARG_PYTHON_VERSION }}/bin/python -m venv /tmp/uv-venv && test -x /tmp/uv-venv/bin/python && rm -rf /tmp/uv-venv'
+    exit-status: 0
+  "Verify UTF-8 locale":
+    exec: locale charmap
+    exit-status: 0
+    stdout:
+      - "UTF-8"
+  "Verify Connect runtime mount point is writable":
+    exec: su -s /bin/sh -c 'test -w /opt/rstudio-connect' nobody
+    exit-status: 0
   "Verify Quarto":
     exec: /usr/local/bin/quarto check
     timeout: 120000

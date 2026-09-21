@@ -38,12 +38,16 @@ libxslt1-dev
    Conflicts: libmysqlclient-dev, which libgdal-dev needs, so the swap breaks the build. -#}
 default-libmysqlclient-dev
 libmysqlclient-dev
+libpq-dev
 libsqlite3-dev
 unixodbc
 unixodbc-dev
-{# Version control / network - gert, git2r, renv from GitHub, pip git+ installs, SSH transports -#}
+{# Version control / network - gert, git2r, renv from GitHub, pip VCS installs, SSH transports -#}
+curl
+git
 libgit2-dev
 openssh-client
+subversion
 wget
 {# Geospatial - sf, terra, stars, geopandas, rasterio, pyproj -#}
 gdal-bin
@@ -97,11 +101,9 @@ tk-table
 {# Java - rJava, RJDBC, xlsx, JPype1; run R CMD javareconf after install -#}
 default-jdk
 {# Authentication / directory - mongolite, pymongo GSSAPI, python-ldap, requests-kerberos -#}
+krb5-user
 libkrb5-dev
 libldap2-dev
 libsasl2-dev
-{# Debug / scripting / locale - session diagnostics, R configure perl scripts, Connect compatibility -#}
-gdb
-locales
+{# R configure scripts -#}
 perl
-strace
