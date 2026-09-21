@@ -12,7 +12,7 @@ package:
     installed: true
   {{end}}
   rstudio-drivers:
-    installed: {{ if eq .Env.IMAGE_VARIANT "pro" }}true{{ else }}false{{ end }}
+    installed: {{ if eq .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}
   {{ if eq .Env.IMAGE_OS_VERSION "26.04" }}
   coreutils-from-gnu:
     installed: true
@@ -89,13 +89,13 @@ command:
   "Verify R odbc package is installed":
     exec: {{ r.get_version_directory(goss.build_arg_env_var("R_VERSION")) }}/bin/R -e "library(odbc)"
     exit-status: 0
-    skip: {% raw %}{{ if ne .Env.IMAGE_VARIANT "pro" }}true{{ else }}false{{ end }}{% endraw %}
+    skip: {% raw %}{{ if ne .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
   "Verify ODBC drivers are configured":
     exec: cat /etc/odbcinst.ini
     exit-status: 0
     stdout:
       - "/PostgreSQL|MySQL|SQLServer/"
-    skip: {% raw %}{{ if ne .Env.IMAGE_VARIANT "pro" }}true{{ else }}false{{ end }}{% endraw %}
+    skip: {% raw %}{{ if ne .Env.IMAGE_VARIANT "Standard" }}true{{ else }}false{{ end }}{% endraw %}
   "Ensure GNU coreutils are pinned on Ubuntu 26.04":
     # Ubuntu 26.04 ships Rust-based coreutils (uutils) by default; we pin GNU
     # coreutils as a workaround for a Connect runtime incompatibility.
