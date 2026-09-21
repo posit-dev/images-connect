@@ -341,8 +341,6 @@ images:
         extension: min
         tagDisplayName: min
         primary: true
-        tagAliases:
-          - base
       - name: Standard
         extension: std
         tagDisplayName: std
