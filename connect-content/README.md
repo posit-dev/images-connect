@@ -58,7 +58,7 @@ Two variants are available:
 | Standard (`std`) | R and Python with system dependencies for popular R packages, Posit Professional Drivers, and the `odbc` R package for ODBC connectivity. |
 | Minimal (`min`)  | Open-source R and Python with system dependencies for popular R packages.                                                                 |
 
-Legacy `base` and `pro` variant tags remain aliases for the Minimal and Standard variants, respectively. The unqualified tag remains Minimal.
+The legacy `pro` variant tag remains an alias for the Standard variant. The unqualified tag remains Minimal.
 
 Each tagged image bundles a fixed set of dependencies. Both variants ship one R version, one Python version, and one Quarto version, for a collection of minor versions at their latest patch version available at build time. The Containerfiles in this repository under `connect-content/matrix/` document the exact versions in any tag.
 
@@ -79,7 +79,7 @@ Examples:
 - `R4.4.3-python3.12.12-ubuntu-24.04-std` — R 4.4.3, Python 3.12.12, Ubuntu 24.04, Standard variant
 - `R4.3.3-python3.11.14-ubuntu-22.04-min` — R 4.3.3, Python 3.11.14, Ubuntu 22.04, Minimal variant
 
-The legacy `base` and `pro` variant names remain aliases for `min` and `std`, respectively.
+The legacy `pro` variant name remains an alias for `std`.
 
 ## Architectures
 
@@ -125,7 +125,7 @@ Posit published the legacy images as `rstudio/content-base` and `rstudio/content
 
 ### Variants
 
-The legacy images split content runtimes into two separate repositories: `rstudio/content-base` for the open-source build and `rstudio/content-pro` for the build with Posit Professional Drivers. The replacement images publish both as variants of a single `connect-content` repository: the Minimal (`-min`) variant matches `content-base` and the Standard (`-std`) variant matches `content-pro`. Legacy `base` and `pro` tags remain aliases. See [Image variants](#image-variants).
+The legacy images split content runtimes into two separate repositories: `rstudio/content-base` for the open-source build and `rstudio/content-pro` for the build with Posit Professional Drivers. The replacement images publish both as variants of a single `connect-content` repository: the Minimal (`-min`) variant matches `content-base` and the Standard (`-std`) variant matches `content-pro`. The legacy `pro` tag remains an alias. See [Image variants](#image-variants).
 
 ### Tag format
 
