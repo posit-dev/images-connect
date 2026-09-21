@@ -24,11 +24,15 @@ libxml2-dev
 libxslt1-dev
 default-libmysqlclient-dev
 libmysqlclient-dev
+libpq-dev
 libsqlite3-dev
 unixodbc
 unixodbc-dev
+curl
+git
 libgit2-dev
 openssh-client
+subversion
 wget
 gdal-bin
 libgdal-dev
@@ -73,10 +77,8 @@ tk
 tk-dev
 tk-table
 default-jdk
+krb5-user
 libkrb5-dev
 libldap2-dev
 libsasl2-dev
-gdb
-locales
 perl
-strace
