@@ -9,7 +9,7 @@ if ! getent group rstudio-connect >/dev/null; then
 fi
 if ! getent passwd rstudio-connect >/dev/null; then
     useradd --system --uid 999 --gid rstudio-connect \
-        --no-create-home --home-dir /var/lib/rstudio-connect \
+        --no-create-home --home-dir /home/rstudio-connect \
         --shell /usr/sbin/nologin \
         rstudio-connect
 fi
