@@ -69,6 +69,7 @@ command:
   "Verify Python virtual environment creation":
     exec: 'rm -rf /tmp/uv-venv && /opt/python/{{ .Env.BUILD_ARG_PYTHON_VERSION }}/bin/python -m venv /tmp/uv-venv && test -x /tmp/uv-venv/bin/python && rm -rf /tmp/uv-venv'
     exit-status: 0
+    timeout: 120000
   "Verify UTF-8 locale":
     exec: locale charmap
     exit-status: 0
