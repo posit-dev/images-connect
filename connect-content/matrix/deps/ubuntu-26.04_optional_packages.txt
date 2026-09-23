@@ -4,8 +4,6 @@ cmake
 gfortran
 make
 patch
-pkg-config
-bzip2
 unzip
 zip
 libarchive-dev
