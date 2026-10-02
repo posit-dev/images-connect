@@ -13,10 +13,15 @@ install-bakery *OPTS:
 
 install-goss:
   #!/bin/bash
-  mkdir -p tools
-  curl -fsSL https://github.com/goss-org/goss/releases/latest/download/goss-linux-amd64 -o {{justfile_directory()}}/tools/goss
-  chmod +rx {{justfile_directory()}}/tools/goss
-  curl -fsSL https://github.com/goss-org/goss/releases/latest/download/dgoss -o {{justfile_directory()}}/tools/dgoss
-  chmod +rx {{justfile_directory()}}/tools/dgoss
+  set -euo pipefail
+  # dgoss copies goss into the container under test, so the binary must be a Linux build.
+  # The installer ends by running goss on the host, which fails on macOS before dgoss is written.
+  tools="{{justfile_directory()}}/tools"
+  mkdir -p "$tools"
+  curl -fsSL https://goss.rocks/install | GOSS_DST="$tools" sh || true
+  test -s "$tools/goss" || { echo "ERROR: goss was not installed to $tools/goss" >&2; exit 1; }
+  chmod +rx "$tools/goss"
+  curl -fsSL https://github.com/goss-org/goss/releases/latest/download/dgoss -o "$tools/dgoss"
+  chmod +rx "$tools/dgoss"
 
 init: install-bakery install-goss
