@@ -53,10 +53,12 @@ Configure these images as execution environments in Connect through any of the f
 
 Two variants are available:
 
-| Variant       | Description                                                                                                                  |
-|---------------|------------------------------------------------------------------------------------------------------------------------------|
-| Base (`base`) | Open-source R and Python with system dependencies for popular R packages.                                                    |
-| Pro (`pro`)  | Builds on the Base variant and adds Posit Professional Drivers and the `odbc` R package for ODBC database connectivity.      |
+| Variant          | Description                                                                                                                               |
+|------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| Standard (`std`) | R and Python with system dependencies for popular R packages, Posit Professional Drivers, and the `odbc` R package for ODBC connectivity. |
+| Minimal (`min`)  | Open-source R and Python with system dependencies for popular R packages.                                                                 |
+
+The legacy `pro` variant tag remains an alias for the Standard variant. The unqualified tag remains Minimal.
 
 Each tagged image bundles a fixed set of dependencies. Both variants ship one R version, one Python version, and one Quarto version, for a collection of minor versions at their latest patch version available at build time. The Containerfiles in this repository under `connect-content/matrix/` document the exact versions in any tag.
 
@@ -70,12 +72,14 @@ Posit publishes images to:
 
 Ubuntu 24.04 is the default OS.
 
-The tag format is: `R{r_version}-python{python_version}-{os}[-pro]`
+The tag format is: `R{r_version}-python{python_version}-{os}[-std|-min]`
 
 Examples:
-- `R4.5.2-python3.14.3-ubuntu-24.04` — R 4.5.2, Python 3.14.3, Ubuntu 24.04, Base variant
-- `R4.4.3-python3.12.12-ubuntu-24.04-pro` — R 4.4.3, Python 3.12.12, Ubuntu 24.04, Pro variant
-- `R4.3.3-python3.11.14-ubuntu-22.04` — R 4.3.3, Python 3.11.14, Ubuntu 22.04, Base variant
+- `R4.5.2-python3.14.3-ubuntu-24.04` — R 4.5.2, Python 3.14.3, Ubuntu 24.04, Minimal variant
+- `R4.4.3-python3.12.12-ubuntu-24.04-std` — R 4.4.3, Python 3.12.12, Ubuntu 24.04, Standard variant
+- `R4.3.3-python3.11.14-ubuntu-22.04-min` — R 4.3.3, Python 3.11.14, Ubuntu 22.04, Minimal variant
+
+The legacy `pro` variant name remains an alias for `std`.
 
 ## Architectures
 
@@ -91,7 +95,7 @@ Each image includes:
 | Python    | `/opt/python/{version}/bin/python3` |
 | Quarto    | `/opt/quarto/bin/quarto`  |
 
-The Pro variant also installs Posit Professional Drivers under `/opt/rstudio-drivers/` and the `odbc` R package, with the bundled `odbcinst.ini` copied to `/etc/odbcinst.ini`.
+The Standard variant also installs Posit Professional Drivers under `/opt/rstudio-drivers/` and the `odbc` R package, with the bundled `odbcinst.ini` copied to `/etc/odbcinst.ini`.
 
 ## User
 
@@ -101,10 +105,10 @@ These images do not declare a `USER`. Containers start as `root`. The Connect Jo
 
 ### Extending an image with additional R packages
 
-Use any tag as a base for a derived image with additional dependencies. For example, a Pro-variant image with Tidyverse pre-installed:
+Use any tag as a base for a derived image with additional dependencies. For example, a Standard-variant image with Tidyverse pre-installed:
 
 ```dockerfile
-FROM ghcr.io/posit-dev/connect-content:R4.5.2-python3.14.3-ubuntu-24.04-pro
+FROM ghcr.io/posit-dev/connect-content:R4.5.2-python3.14.3-ubuntu-24.04-std
 
 RUN /opt/R/4.5.2/bin/R -e 'install.packages("tidyverse", repos = "https://p3m.dev/cran/__linux__/noble/latest")'
 ```
@@ -121,11 +125,11 @@ Posit published the legacy images as `rstudio/content-base` and `rstudio/content
 
 ### Variants
 
-The legacy images split content runtimes into two separate repositories: `rstudio/content-base` for the open-source build and `rstudio/content-pro` for the build with Posit Professional Drivers. The replacement images publish both as variants of a single `connect-content` repository: the Base variant matches `content-base` and the Pro (`-pro`) variant matches `content-pro`. See [Image variants](#image-variants).
+The legacy images split content runtimes into two separate repositories: `rstudio/content-base` for the open-source build and `rstudio/content-pro` for the build with Posit Professional Drivers. The replacement images publish both as variants of a single `connect-content` repository: the Minimal (`-min`) variant matches `content-base` and the Standard (`-std`) variant matches `content-pro`. The legacy `pro` tag remains an alias. See [Image variants](#image-variants).
 
 ### Tag format
 
-Legacy tags followed `r{r_version}-py{python_version}-{codename}`, for example `r4.1.0-py3.9.2-jammy`. Replacement tags follow `R{r_version}-python{python_version}-{os}[-pro]`, for example `R4.5.2-python3.14.3-ubuntu-24.04`. Both forms encode the same information.
+Legacy tags followed `r{r_version}-py{python_version}-{codename}`, for example `r4.1.0-py3.9.2-jammy`. Replacement tags follow `R{r_version}-python{python_version}-{os}[-std|-min]`, for example `R4.5.2-python3.14.3-ubuntu-24.04-std`. Both forms encode the same information.
 
 ### What did not change
 
