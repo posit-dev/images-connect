@@ -55,8 +55,8 @@ Two variants are available:
 
 | Variant          | Description                                                                                                                               |
 |------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| Standard (`std`) | R and Python with system dependencies for popular R packages, Posit Professional Drivers, and the `odbc` R package for ODBC connectivity. |
-| Minimal (`min`)  | Open-source R and Python with system dependencies for popular R packages.                                                                 |
+| Standard (`std`) | R, Python, and Quarto with system dependencies for popular R and Python packages, Posit Professional Drivers, and the `odbc` R package for ODBC connectivity. |
+| Minimal (`min`)  | R, Python, and Quarto with only the runtime prerequisites needed by Connect.                                                               |
 
 The legacy `pro` variant tag remains an alias for the Standard variant. The unqualified tag remains Minimal.
 
