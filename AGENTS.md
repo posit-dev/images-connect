@@ -4,6 +4,8 @@
 
 Posit Connect container images built with [Posit Bakery](https://github.com/posit-dev/images-shared/tree/main/posit-bakery). Contains `connect` (Standard/Minimal variants), `connect-content` (matrix of R x Python), and `connect-content-init`.
 
+Before changing Bakery templates, versions, or CI workflows, follow the [Bakery skill](https://github.com/posit-dev/images-shared/blob/main/plugins/bakery/skills/bakery/SKILL.md).
+
 ## Sibling Repositories
 
 This project is part of a multi-repo ecosystem for Posit container images. **Read the
