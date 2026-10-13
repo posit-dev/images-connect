@@ -57,6 +57,7 @@ jobs:
       packages: write
     uses: posit-dev/images-shared/.github/workflows/bakery-build-pr.yml@v0
     with:
+      trivy-scan: true
       dev-versions: "exclude"
       matrix-versions: "exclude"
       recent: 3
@@ -68,6 +69,7 @@ jobs:
       packages: write
     uses: posit-dev/images-shared/.github/workflows/bakery-build-pr.yml@v0
     with:
+      trivy-scan: true
       dev-versions: "only"
       matrix-versions: "exclude"
 
@@ -78,6 +80,7 @@ jobs:
       packages: write
     uses: posit-dev/images-shared/.github/workflows/bakery-build-pr.yml@v0
     with:
+      trivy-scan: true
       matrix-versions: "only"
 
   zizmor:
