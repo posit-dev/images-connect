@@ -1,0 +1,13 @@
+bzip2
+cracklib-runtime
+curl
+git
+gnupg
+gnupg-agent
+libnss-sss
+libpam-sss
+libsodium23
+libglib2.0-0
+mime-support
+rrdtool
+tzdata
