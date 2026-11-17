@@ -45,13 +45,14 @@ jobs:
     needs:
       - build
       - update-helm
+      - report-vulnerabilities
 
     steps:
       - uses: re-actors/alls-green@b5b5b37504aa4183270bd3d855c52a67f212be35  # v1.3.0
         id: alls-green
         with:
           jobs: ${{ toJSON(needs) }}
-          allowed-skips: update-helm
+          allowed-skips: update-helm, report-vulnerabilities
       # Cancelled builds fire an alert that never clears — slack-build-notify
       # skips cancelled runs when scanning for recovery. The next run carries
       # the real verdict; silence here is correct.
@@ -61,6 +62,17 @@ jobs:
         with:
           result: ${{ steps.alls-green.outcome }}
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  report-vulnerabilities:
+    needs: build
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+    permissions:
+      contents: read
+      actions: read
+    uses: ./.github/workflows/report-vulnerabilities.yml
+    secrets:
+      APP_ID: ${{ secrets.POSIT_CONNECT_PROJECTS_APP_ID }}
+      APP_PRIVATE_KEY: ${{ secrets.POSIT_CONNECT_PROJECTS_PEM }}
 
   # Jobs that call a reusable workflow via `uses:` can't also set
   # `environment:`, so the branch restriction lives in its own job and

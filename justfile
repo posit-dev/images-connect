@@ -25,3 +25,7 @@ install-goss:
   chmod +rx "$tools/dgoss"
 
 init: install-bakery install-goss
+
+# Verify the issue reporter without contacting GitHub.
+test-vulnerability-reporting:
+  uv run --no-project python -B -m unittest discover -s .github/scripts -p 'test_*.py'

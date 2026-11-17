@@ -33,3 +33,5 @@ repos:
     rev: v1.7.12
     hooks:
     -   id: actionlint
+        # shortcut: v1.7.12 lacks GitHub's queue property; remove when actionlint supports it.
+        args: ['-ignore', 'unexpected key "queue" for "concurrency" section']
