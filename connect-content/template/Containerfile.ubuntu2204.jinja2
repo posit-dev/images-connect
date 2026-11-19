@@ -55,6 +55,7 @@ RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini
 ### Install R ###
 {{ r.declare_build_arg() }}
 RUN {{ r.install(r.build_arg()) | indent(4) }}
+{{ r.run_link_to_path(r.build_arg()) }}
 
 {% if Image.Variant == "Standard" -%}
 ### Install odbc R package ###
@@ -62,10 +63,10 @@ RUN {{ r.get_version_directory(r.build_arg()) }}/bin/R -e 'install.packages("odb
 
 {% endif -%}
 ### Install Python from build stage ###
-{{ python.copy_from_build_stage() }}
+{{ python.declare_build_arg() }}
+{{ python.copy_from_build_stage(python.build_arg(), link_to_path=True) }}
 
 ### Upgrade setuptools ###
-{{ python.declare_build_arg() }}
 RUN {{ python.get_version_directory(python.build_arg()) }}/bin/python -m pip install --no-cache-dir --break-system-packages --upgrade setuptools
 
 ### Install Quarto ###
