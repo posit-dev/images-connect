@@ -2,6 +2,7 @@
 Below are imports for Bakery's macros. If any are unneeded, they can be removed.
 Bakery handles bootstrapping the files into template rendering.
 -#}
+{%- import "goss.j2" as goss -%}
 {%- import "python.j2" as python -%}
 {%- import "quarto.j2" as quarto -%}
 {%- import "r.j2" as r -%}
@@ -166,6 +167,15 @@ command:
       - "{{ python_version }}"
     skip: {% raw %}{{ if eq .Env.IMAGE_VARIANT "Minimal" }}true{{ else }}false{{ end }}{% endraw %}
   {%- endfor %}
+
+  {% set r_bins = ["R", "Rscript"] -%}
+  {% set python_bins = ["python", "python3", "pip", "pip3"] -%}
+  {% raw %}{{ if eq .Env.IMAGE_VARIANT "Standard" }}{% endraw %}
+  {{- goss.path_link_checks(r_bins, r.get_version_directory(Dependencies.R | maxVersion)) }}
+  {{- goss.path_link_targets(r_bins, "/opt/R/default") }}
+  {{- goss.path_link_checks(python_bins, python.get_version_directory(Dependencies.python | maxVersion)) }}
+  {{- goss.path_link_targets(python_bins, "/opt/python/default") }}
+  {% raw %}{{ end }}{% endraw %}
 
   "Ensure Quarto version is correct":
     exec: {{ quarto.get_directory() }}/bin/quarto --version

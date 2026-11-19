@@ -94,15 +94,32 @@ RUN apt-get update -yqq && \
         r-$R_VERSION && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
+RUN ln -sfn /opt/R/$R_VERSION /opt/R/default && \
+    for bin in R Rscript; do \
+        case "$(readlink /usr/local/bin/$bin || true)" in \
+            /opt/R/*) ;; \
+            *) if [ -e /usr/local/bin/$bin ]; then echo "Keeping existing /usr/local/bin/$bin" >&2; continue; fi ;; \
+        esac; \
+        ln -sf /opt/R/default/bin/$bin /usr/local/bin/$bin; \
+    done
 
 ### Install odbc R package ###
 RUN /opt/R/$R_VERSION/bin/R -e 'install.packages("odbc", repos="https://p3m.dev/cran/__linux__/resolute/latest")'
 
 ### Install Python from build stage ###
+ARG PYTHON_VERSION
 COPY --from=python-builder /opt/python /opt/python
 
+RUN ln -sfn /opt/python/$PYTHON_VERSION /opt/python/default && \
+    for bin in python python3 pip pip3; do \
+        case "$(readlink /usr/local/bin/$bin || true)" in \
+            /opt/python/*) ;; \
+            *) if [ -e /usr/local/bin/$bin ]; then echo "Keeping existing /usr/local/bin/$bin" >&2; continue; fi ;; \
+        esac; \
+        ln -sf /opt/python/default/bin/$bin /usr/local/bin/$bin; \
+    done
+
 ### Upgrade setuptools ###
-ARG PYTHON_VERSION
 RUN /opt/python/$PYTHON_VERSION/bin/python -m pip install --no-cache-dir --break-system-packages --upgrade setuptools
 
 ### Install Quarto ###
