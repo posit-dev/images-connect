@@ -32,8 +32,6 @@ libgit2-dev
 openssh-client
 subversion
 wget
-gdal-bin
-libgdal-dev
 libgeos-dev
 libproj-dev
 libudunits2-dev
