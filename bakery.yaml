@@ -54,7 +54,8 @@ images:
         options:
           - tool: goss
             wait: 20
-            # Pebble is the entrypoint and starts Connect itself; no extra args.
+            # No args: run the image default (startup.sh CMD on older versions,
+            # Pebble on newer ones, which rejects extra args).
             command: ""
             runtimeOptions: "--privileged"
       - name: Minimal
@@ -62,8 +63,9 @@ images:
         tagDisplayName: min
         options:
           - tool: goss
-            command: ""
-            runtimeOptions: "--privileged"
+            # Sleep regardless of ENTRYPOINT (Pebble on newer versions, none on older).
+            runtimeOptions: "--privileged --entrypoint sleep"
+            command: "infinity"
     devVersions:
       - sourceType: stream
         product: connect

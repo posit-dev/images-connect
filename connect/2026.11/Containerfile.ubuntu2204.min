@@ -52,23 +52,6 @@ RUN apt-get update -yqq && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
-### Install Pebble ###
-ARG TARGETARCH
-RUN case "$TARGETARCH" in \
-      amd64) sha256=e9d84f9e461a89abb4437af26a784917bd85cf1612c8de142a3b4449dff332d0 ;; \
-      arm64) sha256=0c19a80498da84e5615138bf804c85b782438c515832430fef8d40057418b4eb ;; \
-      *) echo "Unsupported Pebble architecture: $TARGETARCH" >&2; exit 1 ;; \
-    esac && \
-    version=v1.33.2 && \
-    tmpdir="$(mktemp -d)" && \
-    curl -fsSL "https://github.com/canonical/pebble/releases/download/${version}/pebble_${version}_linux_${TARGETARCH}.tar.gz" \
-      -o "$tmpdir/pebble.tar.gz" && \
-    printf '%s  %s\n' "$sha256" "$tmpdir/pebble.tar.gz" | sha256sum -c - && \
-    tar -xzf "$tmpdir/pebble.tar.gz" -C "$tmpdir" pebble COPYING && \
-    install -D -m 0755 "$tmpdir/pebble" /usr/local/bin/pebble && \
-    install -D -m 0644 "$tmpdir/COPYING" /usr/local/share/doc/pebble/COPYING && \
-    rm -rf "$tmpdir"
-
 ### Install Connect ###
 ARG CONNECT_VERSION="2026.11.1"
 COPY connect/2026.11/conf/rstudio-connect.gcfg /tmp/rstudio-connect.gcfg
@@ -81,13 +64,6 @@ RUN IMAGE_VARIANT="Minimal" \
 ### Copy scripts ###
 COPY --chmod=0775 connect/2026.11/scripts/startup.sh /usr/local/bin/startup.sh
 
-### Configure Pebble ###
-ENV PEBBLE=/var/lib/posit-pebble
-RUN command -v pebble >/dev/null || { echo "Pebble must be installed and on PATH" >&2; exit 1; }; \
-    install -d -m 0755 "$PEBBLE/layers" && chmod 0750 "$PEBBLE" && \
-    chown "root:root" "$PEBBLE"
-COPY --chmod=0644 ["connect/2026.11/pebble/001-connect.yaml", "/var/lib/posit-pebble/layers/001-product.yaml"]
-
 ### Create data volume ###
 VOLUME ["/data"]
 
@@ -95,4 +71,4 @@ VOLUME ["/data"]
 EXPOSE 3939/tcp
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
     CMD curl --fail --silent --output /dev/null http://localhost:3939/__ping__
-ENTRYPOINT ["pebble", "run", "--verbose"]
+CMD ["/usr/local/bin/startup.sh"]

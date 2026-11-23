@@ -69,9 +69,5 @@ unset RSC_LICENSE
 unset RSC_LICENSE_SERVER
 unset RSC_LICENSE_FILE_PATH
 
-# Pebble sends SIGTERM to this script and Connect alike; exiting on TERM (after Connect
-# stops) lets the EXIT trap deactivate the license.
-trap 'exit 143' TERM
-
 # Start RStudio Connect
 /opt/rstudio-connect/bin/connect --config /etc/rstudio-connect/rstudio-connect.gcfg

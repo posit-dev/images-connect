@@ -113,14 +113,12 @@ file:
       - "TEXMFVAR = ~/.texlive/texmf-var"
   {{ end }}
 
-  /usr/local/bin/pebble:
-    # Ubuntu 26.04 uses the base image's /usr/bin/pebble instead
-    exists: {{ if eq .Env.IMAGE_OS_VERSION "26.04" }}false{{ else }}true{{ end }}
-  /var/lib/posit-pebble/layers/001-product.yaml:
-    exists: true
-    filetype: file
-    contains:
-      - "/usr/local/bin/startup.sh"
+  {{ if eq .Env.IMAGE_OS_VERSION "26.04" }}
+  /usr/bin/pebble:
+    exists: false
+  /var/lib/pebble:
+    exists: false
+  {{ end }}
 
 command:
   "Ensure Connect version is correct":
