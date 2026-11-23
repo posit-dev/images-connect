@@ -3,6 +3,7 @@ Below are imports for Bakery's macros. If any are unneeded, they can be removed.
 Bakery handles bootstrapping the files into template rendering.
 -#}
 {%- import "apt.j2" as apt -%}
+{%- import "pebble.j2" as pebble -%}
 {%- import "python.j2" as python -%}
 {%- import "quarto.j2" as quarto -%}
 {%- import "r.j2" as r -%}
@@ -38,8 +39,6 @@ SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 COPY --chmod=0755 connect/scripts/precreate_rstudio_user.sh /tmp/precreate_rstudio_user.sh
 RUN /tmp/precreate_rstudio_user.sh && \
     rm -f /tmp/precreate_rstudio_user.sh
-
-RUN rm -f /usr/bin/pebble && rm -rf /var/lib/pebble
 
 ### Run setup ###
 {{ apt.run_setup(open_repo=True, pro_repo=True) }}
@@ -105,6 +104,9 @@ RUN IMAGE_VARIANT="{{ Image.Variant }}" {% if Image.DownloadURL is defined %}DOW
 ### Copy scripts ###
 COPY --chmod=0775 {{ Path.Version }}/scripts/startup.sh /usr/local/bin/startup.sh
 
+### Configure Pebble ###
+{{ pebble.configure(Path.Version ~ "/pebble/001-connect.yaml", "root:root") }}
+
 ### Create data volume ###
 VOLUME ["/data"]
 
@@ -112,4 +114,4 @@ VOLUME ["/data"]
 EXPOSE 3939/tcp
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
     CMD curl --fail --silent --output /dev/null http://localhost:3939/__ping__
-CMD ["/usr/local/bin/startup.sh"]
+{{ pebble.entrypoint() }}

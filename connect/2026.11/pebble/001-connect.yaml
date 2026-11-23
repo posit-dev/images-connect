@@ -1,0 +1,10 @@
+services:
+  connect:
+    override: replace
+    command: /usr/local/bin/startup.sh
+    startup: enabled
+    # Stop the container when Connect exits, whether cleanly or not.
+    on-success: shutdown
+    on-failure: shutdown
+    # Time for Connect to drain and license deactivation after SIGTERM.
+    kill-delay: 25s

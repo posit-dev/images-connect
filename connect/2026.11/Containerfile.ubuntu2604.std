@@ -34,8 +34,6 @@ COPY --chmod=0755 connect/scripts/precreate_rstudio_user.sh /tmp/precreate_rstud
 RUN /tmp/precreate_rstudio_user.sh && \
     rm -f /tmp/precreate_rstudio_user.sh
 
-RUN rm -f /usr/bin/pebble && rm -rf /var/lib/pebble
-
 ### Run setup ###
 RUN echo 'Acquire::Retries "3"; Acquire::http::Timeout "30"; Acquire::https::Timeout "30";' > /etc/apt/apt.conf.d/99-retries && \
     apt-get update -yqq --fix-missing && \
@@ -130,6 +128,13 @@ RUN IMAGE_VARIANT="Standard" \
 ### Copy scripts ###
 COPY --chmod=0775 connect/2026.11/scripts/startup.sh /usr/local/bin/startup.sh
 
+### Configure Pebble ###
+ENV PEBBLE=/var/lib/posit-pebble
+RUN command -v pebble >/dev/null || { echo "Pebble must be installed and on PATH" >&2; exit 1; }; \
+    install -d -m 0755 "$PEBBLE/layers" && chmod 0750 "$PEBBLE" && \
+    chown "root:root" "$PEBBLE"
+COPY --chmod=0644 ["connect/2026.11/pebble/001-connect.yaml", "/var/lib/posit-pebble/layers/001-product.yaml"]
+
 ### Create data volume ###
 VOLUME ["/data"]
 
@@ -137,4 +142,4 @@ VOLUME ["/data"]
 EXPOSE 3939/tcp
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
     CMD curl --fail --silent --output /dev/null http://localhost:3939/__ping__
-CMD ["/usr/local/bin/startup.sh"]
+ENTRYPOINT ["pebble", "run", "--verbose"]
