@@ -6,5 +6,7 @@ services:
     # Stop the container when Connect exits, whether cleanly or not.
     on-success: shutdown
     on-failure: shutdown
-    # Time for Connect to drain and license deactivation after SIGTERM.
-    kill-delay: 25s
+    # Time for Connect to drain and deactivate its license after SIGTERM, before
+    # SIGKILL. Kept under the recommended 120s stop timeout; the outer
+    # Docker/Kubernetes timeout still wins if it is shorter.
+    kill-delay: 110s
